@@ -6,7 +6,7 @@
 * 描述 ：公共左侧菜单组件
 */
 <template>
-  <el-menu  class="el-menu-vertical-demo" background-color="#464955" text-color="#fff" active-text-color="#ffd04b" style="border:none;">
+  <el-menu  class="el-menu-vertical-demo" background-color="#364863" text-color="#fff" active-text-color="#364863" style="border:none;">
     <div v-for="item in options.data" :key="item.index">
       <MItems :item='item' :indexp="item.value"></MItems>
     </div>
@@ -26,13 +26,17 @@ export default {
 </script>
 <style lang="less">
 	.el-aside{
-		background: #464955 !important;
+		background: #364863 !important;
 		overflow: hidden;
 		a{
 			color: #fff;
+			font-size: 16px;
 		}
 		.el-menu-item.is-active{
-			background:#52b3a6 !important;
+			background:#f2f2f2 !important;
+			a{
+				color: #364863 !important;
+			}
 		}
 		.el-menu-item{
 			a{

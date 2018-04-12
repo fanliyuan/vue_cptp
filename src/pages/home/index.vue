@@ -8,7 +8,8 @@
 <template>
   <el-container class="is-vertical">
     <HeaderBar :menuState="menuState"></HeaderBar>
-    <BreadCrumb :options="breadOptions" class="breadcreamb"></BreadCrumb>
+    </div>
+    <!-- <BreadCrumb :options="breadOptions" class="breadcreamb"></BreadCrumb> -->
     <el-main>
       <p>welcome!!</p>
     </el-main>

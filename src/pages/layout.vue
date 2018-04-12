@@ -6,13 +6,16 @@
 * 描述 ：子路由布局页
 */
 <template>
-  <el-container class="is-vertical" style="height:auto">
+  <el-container class="is-vertical" style="height:auto;background: #f0f0f0">
     <HeaderBar :menuState="menuState"></HeaderBar>
+    <div class="breadcrumb">
+      <span class="manager_background">管理员后台</span>
+    </div>
     <el-container style="height:100%">
       <el-aside style="width:200px">
         <LeftBar :options="leftBarOption"></LeftBar>
       </el-aside>
-      <router-view/>
+      <router-view style="padding-left: 20px; padding-top: 20px;position:relative;"/>
       </el-container>
   </el-container>
 </template>
@@ -34,171 +37,54 @@ export default {
         data: [
           {
             'value': 1,
-            'label': '首页',
+            'label': '用户管理',
             'icon': '图片路径',
-            'frontUrl': '/',
+            'frontUrl': '/user',
             'parentId': 0
           },
           {
             'value': 2,
-            'label': '基地分布图',
+            'label': '权限管理',
             'icon': '图片路径',
-            'frontUrl': '/mapArea',
+            'frontUrl': '/auth',
             'parentId': 0
           },
           {
             'value': 3,
-            'label': '数据管理',
+            'label': '产品管理',
             'icon': '图片路径',
-            'frontUrl': '/dataManage/catalogManage',
+            'frontUrl': '/product',
             'parentId': 0,
             'children': [
               {
                 'value': 4,
-                'label': '目录管理',
+                'label': '标签管理',
                 'icon': '图片路径',
-                'frontUrl': '/dataManage/catalogManage',
+                'frontUrl': '/product/editTag',
+                'parentId': 3
+              },
+              {
+                'value': 5,
+                'label': '市场定位',
+                'icon': '图片路径',
+                'frontUrl': '/product/marketPosition',
                 'parentId': 3
               }
             ]
           },
           {
-            'value': 5,
-            'label': '任务管理',
+            'value': 6,
+            'label': '项目管理',
             'icon': '图片路径',
-            'frontUrl': '/taskManage/myTask',
-            'parentId': 0,
-            'children': [
-              {
-                'value': 3,
-                'label': 'PASS平台开发',
-                'icon': '图片路径',
-                'frontUrl': '/product/pass/development',
-                'parentId': 2
-              },
-              {
-                'value': 4,
-                'label': '在线交易平台',
-                'icon': '图片路径',
-                'frontUrl': '/product/pass/transaction',
-                'parentId': 2
-              },
-              {
-                'value': 5,
-                'label': '政府交易平台',
-                'icon': '图片路径',
-                'frontUrl': '/product/pass/government',
-                'parentId': 2
-              }
-            ]
+            'frontUrl': '/project',
+            'parentId': 0
           },
           {
             'value': 8,
-            'label': '工单管理',
+            'label': '个人中心',
             'icon': '图片路径',
-            'frontUrl': '/workOrderManage/workBench',
-            'parentId': 0,
-            'children': [
-              {
-                'value': 9,
-                'label': '工作台',
-                'icon': '图片路径',
-                'frontUrl': '/workOrderManage/workBench',
-                'parentId': 8
-              },
-              {
-                'value': 10,
-                'label': '工单生成',
-                'icon': '图片路径',
-                'frontUrl': '/workOrderManage/addOrder',
-                'parentId': 8
-              }
-            ]
-          },
-          {
-            'value': 11,
-            'label': '工具管理',
-            'icon': '图片路径',
-            'frontUrl': '/toolsManage/tools',
-            'parentId': 0,
-            'children': [
-              {
-                'value': 12,
-                'label': '工具集',
-                'icon': '图片路径',
-                'frontUrl': '/toolsManage/tools',
-                'parentId': 11
-              },
-              {
-                'value': 13,
-                'label': '工单生成',
-                'icon': '图片路径',
-                'frontUrl': '/toolsManage/addTools',
-                'parentId': 11
-              }
-            ]
-          },
-          {
-            'value': 14,
-            'label': '人员管理',
-            'icon': '图片路径',
-            'frontUrl': '/employeeManage/KPIManage',
-            'parentId': 0,
-            'children': [
-              {
-                'value': 15,
-                'label': '绩效管理',
-                'icon': '图片路径',
-                'frontUrl': '/employeeManage/KPIManage',
-                'parentId': 14
-              }
-            ]
-          },
-          {
-            'value': 16,
-            'label': '系统管理',
-            'icon': '图片路径',
-            'frontUrl': '/systemManage/userManage',
-            'parentId': 0,
-            'children': [
-              {
-                'value': 17,
-                'label': '用户管理',
-                'icon': '图片路径',
-                'frontUrl': '/systemManage/userManage',
-                'parentId': 16
-              },
-              {
-                'value': 18,
-                'label': '基地管理',
-                'icon': '图片路径',
-                'frontUrl': '/systemManage/baseManage',
-                'parentId': 16,
-                'children': [
-                  {
-                    'value': 19,
-                    'label': '存储配置',
-                    'icon': '图片路径',
-                    'frontUrl': '/systemManage/baseManage/storageManage',
-                    'parentId': 18
-                  }
-                ]
-              },
-              {
-                'value': 20,
-                'label': '日志管理',
-                'icon': '图片路径',
-                'frontUrl': '/systemManage/logManage',
-                'parentId': 16
-              },
-              {
-                'value': 21,
-                'label': '通知管理',
-                'icon': '图片路径',
-                'frontUrl': '/systemManage/noticeManage',
-                'parentId': 16
-              }
-            ]
+            'frontUrl': '/me',
+            'parentId': 0
           }
         ]
       }
@@ -206,3 +92,15 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+  .breadcrumb{
+    height: 60px;
+    background: url('/static/img/breadcrumb-bg.png') no-repeat;
+    .manager_background{
+      font-size: 20px;
+      line-height: 60px;
+      color: white;
+      margin-left: 60px;
+    }
+  }
+</style>

@@ -7,18 +7,20 @@
 */
 <template>
   <el-menu-item v-if="!item.children"
-                :index="indexp + '-' + item.value.toString()">
+                :index="indexp + '-' + item.value.toString()"
+                style="padding-left:60px">
     <router-link :to="{ path:item.frontUrl }">{{item.label}}</router-link>
   </el-menu-item>
   <el-submenu v-else
               :index="indexp + '-' + item.value.toString()">
-    <template slot="title" >
-      <router-link :to="{ path:item.frontUrl}">
+    <template slot="title">
+      <router-link :to="{ path:item.frontUrl}" 
+                style="padding-left:40px">
         {{item.label}}
       </router-link>
     </template>
     <template v-for="itemChild in item.children">
-      <items :item="itemChild" :key="itemChild.index" :indexp="indexp + '-' + item.value.toString()"></items>
+      <items :item="itemChild" :key="itemChild.index" :indexp="indexp + '-' + item.value.toString()" style="padding-left:60px;font-size:14px;"  class="my_leftbar_child"></items>
     </template>
   </el-submenu>
 </template>
@@ -28,3 +30,10 @@ export default {
   props: ['item', 'indexp']
 }
 </script>
+<style lang="less" scoped>
+  .my_leftbar_child{
+    a {
+      font-size: 14px !important;
+    }
+  }
+</style>
