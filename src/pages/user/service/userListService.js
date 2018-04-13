@@ -2,7 +2,7 @@ class TabelOptions {
   constructor (data) {
     this.data = data
   }
-  getOptions () {
+  getOptions ({that, editUser, enableUser, disableUser}) {
     let thead = [
       {
         label: '用户名',
@@ -37,17 +37,43 @@ class TabelOptions {
         label: '操作',
         prop: 'opetate',
         textProp: 'textProp',
-        OnClick (val) {
-          console.log(val)
+        OnClick (val, row) {
+          // 调用不同的接口
+          // that.$router.push()
+          if (val.textProp === '修改') {
+            that.$router.push(`/user/editUser/${row.userId}`)
+          } else if (val.textProp === '启用') {
+            // console.log(row, '启用')
+          } else {
+            console.log(row, '停用')
+          }
         },
         width: '200px',
         linkStyle: 'padding-left: 20px;'
       }
     ]
+    let rightbuttonOptions = [
+      {
+        label: '批量导入',
+        fun () {
+          console.log('批量导入')
+        }
+      },
+      {
+        label: '添加用户',
+        fun () {
+          that.$router.push('/user/editUser')
+          // console.log(that)
+        }
+      }
+    ]
     let options = {
-      thead,
-      data: this.data,
-      border: true
+      tableOptions: {
+        thead,
+        data: this.data,
+        border: true
+      },
+      rightbuttonOptions
     }
     return options
   }

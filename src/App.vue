@@ -13,6 +13,10 @@ export default {
 
 <style>
   @import "./assets/less/common.less";
+   /* 全局样式,目前里面写了面包屑的全局样式 */
+  @import "./assets/less/globalcss.css";
+  /* 字体图标 */
+  @import "/static/css/iconfont.css";
   .containerMain {
     min-width: 1190px;
   }

@@ -8,19 +8,23 @@
 <template>
   <el-menu-item v-if="!item.children"
                 :index="indexp + '-' + item.value.toString()"
-                style="padding-left:60px">
-    <router-link :to="{ path:item.frontUrl }">{{item.label}}</router-link>
+                style="padding-left:80px">
+    <router-link :to="{ path:item.frontUrl }">
+      <b v-if="item.iconfont" :class="item.iconfont" class="iconfont"></b>&nbsp;
+      {{item.label}}
+      </router-link>
   </el-menu-item>
   <el-submenu v-else
               :index="indexp + '-' + item.value.toString()">
     <template slot="title">
-      <router-link :to="{ path:item.frontUrl}" 
-                style="padding-left:40px">
+      <router-link :to="{ path:item.frontUrl}"
+                style="padding-left:60px">
+        <b v-if="item.iconfont" :class="item.iconfont" class="iconfont"></b>&nbsp;
         {{item.label}}
       </router-link>
     </template>
     <template v-for="itemChild in item.children">
-      <items :item="itemChild" :key="itemChild.index" :indexp="indexp + '-' + item.value.toString()" style="padding-left:60px;font-size:14px;"  class="my_leftbar_child"></items>
+      <items :item="itemChild" :key="itemChild.index" :indexp="indexp + '-' + item.value.toString()" style="padding-left:80px;font-size:14px;"  class="my_leftbar_child"></items>
     </template>
   </el-submenu>
 </template>
@@ -35,5 +39,9 @@ export default {
     a {
       font-size: 14px !important;
     }
+  }
+  .iconfont{
+    font-size: 18px;
+    font-weight: 400;
   }
 </style>

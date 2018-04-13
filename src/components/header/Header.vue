@@ -16,12 +16,18 @@
       <el-col :span="16" style="margin-left:-60px">
         <span class="headerText">产品资源全景浏览器</span>
       </el-col>
-      <el-col class="adminInfo" :span="3" :offset="1">
-        <p class="head_text"><img src="/static/img/avatar.png" alt="默认头像" style="">
-        &nbsp;&nbsp;
-        <span class="userName">{{userName}}</span>
-        <i>&nbsp;&nbsp;</i>
-        <a href="javascript:;" class="logout">退出</a>
+      <el-col class="adminInfo" :span="4">
+        <p class="head_text">
+          <!-- <img src="/static/img/avatar.png" alt="默认头像" style=""> -->
+          <a href="javascript:;" @click="meHandler">
+            <i class="iconfont icon-gerenzhongxin1"></i>
+            &nbsp;
+            <span class="userName">{{userName}}</span>
+          </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="bold">
+          <a href="javascript:;" class="logout" @click="logoutHandler"><b class="iconfont iconfontx icon-tuichu"></b>&nbsp;&nbsp;退出</a>
+        </span>
         </p>
       </el-col>
     </el-row>
@@ -38,12 +44,21 @@ export default {
   },
   mounted: function () {
   },
-  methods: {}
+  methods: {
+    logoutHandler () {
+      this.$message({
+        type: 'success',
+        message: '退出'
+      })
+    },
+    meHandler () {
+      // this.$router.push({name: 'me'})
+    }
+  }
 }
 </script>
 
-<style scoped>
-  @import "./header.styl";
+<style lang="less" scoped>
   .head_text{
     line-height: 95px;
     color: #283c4d !important;
@@ -54,4 +69,23 @@ export default {
     color: #283c4d;
     font-size: 16px;
   }
+  .userName{
+    vertical-align: middle;
+    font-weight: bold;
+  }
+  .iconfont{
+    font-size: 44px;
+    vertical-align: middle;
+    .iconfontx{
+      font-size: 16px;
+    }
+  }
+  .bold{
+    .logout,i {
+      font-weight: bold !important;
+    }
+  }
+</style>
+<style scoped>
+  @import "./header.styl";
 </style>
