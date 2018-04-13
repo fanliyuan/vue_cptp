@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="myselectsearch">
     <el-row :type="'flex'" :justify="'space-between'" class="my_component">
       <el-col :span="20">
         <el-select v-for="select in options.select"   :key="select.index" v-model="select.value" @change="select.selectHandler" :class="select.className" class="my_select">
@@ -35,5 +35,12 @@ export default {
   }
   .my_component{
     padding-right: 20px;
+  }
+  .myselectsearch{
+    margin-bottom: 10px;
+    padding-right: 20px;
+  }
+  .el-icon-search{
+    font-size: 24px;
   }
 </style>

@@ -1,0 +1,14 @@
+.mybreadcrumb{
+  position: absolute;
+  left: 45px;
+  top: -52px;
+  font-size: 16px;
+  color: white;
+  box-shadow:0 0 0 0 #fff !important;
+}
+.breadCrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner{
+  color:#ddd !important;
+}
+.breadCrumb .el-breadcrumb__inner{
+  color:white !important;
+}

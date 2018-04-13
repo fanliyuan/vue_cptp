@@ -19,7 +19,7 @@ import Login from '../pages/login/login.vue'
 import middlewares from '../middlewares'
 
 // 一级页面
-const Index = () => import('@/pages/home/index.vue')
+// const Index = () => import('@/pages/home/index.vue')
 // 布局页面
 const Layout = () => import('@/pages/layout.vue')
 
@@ -30,7 +30,8 @@ const router = new Router({
     {
       path: '/',
       name: 'home-index',
-      component: Index
+      component: Layout,
+      redirect: '/user'
     },
     {
       path: '/product',

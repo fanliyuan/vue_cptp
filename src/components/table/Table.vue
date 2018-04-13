@@ -13,7 +13,7 @@
 *                    工具栏加入autocomplete自动提示搜索框
 */
 <template>
-  <el-container class="tableContainer is-vertical">
+  <el-container class="tableContainer is-vertical" style="padding-right:40px;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;-ms-box-sizing:border-box;">
     <el-row class="toolbar" v-if="options.toolbar&&options.toolbar.length>0">
       <el-col class="toolbarRow" v-for="item in options.toolbar" v-if="item.xtype==='toolbarRow'" :key="item.index">
         <div class="toolbarItem" v-for="toolbarItem in item.items" :key="toolbarItem.index" :span="4" :class="toolbarItem.className" :style="toolbarItem.containerStyle">
@@ -172,7 +172,7 @@
           :prop="item.prop"
           :render-header="item.renderHeader">
           <template slot-scope="scope">
-            <a v-for="link in scope.row[item.prop]" :key="link.index" :class="item.linkClassName" :style="item.linkStyle" @click="item.OnClick(link)">
+            <a v-for="link in scope.row[item.prop]" :key="link.index" :class="item.linkClassName" :style="item.linkStyle" @click="item.OnClick(link, scope.row)">
               {{link[item.textProp]}}
             </a>
           </template>

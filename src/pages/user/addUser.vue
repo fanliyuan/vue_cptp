@@ -21,21 +21,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-  .mybreadcrumb{
-    position: absolute;
-    left: 135px;
-    top: -52px;
-    font-size: 16px;
-    color: white;
-    box-shadow:0 0 0 0 #fff;
-  }
 </style>
 <style lang="less">
-.breadCrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner{
-  color:#ddd !important;
-}
-.breadCrumb .el-breadcrumb__inner{
-  color:white !important;
-}
 </style>
-
