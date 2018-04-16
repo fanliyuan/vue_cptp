@@ -80,6 +80,7 @@
       :data="options.data"
       :empty-text="options.emptyText || '暂无数据'"
       :border="options.border || false"
+      :stripe="options.stripe || false"
       :style="`width: 100%;${options.tableStyle || ''}`"
       header-cell-class-name="myheadclass"
       :size="options.size"

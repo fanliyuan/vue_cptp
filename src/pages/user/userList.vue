@@ -3,6 +3,7 @@
     <bread-crumb class="mybreadcrumb" :options="breadcrumbOptions"/>
     <RightButton :options="rightbuttonOptions" />
     <SelectSearch :options="selectSearchOptions"/>
+    <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="TableOptions"></Table>
   </div>
 </template>
@@ -100,14 +101,22 @@ export default {
       TableOptions: userListService(temp).getOptions({that: this}).tableOptions,
       rightbuttonOptions: userListService(temp).getOptions({that: this}).rightbuttonOptions,
       breadcrumbOptions: {bread: [{label: '用户管理', path: '/user'}]},
-      selectSearchOptions: selectSearchOptions
+      selectSearchOptions: selectSearchOptions,
+      searchResult: null
     }
   },
   watch: {
     $route () {
-      this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户搜索'}]}
-      // console.log(this.$route.params.keyword)
-      if (!this.$route.params.keyword) this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}]}
+      if (this.$route && this.$route.params) {
+        this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户搜索'}]}
+        this.searchResult = {
+          keyword: this.$route.params.keyword,
+          total: 9
+        }
+      } else {
+        this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}]}
+        this.searchResult = null
+      }
     }
   }
 }

@@ -8,12 +8,23 @@ export default [
   {
     path: '/auth',
     name: 'userAuthList',
-    component: UserAuthListPage
+    component: UserAuthListPage,
+    children: [
+      {
+        path: 'search/:keyword',
+        name: 'authSearch'
+      }
+    ]
   },
   {
     path: 'editUserAuth',
     name: 'editUserAuth',
-    component: EditUserAuthPage
+    component: EditUserAuthPage,
+    children: [
+      {
+        path: ':userId'
+      }
+    ]
   },
   {
     path: 'editPosition',

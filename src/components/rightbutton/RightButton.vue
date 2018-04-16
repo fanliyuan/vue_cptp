@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     buttonHandler (item) {
-      item.fun && item.fun()
+      item.fun && item.fun(item)
     }
   }
 }

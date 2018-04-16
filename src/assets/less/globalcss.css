@@ -12,3 +12,10 @@
 .breadCrumb .el-breadcrumb__inner{
   color:white !important;
 }
+.mysearch{
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.mysearch .red{
+  color: red;
+}
