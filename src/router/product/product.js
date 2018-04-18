@@ -7,11 +7,10 @@
  */
 // const ProductListPage = () => import('@/pages/product/productList.vue')
 import ProductListPage from '../../pages/product/productList.vue'
-import ProductDetailPage from '../../pages/product/productDetail.vue'
 import EditProductPage from '../../pages/product/editProduct.vue'
 import AddProductPage from '../../pages/product/addProduct.vue'
 import EditTagPage from '../../pages/product/editTag.vue'
-import ProductSearchResultPage from '../../pages/product/productSearchResult.vue'
+// import ProductSearchResultPage from '../../pages/product/productSearchResult.vue'
 import MarketPositionPage from '../../pages/product/marketPosition.vue'
 import ProductForbiddenPage from '../../pages/product/productForbidden.vue'
 
@@ -19,17 +18,23 @@ export default [
   {
     path: '/product',
     name: 'product-list',
-    component: ProductListPage
-  },
-  {
-    path: 'productDetail',
-    name: 'product-detail',
-    component: ProductDetailPage
+    component: ProductListPage,
+    children: [
+      {
+        path: 'search/:keyword',
+        name: 'searchProduct'
+      }
+    ]
   },
   {
     path: 'editProduct',
     name: 'editProduct',
-    component: EditProductPage
+    component: EditProductPage,
+    children: [
+      {
+        path: ':productId'
+      }
+    ]
   },
   {
     path: 'addProduct',
@@ -40,11 +45,6 @@ export default [
     path: 'editTag',
     name: 'editTag',
     component: EditTagPage
-  },
-  {
-    path: 'search',
-    name: 'productSearchResult',
-    component: ProductSearchResultPage
   },
   {
     path: 'marketPosition',

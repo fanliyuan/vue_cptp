@@ -100,21 +100,21 @@ export default {
     return {
       TableOptions: userListService(temp).getOptions({that: this}).tableOptions,
       rightbuttonOptions: userListService(temp).getOptions({that: this}).rightbuttonOptions,
-      breadcrumbOptions: {bread: [{label: '用户管理', path: '/user'}]},
+      breadcrumbOptions: {bread: [{label: '用户列表', path: '/user'}]},
       selectSearchOptions: selectSearchOptions,
       searchResult: null
     }
   },
   watch: {
     $route () {
-      if (this.$route && this.$route.params) {
+      if (this.$route.params && this.$route.params.keyword) {
         this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户搜索'}]}
         this.searchResult = {
           keyword: this.$route.params.keyword,
           total: 9
         }
       } else {
-        this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}]}
+        this.breadcrumbOptions = {bread: [{label: '用户列表', path: '/user'}]}
         this.searchResult = null
       }
     }

@@ -45,3 +45,7 @@ export default {
     font-weight: 400;
   }
 </style>
+<style lang="less">
+.el-submenu__title{
+}
+</style>

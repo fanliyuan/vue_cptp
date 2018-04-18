@@ -46,12 +46,11 @@ export default {
   },
   watch: {
     $route () {
-      console.log(this.$route.params)
       if (this.$route.params && this.$route.params.keyword) {
         this.breadcrumbOptions = {
           bread: [
             {
-              label: '权限列表',
+              label: '权限管理',
               path: '/auth'
             },
             {
