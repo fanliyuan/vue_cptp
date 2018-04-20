@@ -3,6 +3,7 @@
     <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb"/>
     <RightButton :options="rightButtonOption" class="myrightbutton"/>
     <Table :options="tableOption" />
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
     <el-dialog :visible.sync="visibility" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">市场定位名</span>
@@ -56,7 +57,12 @@ export default {
       visibility: false,
       editVisibility: false,
       addMarketPositionInfo: '',
-      editMarketPositionInfo: {}
+      editMarketPositionInfo: {},
+      pageInfo: {
+        pageNum: 1,
+        pageSize: 10,
+        total: 11
+      }
     }
   },
   methods: {
@@ -67,6 +73,11 @@ export default {
     editHandler () {
       // 调用编辑接口
       console.log('编辑')
+    },
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      console.log(this.pageInfo)
+      // 接口
     }
   }
 }

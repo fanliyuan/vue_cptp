@@ -28,6 +28,7 @@ class Option {
         textProp: 'textProp',
         OnClick (val, row) {
           if (val.textProp === '修改') {
+            sessionStorage.setItem('productInfo', JSON.stringify(row))
             that.$router.push(`/product/editProduct/${row.productId}`)
           } else if (val.textProp === '冻结') {
             // 调用冻结接口,从上面传入

@@ -5,6 +5,7 @@
     <SelectSearch :options="selectSearchOption" />
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="tableOption"/>
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
   </div>
 </template>
 <script>
@@ -29,7 +30,12 @@ export default {
       rightButtonOption: projectListService().getRightButtonOption({that: this}),
       selectSearchOption: projectListService().getSelectSearchOption({that: this}),
       tableOption: projectListService().getTableOption({that: this, delFun}),
-      searchResult: null
+      searchResult: null,
+      pageInfo: {
+        pageSize: 10,
+        pageNum: 1,
+        total: 11
+      }
     }
   },
   watch: {
@@ -53,6 +59,13 @@ export default {
           }
         ]
       }
+    }
+  },
+  methods: {
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      console.log(this.pageInfo)
+      // 接口
     }
   }
 }

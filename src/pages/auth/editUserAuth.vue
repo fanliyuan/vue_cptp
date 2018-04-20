@@ -58,6 +58,9 @@ export default {
         authList: []
       }
     }
+  },
+  mounted () {
+    this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
   }
 }
 </script>

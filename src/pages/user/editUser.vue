@@ -5,7 +5,7 @@
       <div class="box">
         <div class="label">用户名</div>
         <div class="silver username" v-if="userInfo.oldName">{{userInfo.oldName}}</div>
-        <el-input class="input" v-else v-model="projectInfo.userName"></el-input>
+        <el-input class="input" v-else v-model="userInfo.userName"></el-input>
       </div>
       <div class="box">
         <div class="label">账号</div>
@@ -47,7 +47,16 @@ export default {
   data () {
     return {
       breadCrumbOptions: editUser().getOptions().breadCrumbOptions,
-      userInfo: {}
+      userInfo: {
+        oldName: null,
+        userName: null,
+        account: null,
+        mobile: null,
+        deparment: null,
+        position: null,
+        positionClass: null,
+        role: null
+      }
     }
   },
   watch: {
@@ -64,6 +73,8 @@ export default {
     if (this.$route.params && this.$route.params.userId) {
       // 这里调用接口,赋值数据
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户修改'}]}
+      this.userInfo.oldName = JSON.parse(sessionStorage.getItem('userInfo')).userName
+      this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     } else {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
     }

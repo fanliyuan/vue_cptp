@@ -14,6 +14,7 @@
       <el-button type="primary" class="button" @click="addHandler">确定</el-button>
     </el-dialog>
     <Tabel :options="tableOptions" />
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
     <el-dialog :visible.sync="editPositionClass" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">原职位类型</span>
@@ -89,7 +90,12 @@ export default {
       addPositionClass: false,
       positionClassValue: '',
       editPositionClass: false,
-      editPositionClassInfo: {}
+      editPositionClassInfo: {},
+      pageInfo: {
+        pageSize: 10,
+        pageNum: 1,
+        total: 11
+      }
     }
   },
   methods: {
@@ -100,6 +106,11 @@ export default {
       // 这里调用更新接口
       alert(`${this.editPositionClassInfo.oldValue}修改成功`)
       this.editPosition = false
+    },
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      console.log(this.pageInfo)
+      // 调用接口
     }
   }
 }

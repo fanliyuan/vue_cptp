@@ -12,6 +12,7 @@
     <SelectSearch :options="selectSearchOption" class="select"/>
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="tableOption" />
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
   </div>
 </template>
 <script>
@@ -94,7 +95,12 @@ export default {
         }
       ],
       searchResult: null,
-      tableOption: productListService(data).getTabelOptions({that: this})
+      tableOption: productListService(data).getTabelOptions({that: this}),
+      pageInfo: {
+        total: 11,
+        pageSize: 10,
+        pageNum: 1
+      }
     }
   },
   watch: {
@@ -109,6 +115,13 @@ export default {
         this.breadCrumbOption = {bread: [{label: '产品列表', path: '/product'}]}
         this.searchResult = null
       }
+    }
+  },
+  methods: {
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      console.log(this.pageInfo)
+      // 接口
     }
   }
 }

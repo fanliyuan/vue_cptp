@@ -85,6 +85,7 @@
       header-cell-class-name="myheadclass"
       :size="options.size"
       :highlight-current-row="options.highlightCurrentRow || false"
+      :max-height="options.maxHeight"
       @selection-change="handleSelectionChange">
       <el-table-column v-if="options.selection"
                        type="selection"
@@ -171,6 +172,7 @@
           :align="item.align || 'center'"
           :label="item.label"
           :prop="item.prop"
+          :label-class-name="'label-class-name'"
           :render-header="item.renderHeader">
           <template slot-scope="scope">
             <a v-for="link in scope.row[item.prop]" :key="link.index" :class="item.linkClassName" :style="item.linkStyle" @click="item.OnClick(link, scope.row)">
@@ -288,5 +290,11 @@ export default {
   th.myheadclass {
     background: #52b3a6;
     color: white;
+  }
+  .el-table__header, .el-table__header .gutter{
+    background-color: rgb(240, 240, 240);
+  }
+  .label-class-name{
+    width: 317px!important;
   }
 </style>

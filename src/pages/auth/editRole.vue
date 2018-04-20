@@ -34,26 +34,13 @@
         <el-table-column align="center" label="删除" width="100" prop="positionClass"></el-table-column>
       </el-table-column>
       <el-table-column align="center" label="操作" prop="operate">
-        <!-- <el-table-column align="center" label="编辑" prop="operate">
-          <template slot-scope="scope">
-            <a href="javascript:;" class="acolor" @click="editHandler">
-              编辑
-            </a>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="删除" prop="positionClass">
-          <template slot-scope="scope">
-            <a href="javascript:;" class="acolor" @click="delHandler">
-              删除
-            </a>
-          </template>
-        </el-table-column> -->
         <template slot-scope="scope">
           <a href="javascript:;" class="acolor" v-for="item in scope.row.operate" v-text="item.label" :key="item.index" @click="operate.handler(item, scope.row)">
           </a>
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
     <el-dialog :visible.sync="editRole" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">角色名称</span>
@@ -143,6 +130,11 @@ export default {
               })
           }
         }
+      },
+      pageInfo: {
+        pageSize: 10,
+        pageNum: 1,
+        total: 11
       }
     }
   },
@@ -156,6 +148,11 @@ export default {
       // 调用编辑接口
       console.log('编辑')
       this.editRole = false
+    },
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      console.log(this.pageInfo)
+      // 调用接口
     }
   }
 }

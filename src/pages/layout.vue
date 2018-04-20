@@ -6,7 +6,7 @@
 * 描述 ：子路由布局页
 */
 <template>
-  <el-container class="is-vertical" style="height:auto;background: #f0f0f0">
+  <el-container class="is-vertical" style="height:auto;background: #f0f0f0;overflow-x: hidden; overflow-y: auto;">
     <HeaderBar :menuState="menuState"></HeaderBar>
     <div class="breadcrumb">
       <span class="manager_background"><i class="iconfont icon-houtai1" style="font-size:20px">&nbsp;</i>管理员后台</span>

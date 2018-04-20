@@ -5,6 +5,7 @@
     <SelectSearch :options="selectSearchOptions"/>
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="TableOptions"></Table>
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
   </div>
 </template>
 <script>
@@ -26,6 +27,117 @@ export default {
     let temp = [
       {
         userName: '用户名1',
+        account: '账户',
+        userId: 1,
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ],
+        mobile: 13312341234
+      },
+      {
+        userName: '用户名2',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ],
+        mobile: 111111111
+      },
+      {
+        userName: '用户名3',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名4',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名5',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名6',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名7',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名8',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名9',
+        account: '账户',
+        opetate: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '停用'
+          }
+        ]
+      },
+      {
+        userName: '用户名10',
         account: '账户',
         opetate: [
           {
@@ -102,7 +214,12 @@ export default {
       rightbuttonOptions: userListService(temp).getOptions({that: this}).rightbuttonOptions,
       breadcrumbOptions: {bread: [{label: '用户列表', path: '/user'}]},
       selectSearchOptions: selectSearchOptions,
-      searchResult: null
+      searchResult: null,
+      pageInfo: {
+        total: 11,
+        pageSize: 10,
+        pageNum: 1
+      }
     }
   },
   watch: {
@@ -117,6 +234,12 @@ export default {
         this.breadcrumbOptions = {bread: [{label: '用户列表', path: '/user'}]}
         this.searchResult = null
       }
+    }
+  },
+  methods: {
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      // 重新调用数据请求接口
     }
   }
 }

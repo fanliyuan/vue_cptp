@@ -37,7 +37,7 @@
       </div>
       <div class="box">
         <div class="label">产品名称</div>
-        <el-input v-model="productInfo.prudoctName" placeholder="请输入产品名称" class="input"></el-input>
+        <el-input v-model="productInfo.productName" placeholder="请输入产品名称" class="input"></el-input>
       </div>
       <div class="box">
         <div class="label">产品经理</div>
@@ -118,6 +118,8 @@ export default {
           }
         ]
       }
+      this.productInfo = JSON.parse(sessionStorage.getItem('productInfo'))
+      this.productInfo.productName = JSON.parse(sessionStorage.getItem('productInfo')).productName[0].textProp
     } else {
       this.breadCrumbOption = {
         bread: [

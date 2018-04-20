@@ -1,10 +1,11 @@
 <template>
   <div>
     <SelectSearch :options="selectSearchOptions" />
-    <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
-    <Table :options="tableOptions"></Table>
-    <BreadCrumb :options="breadcrumbOptions" class="mybreadcrumb"/>
     <RightButton :options="rightButtonOptions" />
+    <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
+    <BreadCrumb :options="breadcrumbOptions" class="mybreadcrumb"/>
+    <Table :options="tableOptions"></Table>
+    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
   </div>
 </template>
 <script>
@@ -41,7 +42,8 @@ export default {
       selectSearchOptions: userAuthListService().selectSearchOptions({that: this}),
       rightButtonOptions: userAuthListService().rightOptions({that: this}),
       breadcrumbOptions: userAuthListService().breadcrumbOptions(),
-      searchResult: null
+      searchResult: null,
+      pageInfo: {pageNum: 1, pageSize: 10, total: 11}
     }
   },
   watch: {
@@ -72,6 +74,12 @@ export default {
         }
         this.searchResult = null
       }
+    }
+  },
+  methods: {
+    pageHandler (val) {
+      this.pageInfo.pageNum = val
+      // 调用数据请求接口,带分页参数
     }
   }
 }

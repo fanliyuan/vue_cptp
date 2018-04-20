@@ -41,6 +41,7 @@ class TabelOptions {
           // 调用不同的接口
           // that.$router.push()
           if (val.textProp === '修改') {
+            sessionStorage.setItem('userInfo', JSON.stringify(row))
             that.$router.push(`/user/editUser/${row.userId}`)
           } else if (val.textProp === '启用') {
             // console.log(row, '启用')

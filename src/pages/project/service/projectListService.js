@@ -111,6 +111,7 @@ class Option {
         textProp: 'textProp',
         OnClick (item, row) {
           if (item.textProp === '修改') {
+            sessionStorage.setItem('projectInfo', JSON.stringify(row))
             that.$router.push(`/project/editProject/${row.projectId}`)
           } else {
             delFun && delFun(row)
@@ -143,13 +144,186 @@ class Option {
             textProp: '删除'
           }
         ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
+      },
+      {
+        projectName: '项目1',
+        projectId: 1,
+        department: '部门1',
+        manager: '负责人1',
+        product: [
+          {
+            textProp: '产品1',
+            productId: 1
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          },
+          {
+            textProp: '产品2',
+            productId: 2
+          }
+        ],
+        operation: [
+          {
+            textProp: '修改'
+          },
+          {
+            textProp: '删除'
+          }
+        ]
       }
     ]
     return {
       thead,
       data,
       stripe: true,
-      border: true
+      border: true,
+      maxHeight: 650
     }
   }
 }

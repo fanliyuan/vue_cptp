@@ -1,20 +1,20 @@
 <template>
   <div>
     <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
-    <div class="myinput">
-      <div class="box">
-        <el-input class="input" placeholder="请输入原登录密码"></el-input>
-      </div>
-      <div class="box">
-        <el-input class="input" placeholder="请输入新登录密码(8-16为字符)"></el-input>
-      </div>
-      <div class="box">
-        <el-input class="input" placeholder="请再次输入新登录密码"></el-input>
-      </div>
-      <div class="box mt10">
-        <span class="submit">确认</span>
-      </div>
-    </div>
+    <el-form class="myinput" ref="myinput" :model="inputData" :rules="inputRule" status-icon @validate="validateHandler">
+      <el-form-item class="box" prop="oldPassword">
+        <el-input type="password" class="input" placeholder="请输入原登录密码" v-model="inputData.oldPassword"></el-input>
+      </el-form-item>
+      <el-form-item class="box" prop="newPassword">
+        <el-input type="password" class="input" placeholder="请输入新登录密码(8-16为字符)" v-model="inputData.newPassword"></el-input>
+      </el-form-item>
+      <el-form-item class="box" prop="confirmPassword">
+        <el-input type="password" class="input" placeholder="请再次输入新登录密码" v-model="inputData.confirmPassword"></el-input>
+      </el-form-item>
+      <el-form-item class="box mt10">
+        <el-button type="primary" @click="submitHandler(inputRule)" :disabled="disabled">确认</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>
@@ -25,8 +25,78 @@ export default {
     BreadCrumb
   },
   data () {
+    let checkPassword = (rule, val, cb) => {
+      if (val.trim().length < 8 || val.trim().length > 16) {
+        cb(new Error('密码长度为8-16个字符'))
+      } else {
+        if (val !== this.inputData.newPassword) {
+          cb(new Error('两次密码输入不一致'))
+        } else {
+          cb()
+        }
+      }
+    }
     return {
-      breadCrumbOption: meService().getBreadCrumbOption({type: 'password'})
+      breadCrumbOption: meService().getBreadCrumbOption({type: 'password'}),
+      inputData: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      },
+      inputRule: {
+        oldPassword: [
+          {
+            required: true,
+            message: '请输入原登录密码',
+            trigger: 'blur'
+          }
+        ],
+        newPassword: [
+          {
+            required: true,
+            message: '请输入新登录密码',
+            trigger: 'blur'
+          },
+          {
+            min: 8,
+            max: 16,
+            message: '长度在8-16个字符'
+          }
+        ],
+        confirmPassword: [
+          {
+            required: true,
+            message: '请再次输入刚才输入的密码',
+            trigger: 'blur'
+          },
+          {
+            validator: checkPassword,
+            trigger: ['change', 'blur']
+          }
+        ]
+      },
+      disabled: true,
+      oldPassword: false,
+      newPassword: false,
+      confirmPassword: false
+    }
+  },
+  mounted () {
+    console.log(this.$refs)
+    // this.$refs.myinput.title = '我的输入框'
+  },
+  methods: {
+    submitHandler (formName) {
+      this.$refs[formName].validate((flag, err) => {
+        if (flag) {
+          alert('验证通过,可以提交表单')
+        }
+      })
+    },
+    validateHandler (val, item) {
+      this[val] = item
+      console.log(this.oldPassword, this.newPassword, this.confirmPassword)
+      this.disabled = !(this.oldPassword && this.newPassword && this.confirmPassword)
     }
   }
 }

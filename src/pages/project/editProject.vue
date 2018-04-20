@@ -74,6 +74,7 @@ export default {
   mounted () {
     if (this.$route.params && this.$route.params.projectId) {
       this.breadCrumbOption = editProjectService().getBreadCrumbOption({projectId: this.$route.params.projectId})
+      this.projectInfo = JSON.parse(sessionStorage.getItem('projectInfo'))
     } else {
       this.breadCrumbOption = editProjectService().getBreadCrumbOption()
     }

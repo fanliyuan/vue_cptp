@@ -49,9 +49,9 @@ class TabelOptions {
         label: '权限设置',
         prop: 'opetate',
         textProp: 'textProp',
-        OnClick (val) {
-          // console.log(val)
-          that.$router.push(`/auth/editUserAuth/${val.userId || val.textProp}`)
+        OnClick (item, row) {
+          sessionStorage.setItem('authInfo', JSON.stringify(row))
+          that.$router.push(`/auth/editUserAuth/${row.userId}`)
         },
         width: '200px',
         linkStyle: 'padding-left: 20px;'
