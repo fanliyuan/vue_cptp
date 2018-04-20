@@ -18,7 +18,7 @@
               :index="indexp + '-' + item.value.toString()">
     <template slot="title">
       <router-link :to="{ path:item.frontUrl}"
-                style="padding-left:60px">
+                style="padding-left:60px;display: block;">
         <b v-if="item.iconfont" :class="item.iconfont" class="iconfont"></b>&nbsp;
         {{item.label}}
       </router-link>

@@ -6,7 +6,13 @@ export default [
   {
     path: '/project',
     name: 'project',
-    component: ProjectListPage
+    component: ProjectListPage,
+    children: [
+      {
+        name: 'project-search',
+        path: 'search/:keyword'
+      }
+    ]
   },
   {
     path: 'addProject',
@@ -16,7 +22,13 @@ export default [
   {
     path: 'editProject',
     name: 'editProject',
-    component: EditProjectPage
+    component: EditProjectPage,
+    children: [
+      {
+        path: ':projectId',
+        name: 'project-edit'
+      }
+    ]
   },
   {
     path: 'projectSearchResult',

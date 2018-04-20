@@ -14,23 +14,24 @@
     <el-main>
       <div class="input mylogininput">
         <div class="input_header">
-          管理员登录
+          找回密码
         </div>
+        <router-link :to="'/login'" class="login">
+          返回登录
+        </router-link>
         <div class="input_body">
           <div class="input_row">
             <el-input placeholder="请输入登录账号"></el-input>
           </div>
           <div class="input_row">
-            <el-input placeholder="请输入登录密码"></el-input>
-          </div>
-          <div class="input_row code">
             <el-input placeholder="请输入验证码" class="input_code"></el-input>
-            <img class="input_image" src="" alt="无法登录">
-            <span class="input_refresh"></span>
+            <span class="input_button">获取验证码</span>
           </div>
-          <div class="input_row">
-            <el-checkbox>记住账号</el-checkbox>
-            <router-link :to="'/forget'" class="forget">忘记密码?</router-link>
+         <div class="input_row">
+            <el-input placeholder="请输入新密码"></el-input>
+          </div>
+         <div class="input_row">
+            <el-input placeholder="请再次输入新密码"></el-input>
           </div>
           <div class="message" :title="message">
             {{message}}
@@ -74,6 +75,14 @@ export default {
     background-image: url('/static/img/login_input.png');
     position: relative;
     margin: 183px auto 0;
+    .login{
+      position: absolute;
+      right: 72px;
+      top: 118px;
+      color: #113d61;
+      cursor: pointer;
+      font-size: 14px;
+    }
     .input_header{
       text-align: center;
       color: #113d61;
@@ -87,7 +96,7 @@ export default {
       margin-right: 72px;
       width: 329px;
       .input_row{
-        margin-bottom: 25px;
+        margin-bottom: 15px;
       }
       .el-input {
         .el-input__inner{
@@ -99,30 +108,13 @@ export default {
         width: 49%;
       }
       .input_code{
-        width: 55%;
+        width: 65%;
         padding-right: 20px;
       }
-      .input_image{
-        width: 82px;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-      }
-      .input_refresh{
-        display: inline-block;
-        margin-left: 10px;
-        width: 16px;
-        height: 18px;
-        vertical-align: middle;
-        cursor: pointer;
-        background: url('/static/img/login_refresh.png')
-      }
-      .forget{
-        display: inline-block;
-        width: 49%;
-        color: rgb(96, 98, 102);
-        cursor: pointer;
+      .input_button{
         font-size: 14px;
+        color: #409efb;
+        cursor: pointer;
       }
       .button{
         height: 40px;

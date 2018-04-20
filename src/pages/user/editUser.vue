@@ -4,7 +4,8 @@
     <div class="myinput">
       <div class="box">
         <div class="label">用户名</div>
-        <div class="silver username">{{userInfo.userName || '未知用户'}}</div>
+        <div class="silver username" v-if="userInfo.oldName">{{userInfo.oldName}}</div>
+        <el-input class="input" v-else v-model="projectInfo.userName"></el-input>
       </div>
       <div class="box">
         <div class="label">账号</div>
@@ -31,7 +32,7 @@
         <el-input class="input" v-model="userInfo.role"></el-input>
       </div>
       <div>
-        <el-button type="primary" class="submit">提交</el-button>
+        <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
       </div>
     </div>
   </div>
@@ -65,6 +66,12 @@ export default {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户修改'}]}
     } else {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
+    }
+  },
+  methods: {
+    submitHandler () {
+      // 这里调用修改或者添加接口
+      console.log('修改提交')
     }
   }
 }

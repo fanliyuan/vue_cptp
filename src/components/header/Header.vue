@@ -8,15 +8,15 @@
 <template>
   <el-header style="height: 95px;">
     <el-row>
-      <el-col :span="4" class="logo" style="line-height:95px">
+      <el-col class="logo" style="line-height:95px;width: 315px">
         <router-link :to="{ path: '/' }">
           <img src="/static/img/logo.png">
         </router-link>
       </el-col>
-      <el-col :span="16" style="margin-left:-60px">
+      <el-col style="margin-left:-60px; display: inline-block; width: auto">
         <span class="headerText">产品资源全景浏览器</span>
       </el-col>
-      <el-col class="adminInfo" :span="4">
+      <el-col class="adminInfo" style="margin-right: 30px;float: right; width: auto">
         <p class="head_text">
           <!-- <img src="/static/img/avatar.png" alt="默认头像" style=""> -->
           <a href="javascript:;" @click="meHandler">

@@ -15,6 +15,7 @@ import auth from './auth/auth'
 import project from './project/project'
 
 import Login from '../pages/login/login.vue'
+import Forget from '../pages/login/forget.vue'
 import ProductDetailPage from '../pages/product/productDetail.vue'
 // 路由中间件
 import middlewares from '../middlewares'
@@ -91,6 +92,16 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Login
+    },
+    {
+      path: '/Forget',
+      name: 'foget',
+      component: Forget
     }
   ]
 })
