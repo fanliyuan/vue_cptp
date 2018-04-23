@@ -2,7 +2,7 @@ class Option {
   constructor (data) {
     this.data = data
   }
-  getTabelOptions ({that}) {
+  getTabelOptions ({that, forbidFun, cancelForbid}) {
     let thead = [
       {
         xtype: 'links',
@@ -31,8 +31,18 @@ class Option {
             sessionStorage.setItem('productInfo', JSON.stringify(row))
             that.$router.push(`/product/editProduct/${row.productId}`)
           } else if (val.textProp === '冻结') {
-            // 调用冻结接口,从上面传入
-            console.log(row, '冻结')
+            that.$confirm(`是否冻结${row.productName[0].textProp} ?`)
+              .then(data => {
+                if (!data) throw new Error('取消冻结')
+                // 调用用冻结接口
+                forbidFun && forbidFun(row)
+              }).catch(err => {
+                if (err) {
+                  that.$message('取消冻结')
+                }
+              })
+          } else if (val.textProp === '已冻结') {
+            cancelForbid && cancelForbid(row)
           } else {
             console.log(row, '停用')
           }

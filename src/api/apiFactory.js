@@ -24,6 +24,10 @@ export default (module) => {
       // 加载全局参数
       params = apiUtils.loadGlobalParams(params, 'parameter')
 
+      // 这里全局加入加入token信息
+      if (params && localStorage && localStorage.token) {
+        params.token = localStorage.token
+      }
       return $ajax({
         method: item.method,
         url: `${config.apis.modules[module.moduleName].host}${config.apis.modules[module.moduleName].url || config.apis.defaultUrl}${item.url}${locationId}`,

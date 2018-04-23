@@ -77,6 +77,11 @@ export default {
         ]
       }
     ]
+    let forbidFun = (row) => {
+      // 调用冻结接口
+      console.log(row.productName[0].textProp)
+      this.$router.push('/product/productFobidden')
+    }
     return {
       selectSearchOption: temp,
       breadCrumbOption: {
@@ -95,7 +100,7 @@ export default {
         }
       ],
       searchResult: null,
-      tableOption: productListService(data).getTabelOptions({that: this}),
+      tableOption: productListService(data).getTabelOptions({that: this, forbidFun, cancelForbid}),
       pageInfo: {
         total: 11,
         pageSize: 10,

@@ -26,7 +26,7 @@ const module = {
     name: 'home', // 接口名称
     url: '/home' // 接口全路径
   }, {
-    // 检查会话
+    // 检查访问权限
     method: 'post', // 请求方式
     name: 'checkToken', // 接口名称
     url: '/checkToken' // 接口全路径

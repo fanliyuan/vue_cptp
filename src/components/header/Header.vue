@@ -46,11 +46,8 @@ export default {
   },
   methods: {
     logoutHandler () {
-      // this.$message({
-      //   type: 'success',
-      //   message: '退出'
-      // })
       this.$router.push('/login')
+      localStorage && localStorage.removeItem('token')
     },
     meHandler () {
       this.$router.push({name: 'me'})

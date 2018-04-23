@@ -2,7 +2,7 @@
   <div class="myselectsearch">
     <el-row :type="'flex'" :justify="'space-between'" class="my_component">
       <el-col :span="20">
-        <el-select v-for="select in options.select"   :key="select.index" v-model="select.value" @change="select.selectHandler" :class="select.className" class="my_select">
+        <el-select v-if="options.select" v-for="select in options.select"   :key="select.index" v-model="select.value" @change="select.selectHandler" :class="select.className" class="my_select">
           <el-option v-for="item in select.option" :key="item.index" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
