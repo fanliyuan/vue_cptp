@@ -22,6 +22,8 @@ import middlewares from '../middlewares'
 
 // 产品模板页面
 import productDetailLayout from '../pages/product/productDetailLayout'
+// 测试用的公共模板
+import AddUserPage from '@/pages/user/addUser.vue'
 // 模板布局页面
 const Layout = () => import('@/pages/layout.vue')
 // const productDetailLayout = () => import('@pages/product/productDetailLayout.vue')
@@ -102,6 +104,10 @@ const router = new Router({
       path: '/Forget',
       name: 'foget',
       component: Forget
+    },
+    {
+      path: '/user/addUser',
+      component: AddUserPage
     }
   ]
 })
