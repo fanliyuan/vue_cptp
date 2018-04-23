@@ -46,19 +46,23 @@ export default {
   },
   methods: {
     logoutHandler () {
-      this.$message({
-        type: 'success',
-        message: '退出'
-      })
+      // this.$message({
+      //   type: 'success',
+      //   message: '退出'
+      // })
+      this.$router.push('/login')
     },
     meHandler () {
-      // this.$router.push({name: 'me'})
+      this.$router.push({name: 'me'})
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+  .el-header{
+    background: none;
+  }
   .head_text{
     line-height: 95px;
     color: #283c4d !important;

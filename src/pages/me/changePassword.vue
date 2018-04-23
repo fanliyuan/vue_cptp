@@ -1,3 +1,10 @@
+/*
+ * @Author: ChouEric
+ * @Date: 2018-04-23 11:12:58
+ * @Last Modified by:   ChouEric
+ * @Last Modified time: 2018-04-23 11:12:58
+ */
+
 <template>
   <div>
     <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
@@ -12,7 +19,7 @@
         <el-input type="password" class="input" placeholder="请再次输入新登录密码" v-model="inputData.confirmPassword"></el-input>
       </el-form-item>
       <el-form-item class="box mt10">
-        <el-button type="primary" @click="submitHandler(inputRule)" :disabled="disabled">确认</el-button>
+        <el-button type="primary" @click="submitHandler(inputRule)" :disabled="disabledFlag">确认</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -75,15 +82,13 @@ export default {
           }
         ]
       },
-      disabled: true,
+      disabledFlag: true,
       oldPassword: false,
       newPassword: false,
       confirmPassword: false
     }
   },
   mounted () {
-    console.log(this.$refs)
-    // this.$refs.myinput.title = '我的输入框'
   },
   methods: {
     submitHandler (formName) {
@@ -95,8 +100,7 @@ export default {
     },
     validateHandler (val, item) {
       this[val] = item
-      console.log(this.oldPassword, this.newPassword, this.confirmPassword)
-      this.disabled = !(this.oldPassword && this.newPassword && this.confirmPassword)
+      this.disabledFlag = !(this.oldPassword && this.newPassword && this.confirmPassword)
     }
   }
 }
@@ -145,6 +149,10 @@ export default {
     }
     .mt10{
       margin-top: 20px;
+      text-align: center
+    }
+    .el-button{
+      padding: 12px 100px;
     }
   }
 </style>

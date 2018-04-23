@@ -19,27 +19,27 @@
         <router-link :to="'/login'" class="login">
           返回登录
         </router-link>
-        <div class="input_body">
-          <div class="input_row">
-            <el-input placeholder="请输入登录账号"></el-input>
-          </div>
-          <div class="input_row">
-            <el-input placeholder="请输入验证码" class="input_code"></el-input>
+        <el-form class="input_body" ref="myInput" :rules="inputRule" :model="inputData" @validate="validateHandler">
+          <el-form-item prop="account" class="input_row">
+            <el-input placeholder="请输入登录账号" v-model="inputData.account"></el-input>
+          </el-form-item>
+          <el-form-item prop="code" class="input_row">
+            <el-input placeholder="请输入验证码" class="input_code" v-model="inputData.code"></el-input>
             <span class="input_button">获取验证码</span>
-          </div>
-         <div class="input_row">
-            <el-input placeholder="请输入新密码"></el-input>
-          </div>
-         <div class="input_row">
-            <el-input placeholder="请再次输入新密码"></el-input>
-          </div>
-          <div class="message" :title="message">
+          </el-form-item>
+         <el-form-item prop="newPassword" class="input_row">
+            <el-input type="password" placeholder="请输入新密码" v-model="inputData.newPassword"></el-input>
+          </el-form-item>
+         <el-form-item prop="confirmPassword" class="input_row">
+            <el-input type="password" placeholder="请再次输入新密码" v-model="inputData.confirmPassword"></el-input>
+          </el-form-item>
+          <el-form-item prop="" class="message" :title="message">
             {{message}}
-          </div>
-          <div class="input_row">
-            <el-button class="button">立即登录</el-button>
-          </div>
-        </div>
+          </el-form-item>
+          <el-form-item class="input_row">
+            <el-button type="primary" :disabled="disabledFlag" @click="submitHandler">确认</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </el-main>
   </el-container>
@@ -47,8 +47,71 @@
 <script>
 export default {
   data () {
+    let checkPassword = (rule, val, cb) => {
+      if (val === this.inputData.newPassword) {
+        cb()
+      } else {
+        cb(new Error('两次输入密码不一致'))
+      }
+    }
     return {
-      message: ''
+      message: '',
+      disabledFlag: true,
+      inputData: {
+        account: '',
+        code: '',
+        newPassword: '',
+        confirmPassword: ''
+      },
+      inputRule: {
+        account: [
+          {
+            required: true,
+            message: '账号不能为空'
+          }
+        ],
+        code: [
+          {
+            required: true,
+            message: '验证码不能为空'
+          }
+        ],
+        newPassword: [
+          {
+            required: true,
+            min: 8,
+            max: 16,
+            message: '密码为8-16个字符'
+          }
+        ],
+        confirmPassword: [
+          {
+            validator: checkPassword,
+            trigger: ['blur', 'change']
+          }
+        ]
+      },
+      account: false,
+      code: false,
+      newPassword: false,
+      confirmPassword: false
+    }
+  },
+  methods: {
+    submitHandler () {
+      this.$refs.myInput.validate().then(data => {
+        if (data) {
+          // 这里调用接口
+        } else {
+          throw new Error('表单验证未通过')
+        }
+      }).catch(err => {
+        if (err) console.log(err.message)
+      })
+    },
+    validateHandler (item, res) {
+      this[item] = res
+      this.disabledFlag = !(this.account && this.code && this.newPassword && this.confirmPassword)
     }
   }
 }
@@ -62,6 +125,9 @@ export default {
     background: url('/static/img/login_logo.png');
     width: 181px;
     height: 53px;
+  }
+  .el-header{
+    background: none;
   }
   .head{
     text-align: right;
@@ -123,6 +189,9 @@ export default {
         color: white;
         background: #409efb;
         padding: 0;
+      }
+      .el-button{
+        padding: 12px 150px;
       }
       .message{
         margin-bottom: 30px;

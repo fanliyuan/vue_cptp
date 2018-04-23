@@ -1,3 +1,9 @@
+/*
+ * @Author: ChouEric
+ * @Date: 2018-04-23 11:14:45
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-04-23 11:19:30
+ */
 <template>
   <el-container>
     <el-header>
@@ -12,42 +18,114 @@
       </el-row>
     </el-header>
     <el-main>
-      <div class="input mylogininput">
+      <el-form class="input mylogininput" ref="myInput" :model="inputData" :rules="inputRule" @validate="validateHandler">
         <div class="input_header">
           管理员登录
         </div>
-        <div class="input_body">
-          <div class="input_row">
-            <el-input placeholder="请输入登录账号"></el-input>
-          </div>
-          <div class="input_row">
-            <el-input placeholder="请输入登录密码"></el-input>
-          </div>
-          <div class="input_row code">
-            <el-input placeholder="请输入验证码" class="input_code"></el-input>
+        <el-form-item class="input_body">
+          <el-form-item class="input_row" prop="userName">
+            <el-input v-model="inputData.userName" placeholder="请输入登录账号"></el-input>
+          </el-form-item>
+          <el-form-item class="input_row" prop="password">
+            <el-input v-model="inputData.password" placeholder="请输入登录密码"></el-input>
+          </el-form-item>
+          <el-form-item class="input_row code" prop="code">
+            <el-input v-model="inputData.code" placeholder="请输入验证码" class="input_code"></el-input>
             <img class="input_image" src="" alt="无法登录">
             <span class="input_refresh"></span>
-          </div>
-          <div class="input_row">
-            <el-checkbox>记住账号</el-checkbox>
+          </el-form-item>
+          <el-form-item class="input_row">
+            <el-checkbox v-model="rememberFlag">记住账号</el-checkbox>
             <router-link :to="'/forget'" class="forget">忘记密码?</router-link>
-          </div>
-          <div class="message" :title="message">
+          </el-form-item>
+          <el-form-item class="message" :title="message">
             {{message}}
-          </div>
-          <div class="input_row">
-            <el-button class="button">立即登录</el-button>
-          </div>
-        </div>
-      </div>
+          </el-form-item>
+          <el-form-item class="input_row">
+            <el-button type="primary" :disabled="disabledFlag" @click="submitHandler">立即登录</el-button>
+          </el-form-item>
+        </el-form-item>
+      </el-form>
     </el-main>
   </el-container>
 </template>
 <script>
 export default {
   data () {
+    let codeCheck = (rule, val, cb) => {
+      // 这里验证后台的验证码,用来比对
+      if (val !== '1234') {
+        cb(new Error('验证码不正确'))
+      } else {
+        cb()
+      }
+    }
     return {
-      message: ''
+      message: '',
+      inputData: {
+        userName: '',
+        password: '',
+        code: ''
+      },
+      disabledFlag: true,
+      inputRule: {
+        userName: [
+          {
+            required: true,
+            message: '账号不能为空'
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: '密码不能为空'
+          }
+        ],
+        code: [
+          {
+            validator: codeCheck,
+            trigger: ['change', 'blur']
+          }
+        ]
+      },
+      userName: false,
+      password: false,
+      code: false,
+      rememberFlag: false
+    }
+  },
+  methods: {
+    validateHandler (item, res) {
+      this[item] = res
+      this.disabledFlag = !(this.userName && this.password && this.code)
+    },
+    submitHandler () {
+      this.$refs.myInput.validate().then(data => {
+        if (data) {
+          // 这里调用接口
+        } else {
+          throw new Error('表单验证未通过')
+        }
+      }).catch(err => {
+        if (err) console.log(err.message)
+      })
+    }
+  },
+  watch: {
+    rememberFlag () {
+      if (this.rememberFlag) {
+        localStorage.setItem('userName', this.inputData.userName)
+      } else {
+        localStorage.removeItem('userName')
+      }
+    }
+  },
+  mounted () {
+    if (localStorage && localStorage.userName) {
+      this.inputData.userName = localStorage.userName
+      this.rememberFlag = true
+    } else {
+      this.rememberFlag = false
     }
   }
 }
@@ -61,6 +139,9 @@ export default {
     background: url('/static/img/login_logo.png');
     width: 181px;
     height: 53px;
+  }
+  .el-header{
+    background: none;
   }
   .head{
     text-align: right;
@@ -124,19 +205,13 @@ export default {
         cursor: pointer;
         font-size: 14px;
       }
-      .button{
-        height: 40px;
-        line-height: 40px;
-        width: 329px;
-        color: white;
-        background: #409efb;
-        padding: 0;
+      .el-button{
+        padding: 12px 136px !important;
       }
       .message{
-        margin-bottom: 30px;
         color: tomato;
         font-size: 14px;
-        height: 20px;
+        height: 40px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
