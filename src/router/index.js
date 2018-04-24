@@ -16,17 +16,13 @@ import project from './project/project'
 
 import Login from '../pages/login/login.vue'
 import Forget from '../pages/login/forget.vue'
-import ProductDetailPage from '../pages/product/productDetail.vue'
 // 路由中间件
 import middlewares from '../middlewares'
 
-// 产品模板页面
-import productDetailLayout from '../pages/product/productDetailLayout'
-// 测试用的公共模板
+// 重写模板布局页
 import LayoutWithBreadCrumb from '../pages/layoutWithBreadCrumb'
-import AddUserPage from '@/pages/user/addUser.vue'
 // 模板布局页面
-const Layout = () => import('@/pages/layout.vue')
+// const Layout = () => import('@/pages/layout.vue')
 // const productDetailLayout = () => import('@pages/product/productDetailLayout.vue')
 
 Vue.use(Router)
@@ -36,25 +32,12 @@ const router = new Router({
     {
       path: '/',
       name: 'home-index',
-      component: Layout,
       redirect: '/user'
-    },
-    {
-      path: '/product/detail',
-      name: 'product-detail',
-      component: productDetailLayout,
-      children: [
-        {
-          path: ':productId',
-          name: 'detail',
-          component: ProductDetailPage
-        }
-      ]
     },
     {
       path: '/product',
       name: 'product-index',
-      component: Layout,
+      component: LayoutWithBreadCrumb,
       children: [
         ...product
       ]
@@ -62,7 +45,7 @@ const router = new Router({
     {
       path: '/user',
       name: 'user-index',
-      component: Layout,
+      component: LayoutWithBreadCrumb,
       children: [
         ...user
       ]
@@ -70,7 +53,7 @@ const router = new Router({
     {
       path: '/auth',
       name: 'auth-index',
-      component: Layout,
+      component: LayoutWithBreadCrumb,
       children: [
         ...auth
       ]
@@ -78,7 +61,7 @@ const router = new Router({
     {
       path: '/me',
       name: 'me-index',
-      component: Layout,
+      component: LayoutWithBreadCrumb,
       children: [
         ...me
       ]
@@ -86,7 +69,7 @@ const router = new Router({
     {
       path: '/project',
       name: 'project-index',
-      component: Layout,
+      component: LayoutWithBreadCrumb,
       children: [
         ...project
       ]
@@ -105,16 +88,6 @@ const router = new Router({
       path: '/Forget',
       name: 'foget',
       component: Forget
-    },
-    {
-      path: '/user/addUser',
-      component: LayoutWithBreadCrumb,
-      children: [
-        {
-          path: '',
-          component: AddUserPage
-        }
-      ]
     }
   ]
 })

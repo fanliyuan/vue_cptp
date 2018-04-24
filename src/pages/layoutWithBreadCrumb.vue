@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-24 11:04:23
+ * @Last Modified time: 2018-04-24 11:30:48
 */
 
 <template>
@@ -15,14 +15,14 @@
           管理员后台
         </span>
       </div>
-      <BreadCrumb :options="options.breadCrumbOption" class="bread_crumb"/>
-      <RightButton :options="options.rightButtonOption" class="right_button"/>
+      <BreadCrumb v-if="options.breadCrumbOption" :options="options.breadCrumbOption" class="bread_crumb"/>
+      <RightButton v-if="options.rightButtonOption" :options="options.rightButtonOption" class="right_button"/>
     </nav>
     <el-container style="margin-top:0;margin-bottom:0;height: auto">
       <el-aside style="width:290px">
         <LeftBar :options="leftBarOption"></LeftBar>
       </el-aside>
-      <router-view @data="dataFromChild"/>
+      <router-view @data="dataFromChild" class="router_view"/>
     </el-container>
   </el-container>
 </template>
@@ -149,6 +149,15 @@ export default {
       right: 35px;
       top: 8px;
     }
+  }
+  .router_view{
+    overflow: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%
   }
 }
 </style>

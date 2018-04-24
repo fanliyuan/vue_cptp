@@ -1,6 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
     <div class="myinput myheight">
       <div class="box">
         <div class="label">项目名称</div>
@@ -45,12 +44,8 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 import editProjectService from './service/editProjectService'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     return {
       breadCrumbOption: {},
@@ -78,6 +73,7 @@ export default {
     } else {
       this.breadCrumbOption = editProjectService().getBreadCrumbOption()
     }
+    this.resetOption()
   },
   watch: {
     $route () {
@@ -86,6 +82,7 @@ export default {
       } else {
         this.breadCrumbOption = editProjectService().getBreadCrumbOption()
       }
+      this.resetOption()
     }
   },
   methods: {
@@ -104,6 +101,12 @@ export default {
       // console.log('添加产品')
       this.showInfo.firstShow = true
       // 接下来需要获取类别
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: this.rightButtonOption
+      })
     }
   }
 }

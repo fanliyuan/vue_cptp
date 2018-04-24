@@ -1,7 +1,5 @@
 <template>
   <div>
-    <bread-crumb :options="breadCrumbOptions"  class="mybreadcrumb" />
-    <RightButton :options="rightButtonOptions"/>
     <el-dialog :visible.sync="addPositionClass" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">职位类型</span>
@@ -33,15 +31,11 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
-import RightButton from '../../components/rightbutton/RightButton'
 import Tabel from '../../components/table/Table'
 import editPositionClassService from './service/editPositionClassService'
 export default {
   components: {
-    BreadCrumb,
-    Tabel,
-    RightButton
+    Tabel
   },
   data () {
     let vm = this
@@ -111,7 +105,16 @@ export default {
       this.pageInfo.pageNum = val
       console.log(this.pageInfo)
       // 调用接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOptions,
+        rightButtonOption: this.rightButtonOptions
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

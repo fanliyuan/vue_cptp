@@ -13,6 +13,7 @@ import EditTagPage from '../../pages/product/editTag.vue'
 // import ProductSearchResultPage from '../../pages/product/productSearchResult.vue'
 import MarketPositionPage from '../../pages/product/marketPosition.vue'
 import ProductForbiddenPage from '../../pages/product/productForbidden.vue'
+import ProductDetailPage from '../../pages/product/productDetail'
 
 export default [
   {
@@ -55,5 +56,9 @@ export default [
     path: 'productFobidden',
     name: 'productForbidden',
     component: ProductForbiddenPage
+  },
+  {
+    path: 'detail/:productId',
+    component: ProductDetailPage
   }
 ]

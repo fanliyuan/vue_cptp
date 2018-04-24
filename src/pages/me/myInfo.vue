@@ -1,6 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
     <div class="myinput">
       <div class="box">
         <div class="label">邮箱</div>
@@ -24,12 +23,8 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 import meService from './service/meService'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     return {
       breadCrumbOption: meService().getBreadCrumbOption(),
@@ -45,10 +40,17 @@ export default {
         role: '超级管理员',
         mobile: '12312345678'
       }
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: null
+      })
     }
   },
   mounted () {
     this.getUserInfo()
+    this.resetOption()
   }
 }
 </script>

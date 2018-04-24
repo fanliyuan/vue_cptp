@@ -1,6 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOptions" class="mybreadcrumb" />
     <div class="myinput">
       <div class="box">
         <div class="label">用户名</div>
@@ -46,11 +45,7 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     return {
       breadCrumbOptions: {bread: [{label: '权限管理', path: '/auth'}, {label: '编辑权限'}]},
@@ -59,8 +54,17 @@ export default {
       }
     }
   },
+  methods: {
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOptions,
+        rightButtonOption: null
+      })
+    }
+  },
   mounted () {
     this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
+    this.resetOption()
   }
 }
 </script>

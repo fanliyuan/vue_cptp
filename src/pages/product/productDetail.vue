@@ -255,13 +255,36 @@ export default {
     Table
   },
   data () {
+    let breadcrumbOption = {
+      bread: [
+        {
+          label: '产品管理',
+          path: '/product'
+        },
+        {
+          label: '产品详细页'
+        }
+      ]
+    }
     return {
       productInfo: {},
       productId: 1,
       fileInfo: {},
       personTD: productDetailService().getTableOption(),
-      totalNum: 2
+      totalNum: 2,
+      breadcrumbOption
     }
+  },
+  methods: {
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadcrumbOption,
+        rightButtonOption: null
+      })
+    }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

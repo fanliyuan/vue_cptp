@@ -1,7 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
-    <RightButton :options="rightButtonOption" />
     <SelectSearch :options="selectSearchOption" />
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="tableOption"/>
@@ -9,15 +7,11 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
-import RightButton from '../../components/rightbutton/RightButton'
 import SelectSearch from '../../components/select/SelectSearch'
 import Table from '../../components/table/Table'
 import projectListService from './service/projectListService'
 export default {
   components: {
-    BreadCrumb,
-    RightButton,
     SelectSearch,
     Table
   },
@@ -59,6 +53,7 @@ export default {
           }
         ]
       }
+      this.resetOption()
     }
   },
   methods: {
@@ -66,7 +61,16 @@ export default {
       this.pageInfo.pageNum = val
       console.log(this.pageInfo)
       // 接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: this.rightButtonOption
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

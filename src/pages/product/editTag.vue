@@ -1,7 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb"/>
-    <RightButton :options="rightButtonOption" class="myrightbutton"/>
     <Table :options="tableOption" />
     <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
     <el-dialog :visible.sync="visibility" class="mydialog" :width="'30%'">
@@ -25,14 +23,10 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
-import RightButton from '../../components/rightbutton/RightButton'
 import Table from '../../components/table/Table'
 import editTagService from './service/editTagService'
 export default {
   components: {
-    BreadCrumb,
-    RightButton,
     Table
   },
   data () {
@@ -78,7 +72,16 @@ export default {
       this.pageInfo.pageNum = val
       console.log(this.pageInfo)
       // 接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: this.rightButtonOption
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

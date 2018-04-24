@@ -1,6 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOptions" class="mybreadcrumb"/>
     <div class="myinput">
       <div class="box">
         <div class="label">用户名</div>
@@ -38,12 +37,8 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 import editUser from './service/editUserService'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     return {
       breadCrumbOptions: editUser().getOptions().breadCrumbOptions,
@@ -64,8 +59,10 @@ export default {
       if (this.$route.params && this.$route.params.userId) {
         // 这里调用接口,赋值数据
         this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户修改'}]}
+        this.resetOption()
       } else {
         this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
+        this.resetOption()
       }
     }
   },
@@ -78,11 +75,18 @@ export default {
     } else {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
     }
+    this.resetOption()
   },
   methods: {
     submitHandler () {
       // 这里调用修改或者添加接口
       console.log('修改提交')
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOptions,
+        rightButtonOption: null
+      })
     }
   }
 }

@@ -1,13 +1,12 @@
 /*
  * @Author: ChouEric
  * @Date: 2018-04-23 11:12:58
- * @Last Modified by:   ChouEric
- * @Last Modified time: 2018-04-23 11:12:58
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-04-24 13:58:53
  */
 
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
     <el-form class="myinput" ref="myinput" :model="inputData" :rules="inputRule" status-icon @validate="validateHandler">
       <el-form-item class="box" prop="oldPassword">
         <el-input type="password" class="input" placeholder="请输入原登录密码" v-model="inputData.oldPassword"></el-input>
@@ -25,12 +24,8 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 import meService from './service/meService'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     let checkPassword = (rule, val, cb) => {
       if (val.trim().length < 8 || val.trim().length > 16) {
@@ -89,6 +84,7 @@ export default {
     }
   },
   mounted () {
+    this.resetOption()
   },
   methods: {
     submitHandler (formName) {
@@ -101,6 +97,12 @@ export default {
     validateHandler (val, item) {
       this[val] = item
       this.disabledFlag = !(this.oldPassword && this.newPassword && this.confirmPassword)
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: null
+      })
     }
   }
 }

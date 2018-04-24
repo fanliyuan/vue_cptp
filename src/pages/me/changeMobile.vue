@@ -2,12 +2,11 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:09:39
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-23 11:13:37
+ * @Last Modified time: 2018-04-24 13:58:54
  */
 
 <template>
   <div>
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
     <el-form class="myinput" ref="myInput" :rules="inputRule" :model="inputData" @validate="validateHandler">
       <el-form-item class="box" prop="oldMobile">
         <el-input class="input" v-model.number="inputData.oldMobile" placeholder="请输入原手机号"></el-input>
@@ -29,12 +28,8 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 import meService from './service/meService'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     let mobileCheck = (rule, val, cb) => {
       // 手机号正则
@@ -126,7 +121,16 @@ export default {
       }).catch(err => {
         if (err) console.log(err.message)
       })
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: null
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

@@ -1,9 +1,7 @@
 <template>
   <div>
     <SelectSearch :options="selectSearchOptions" />
-    <RightButton :options="rightButtonOptions" />
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
-    <BreadCrumb :options="breadcrumbOptions" class="mybreadcrumb"/>
     <Table :options="tableOptions"></Table>
     <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
   </div>
@@ -11,15 +9,11 @@
 <script>
 import Table from '../../components/table/Table'
 import userAuthListService from './service/userAuthListService'
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 import SelectSearch from '../../components/select/SelectSearch'
-import RightButton from '../../components/rightbutton/RightButton'
 export default {
   components: {
     Table,
-    SelectSearch,
-    RightButton,
-    BreadCrumb
+    SelectSearch
   },
   data () {
     // 展示数据
@@ -74,13 +68,23 @@ export default {
         }
         this.searchResult = null
       }
+      this.resetOption()
     }
   },
   methods: {
     pageHandler (val) {
       this.pageInfo.pageNum = val
       // 调用数据请求接口,带分页参数
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadcrumbOptions,
+        rightButtonOption: this.rightButtonOptions
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

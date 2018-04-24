@@ -64,11 +64,7 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
 export default {
-  components: {
-    BreadCrumb
-  },
   data () {
     return {
       breadCrumbOption: {},
@@ -103,6 +99,7 @@ export default {
           ]
         }
       }
+      this.resetOption()
     }
   },
   mounted () {
@@ -134,6 +131,7 @@ export default {
       }
     }
     this.productManagerList = this.loadProductManagerList()
+    this.resetOption()
   },
   methods: {
     querySearch (queryString, cb) {
@@ -161,6 +159,12 @@ export default {
     },
     submitHandler () {
       // 调用接口,新增编辑接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: this.rightButtonOption
+      })
     }
   }
 }

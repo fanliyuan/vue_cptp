@@ -1,7 +1,5 @@
 <template>
   <div>
-    <BreadCrumb :options="breadCrumOption" class="mybreadcrumb" />
-    <RightButton :options="rightButtonOptions" />
     <el-dialog :visible.sync="addRole" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">角色名称</span>
@@ -65,13 +63,7 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
-import RightButton from '../../components/rightbutton/RightButton'
 export default {
-  components: {
-    BreadCrumb,
-    RightButton
-  },
   data () {
     let vm = this
     return {
@@ -153,7 +145,16 @@ export default {
       this.pageInfo.pageNum = val
       console.log(this.pageInfo)
       // 调用接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumOption,
+        rightButtonOption: this.rightButtonOptions
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

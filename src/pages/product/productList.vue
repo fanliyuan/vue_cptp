@@ -7,8 +7,6 @@
 */
 <template>
   <div class="container">
-    <BreadCrumb :options="breadCrumbOption" class="mybreadcrumb" />
-    <RightButton :options="rightButtonOption" />
     <SelectSearch :options="selectSearchOption" class="select"/>
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="tableOption" />
@@ -16,16 +14,12 @@
   </div>
 </template>
 <script>
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
-import RightButton from '../../components/rightbutton/RightButton'
 import SelectSearch from '../../components/select/SelectSearch'
 import Table from '../../components/table/Table'
 import productListService from './service/productListService'
 export default {
   components: {
     SelectSearch,
-    BreadCrumb,
-    RightButton,
     Table
   },
   data () {
@@ -120,6 +114,7 @@ export default {
         this.breadCrumbOption = {bread: [{label: '产品列表', path: '/product'}]}
         this.searchResult = null
       }
+      this.resetOption()
     }
   },
   methods: {
@@ -127,7 +122,16 @@ export default {
       this.pageInfo.pageNum = val
       console.log(this.pageInfo)
       // 接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadCrumbOption,
+        rightButtonOption: this.rightButtonOption
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>

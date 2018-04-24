@@ -1,7 +1,5 @@
 <template>
   <div>
-    <bread-crumb class="mybreadcrumb" :options="breadcrumbOptions"/>
-    <RightButton :options="rightbuttonOptions" />
     <SelectSearch :options="selectSearchOptions"/>
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="TableOptions"></Table>
@@ -11,14 +9,10 @@
 <script>
 import Table from '../../components/table/Table'
 import userListService from './service/userListService'
-import BreadCrumb from '../../components/breadcrumb/BreadCrumb'
-import RightButton from '../../components/rightbutton/RightButton'
 import SelectSearch from '../../components/select/SelectSearch'
 export default {
   components: {
     Table,
-    BreadCrumb,
-    RightButton,
     SelectSearch
   },
   data () {
@@ -226,6 +220,7 @@ export default {
     $route () {
       if (this.$route.params && this.$route.params.keyword) {
         this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户搜索'}]}
+        this.resetOption()
         this.searchResult = {
           keyword: this.$route.params.keyword,
           total: 9
@@ -233,6 +228,7 @@ export default {
       } else {
         this.breadcrumbOptions = {bread: [{label: '用户列表', path: '/user'}]}
         this.searchResult = null
+        this.resetOption()
       }
     }
   },
@@ -240,7 +236,16 @@ export default {
     pageHandler (val) {
       this.pageInfo.pageNum = val
       // 重新调用数据请求接口
+    },
+    resetOption () {
+      this.$emit('data', {
+        breadCrumbOption: this.breadcrumbOptions,
+        rightButtonOption: this.rightbuttonOptions
+      })
     }
+  },
+  mounted () {
+    this.resetOption()
   }
 }
 </script>
