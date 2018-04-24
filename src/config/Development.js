@@ -20,13 +20,14 @@ export default {
       //   source: "cookie"
       // }]
       // },
-      {
-        type: 'parameter',
-        keys: [{
-          name: 'token', // 参数key
-          source: 'localStorage' // 值的来源
-        }]
-      }]
+      // {
+      //   type: 'parameter',
+      //   keys: [{
+      //     name: 'token', // 参数key
+      //     source: 'localStorage' // 值的来源
+      //   }]
+      // }
+    ]
   },
   apis: {
     // api接口url配置

@@ -172,7 +172,6 @@
           :align="item.align || 'center'"
           :label="item.label"
           :prop="item.prop"
-          :label-class-name="'label-class-name'"
           :render-header="item.renderHeader">
           <template slot-scope="scope">
             <a v-for="link in scope.row[item.prop]" :key="link.index" :class="item.linkClassName" :style="item.linkStyle" @click="item.OnClick(link, scope.row)">

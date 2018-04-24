@@ -2,7 +2,7 @@ class TabelOptions {
   constructor (data) {
     this.data = data
   }
-  getOptions ({that, editUser, enableUser, disableUser}) {
+  getOptions ({that, editUser, enableUser, disableUser, uploadUser}) {
     let thead = [
       {
         label: '用户名',
@@ -49,15 +49,14 @@ class TabelOptions {
             console.log(row, '停用')
           }
         },
-        width: '200px',
-        linkStyle: 'padding-left: 20px;'
+        linkStyle: 'display:inline-block; width: 50%;'
       }
     ]
     let rightbuttonOptions = [
       {
         label: '批量导入',
         fun () {
-          console.log('批量导入')
+          uploadUser && uploadUser()
         }
       },
       {

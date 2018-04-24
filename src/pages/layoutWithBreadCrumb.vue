@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-24 11:30:48
+ * @Last Modified time: 2018-04-24 16:04:38
 */
 
 <template>
@@ -38,6 +38,7 @@ export default {
     Header,
     LeftBar
   },
+  props: ['test'],
   data () {
     return {
       options: {

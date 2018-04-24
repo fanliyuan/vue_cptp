@@ -77,9 +77,9 @@ export default {
   .iconfont{
     font-size: 44px;
     vertical-align: middle;
-    .iconfontx{
-      font-size: 16px;
-    }
+  }
+  .iconfontx{
+    font-size: 16px;
   }
   .bold{
     .logout,i {

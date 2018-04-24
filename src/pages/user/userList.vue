@@ -10,6 +10,7 @@
 import Table from '../../components/table/Table'
 import userListService from './service/userListService'
 import SelectSearch from '../../components/select/SelectSearch'
+// import authAPIs from '../../api/auth/authAPIs'
 export default {
   components: {
     Table,
@@ -203,9 +204,13 @@ export default {
         }
       }
     }
+    let uploadUser = () => {
+      console.log('上传')
+      // authAPIs.login({id: 1111111})
+    }
     return {
       TableOptions: userListService(temp).getOptions({that: this}).tableOptions,
-      rightbuttonOptions: userListService(temp).getOptions({that: this}).rightbuttonOptions,
+      rightbuttonOptions: userListService(temp).getOptions({that: this, uploadUser}).rightbuttonOptions,
       breadcrumbOptions: {bread: [{label: '用户列表', path: '/user'}]},
       selectSearchOptions: selectSearchOptions,
       searchResult: null,
@@ -220,7 +225,6 @@ export default {
     $route () {
       if (this.$route.params && this.$route.params.keyword) {
         this.breadcrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户搜索'}]}
-        this.resetOption()
         this.searchResult = {
           keyword: this.$route.params.keyword,
           total: 9
@@ -228,8 +232,8 @@ export default {
       } else {
         this.breadcrumbOptions = {bread: [{label: '用户列表', path: '/user'}]}
         this.searchResult = null
-        this.resetOption()
       }
+      this.resetOption()
     }
   },
   methods: {
