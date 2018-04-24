@@ -11,7 +11,7 @@
     <div class="breadcrumb">
       <span class="manager_background"><i class="iconfont icon-houtai1" style="font-size:20px">&nbsp;</i>管理员后台</span>
     </div>
-    <el-container style="height:100%;">
+    <el-container style="height:auto;">
       <el-aside style="width:290px">
         <LeftBar :options="leftBarOption"></LeftBar>
       </el-aside>

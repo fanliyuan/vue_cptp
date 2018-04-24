@@ -16,6 +16,35 @@ export default {
     return {
       breadCrumbOptions: options.breadCrumbOptions
     }
+  },
+  mounted () {
+    this.$emit('data', {
+      breadCrumbOption: {
+        bread: [
+          {
+            label: '用户管理',
+            path: '/user'
+          },
+          {
+            label: '用户添加'
+          }
+        ]
+      },
+      rightButtonOption: [
+        {
+          label: '点击添加',
+          fun () {
+            console.log('点击了')
+          }
+        },
+        {
+          label: '点击添加',
+          fun () {
+            console.log('点击了')
+          }
+        }
+      ]
+    })
   }
 }
 </script>

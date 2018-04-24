@@ -40,3 +40,8 @@ body{
 .is-scrolling-none{
   background-color: rgb(240, 240, 240);
 }
+.clearfix::after, .clearfix::before{
+  display: table;
+  content: "";
+  clear: both;
+}

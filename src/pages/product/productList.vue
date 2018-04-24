@@ -100,7 +100,7 @@ export default {
         }
       ],
       searchResult: null,
-      tableOption: productListService(data).getTabelOptions({that: this, forbidFun, cancelForbid}),
+      tableOption: productListService(data).getTabelOptions({that: this, forbidFun}),
       pageInfo: {
         total: 11,
         pageSize: 10,

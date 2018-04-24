@@ -23,6 +23,7 @@ import middlewares from '../middlewares'
 // 产品模板页面
 import productDetailLayout from '../pages/product/productDetailLayout'
 // 测试用的公共模板
+import LayoutWithBreadCrumb from '../pages/layoutWithBreadCrumb'
 import AddUserPage from '@/pages/user/addUser.vue'
 // 模板布局页面
 const Layout = () => import('@/pages/layout.vue')
@@ -107,7 +108,13 @@ const router = new Router({
     },
     {
       path: '/user/addUser',
-      component: AddUserPage
+      component: LayoutWithBreadCrumb,
+      children: [
+        {
+          path: '',
+          component: AddUserPage
+        }
+      ]
     }
   ]
 })
