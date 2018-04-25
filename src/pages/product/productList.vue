@@ -17,6 +17,8 @@
 import SelectSearch from '../../components/select/SelectSearch'
 import Table from '../../components/table/Table'
 import productListService from './service/productListService'
+import dicAPIs from '../../api/dic/dicAPIs'
+import productAPIs from '../../api/product/productAPIs'
 export default {
   components: {
     SelectSearch,
@@ -31,24 +33,16 @@ export default {
           selectHandler (val) {
             console.log(val)
           },
-          value: '2',
+          value: '',
           className: 'my-select',
           option: [
-            {
-              label: '选择一',
-              value: '1'
-            },
-            {
-              label: '选择二',
-              value: '2'
-            }
           ]
         }
       ],
       search: {
         searchHandler (val) {
           if (!val) val = 'all'
-          vm.$router.push(`/product/search/${val}`)
+          this.$router.push(`/product/search/${val}`)
         }
       }
     }
@@ -59,7 +53,8 @@ export default {
             textProp: '产品1'
           }
         ],
-        productManager: '经理1',
+        pm: '经理1',
+        stateName: '预立项',
         productId: 1,
         operation: [
           {
@@ -99,7 +94,8 @@ export default {
         total: 11,
         pageSize: 10,
         pageNum: 1
-      }
+      },
+      status: 0
     }
   },
   watch: {
@@ -122,16 +118,85 @@ export default {
       this.pageInfo.pageNum = val
       console.log(this.pageInfo)
       // 接口
+      this.getProductList()
     },
     resetOption () {
       this.$emit('data', {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
       })
+    },
+    async getStateList () {
+      let { data } = await dicAPIs.selectInfoByValues({ URI: 'CHANPINZHUANGTAI' })
+      let option = []
+      try {
+        let temp = []
+        data.data.forEach((item, index) => {
+          temp[item.dictIndex] = item
+        })
+        temp.forEach(item => {
+          option.push({
+            label: item.dictDesc,
+            value: item.dictIndex
+          })
+        })
+        let vm = this
+        this.selectSearchOption = {
+          select: [
+            {
+              selectHandler (val) {
+                vm.status = val
+                vm.getProductList()
+              },
+              value: '全部状态',
+              className: 'my-select',
+              option
+            }
+          ],
+          search: {
+            searchHandler (val) {
+              if (!val) val = 'all'
+              this.$router.push(`/product/search/${val}`)
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getProductList () {
+      let { data } = await productAPIs.getProductList({
+        name: '',
+        pageNum: this.pageInfo.pageNum,
+        pageSize: this.pageInfo.pageSize,
+        pm: '',
+        status: this.status
+      })
+      let operation = [
+        {
+          textProp: '修改'
+        },
+        {
+          textProp: '冻结'
+        }
+      ]
+      let forbidFun = (row) => {
+        // 调用冻结接口
+        console.log(row.productName[0].textProp)
+        this.$router.push('/product/productFobidden')
+      }
+      this.pageInfo.total = data.data.totalCount
+      data.data.pageList.forEach(item => {
+        item.operation = operation
+        item.productName = [{textProp: item.productName}]
+      })
+      this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun})
     }
   },
   mounted () {
     this.resetOption()
+    this.getStateList()
+    this.getProductList()
   }
 }
 </script>

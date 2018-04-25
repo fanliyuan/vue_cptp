@@ -15,11 +15,11 @@ class Option {
       },
       {
         label: '产品经理',
-        prop: 'productManager'
+        prop: 'pm'
       },
       {
         label: '产品状态',
-        prop: 'productState'
+        prop: 'stateName'
       },
       {
         xtype: 'links',

@@ -1,8 +1,8 @@
 /*
  * @Author: ChouEric
  * @Date: 2018-04-23 17:13:04
- * @Last Modified by:   ChouEric
- * @Last Modified time: 2018-04-23 17:13:04
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-04-25 10:58:49
 */
 
 import apiBase from '../apiBase'
@@ -13,7 +13,7 @@ const module = {
   apis: [
     {
       method: 'post',
-      name: 'login-login',
+      name: 'login',
       url: '/login'
     },
     {
@@ -28,7 +28,7 @@ const module = {
     },
     // 检查token权限
     {
-      method: 'post',
+      method: 'get',
       name: 'checkToken',
       url: '/checkToken'
     }

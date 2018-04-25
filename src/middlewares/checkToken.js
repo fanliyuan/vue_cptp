@@ -5,17 +5,14 @@
  *
  * 描述 ：页面token验证
  */
-import authAPIs from '../api/auth/authAPIs'
+import userAPIs from '../api/user/userAPIs'
 export default (to, from, next) => {
   // console.log("userId", localStorage)
   if (localStorage.token) {
-    authAPIs.checkToken({
-      token: 'token'
-    }).then(({ data }) => {
-      // if(data.code == 10012) {
+    userAPIs.checkToken().then(({ data }) => {
+      // if (data.code === 10012) {
       //   next()
-      // }
-      // else{
+      // } else {
       //   next({
       //     path: '/login',
       //     query: { redUrl: to.fullPath }

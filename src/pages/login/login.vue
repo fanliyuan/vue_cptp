@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-23 11:19:30
+ * @Last Modified time: 2018-04-25 11:33:18
  */
 <template>
   <el-container>
@@ -27,10 +27,10 @@
             <el-input v-model="inputData.userName" placeholder="请输入登录账号"></el-input>
           </el-form-item>
           <el-form-item class="input_row" prop="password">
-            <el-input v-model="inputData.password" placeholder="请输入登录密码"></el-input>
+            <el-input type="password" v-model="inputData.password" placeholder="请输入登录密码"></el-input>
           </el-form-item>
           <el-form-item class="input_row code" prop="code">
-            <el-input v-model="inputData.code" placeholder="请输入验证码" class="input_code"></el-input>
+            <el-input v-model="inputData.code" placeholder="请输入验证码" class="input_code" @keypress.enter.native="submitHandler"></el-input>
             <img class="input_image" src="" alt="无法登录">
             <span class="input_refresh"></span>
           </el-form-item>
@@ -50,6 +50,7 @@
   </el-container>
 </template>
 <script>
+import userAPIs from '../../api/user/userAPIs'
 export default {
   data () {
     let codeCheck = (rule, val, cb) => {
@@ -99,10 +100,27 @@ export default {
       this[item] = res
       this.disabledFlag = !(this.userName && this.password && this.code)
     },
-    submitHandler () {
+    async submitHandler () {
       this.$refs.myInput.validate().then(data => {
         if (data) {
+          // 是否记住账号
+          if (this.rememberFlag) {
+            localStorage.setItem('rememberName', this.inputData.userName)
+          } else {
+            localStorage.removeItem('rememberName')
+          }
           // 这里调用接口
+          // let { data } = await userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password})
+          // console.log(data)
+          localStorage.removeItem('token')
+          userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password})
+            .then(data => {
+              if (data.data && data.data.code === 200) {
+                localStorage.setItem('token', data.data.data.userToken)
+                localStorage.setItem('userName', data.data.data.userName)
+                this.$router.push('/')
+              }
+            })
         } else {
           throw new Error('表单验证未通过')
         }
@@ -114,15 +132,15 @@ export default {
   watch: {
     rememberFlag () {
       if (this.rememberFlag) {
-        localStorage.setItem('userName', this.inputData.userName)
+        localStorage.setItem('rememberName', this.inputData.userName)
       } else {
-        localStorage.removeItem('userName')
+        localStorage.removeItem('rememberName')
       }
     }
   },
   mounted () {
-    if (localStorage && localStorage.userName) {
-      this.inputData.userName = localStorage.userName
+    if (localStorage && localStorage.rememberName) {
+      this.inputData.userName = localStorage.rememberName
       this.rememberFlag = true
     } else {
       this.rememberFlag = false

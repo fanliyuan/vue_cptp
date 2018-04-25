@@ -10,7 +10,7 @@
 import Table from '../../components/table/Table'
 import userListService from './service/userListService'
 import SelectSearch from '../../components/select/SelectSearch'
-// import authAPIs from '../../api/auth/authAPIs'
+import userAPIs from '../../api/user/userAPIs'
 export default {
   components: {
     Table,
@@ -206,7 +206,8 @@ export default {
     }
     let uploadUser = () => {
       console.log('上传')
-      // authAPIs.login({id: 1111111})
+      localStorage.removeItem('token')
+      userAPIs.login({userName: 'aad', userPassword: '123youe'})
     }
     return {
       TableOptions: userListService(temp).getOptions({that: this}).tableOptions,

@@ -34,6 +34,7 @@
   </el-header>
 </template>
 <script>
+import userAPIs from '../../api/user/userAPIs'
 export default {
   props: ['menuState'],
   name: 'HeaderBar',
@@ -43,14 +44,31 @@ export default {
     }
   },
   mounted: function () {
+    this.getUserName()
   },
   methods: {
     logoutHandler () {
+      if (localStorage && localStorage.token) {
+        userAPIs.logout().then(data => {
+          if (data.data && data.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '退出成功'
+            })
+          }
+        })
+      }
       this.$router.push('/login')
       localStorage && localStorage.removeItem('token')
+      localStorage && localStorage.removeItem('userName')
     },
     meHandler () {
       this.$router.push({name: 'me'})
+    },
+    getUserName () {
+      if (localStorage && localStorage.getItem('userName')) {
+        this.userName = localStorage.getItem('userName')
+      }
     }
   }
 }
