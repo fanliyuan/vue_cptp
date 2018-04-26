@@ -1,7 +1,10 @@
 /*
-注意: 此页面不同于其他的所有页面,因为内容溢出的原因,面包屑导航不能写在这个页面,
-所以另外创建了一个模板(productDetailLayout.vue),面包屑写在了这个模板中,同时也修改了路由
- */
+ * @Author: ChouEric
+ * @Date: 2018-04-26 16:53:45
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-04-26 17:02:57
+*/
+
 <template>
   <div class="main">
     <div class="padding border">
@@ -250,6 +253,7 @@
 <script>
 import productDetailService from './service/productDetailService'
 import Table from '../../components/table/Table'
+import productAPIs from '../../api/product/productAPIs'
 export default {
   components: {
     Table
@@ -281,10 +285,38 @@ export default {
         breadCrumbOption: this.breadcrumbOption,
         rightButtonOption: null
       })
+    },
+    async loadAll () {
+      let { data } = await productAPIs.getProductById({productId: this.productId})
+      try {
+        if (data && data.code === 200) {
+          this.productInfo = data.data
+        }
+      } catch (error) {
+      }
+    },
+    timeFormat (time) {
+      let nowYear = new Date().getFullYear()
+      let timeFormat = +this.$moment(time, 'x').format('L').replace(/\//g,'').substr(0, 4)
+      if (nowYear > timeFormat) {
+        return this.$moment(time, 'x').format('ll')
+      } else {
+        let date = +this.$moment(time, 'x').format('L').replace(/\//g,'')
+        let now = +this.$moment().format('L').replace(/\//g,'')
+        if (date === now) {
+          return this.$moment(time, 'x').format('lll').substr(10)
+        } else if(date + 1 === now) {
+          return '昨天' + this.$moment(time, 'x').format('lll').substr(10)
+        } else {
+          return this.$moment(time, 'x').format('ll').substr(5)
+        }
+      }
     }
   },
   mounted () {
+    this.productId = this.$route.params.productId
     this.resetOption()
+    this.loadAll()
   }
 }
 </script>

@@ -23,6 +23,6 @@ export default (to, from, next) => {
   } else {
     // console.log(`需要鉴权`, to.fullPath)
     checkToken(to, from, next)
-    next()
+    // next()
   }
 }

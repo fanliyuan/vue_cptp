@@ -1,10 +1,10 @@
-/**
-* 作者 ：食草狂魔
-*
-* 日期 ：2017/12/20
-*
-* 描述 ：产品列表页
+/*
+ * @Author: ChouEric
+ * @Date: 2018-04-26 16:53:40
+ * @Last Modified by:   ChouEric
+ * @Last Modified time: 2018-04-26 16:53:40
 */
+
 <template>
   <div class="container">
     <SelectSearch :options="selectSearchOption" class="select"/>
@@ -47,24 +47,24 @@ export default {
       }
     }
     let data = [
-      {
-        productName: [
-          {
-            textProp: '产品1'
-          }
-        ],
-        pm: '经理1',
-        stateName: '预立项',
-        productId: 1,
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '冻结'
-          }
-        ]
-      }
+      // {
+      //   productName: [
+      //     {
+      //       textProp: '产品1'
+      //     }
+      //   ],
+      //   pm: '经理1',
+      //   stateName: '预立项',
+      //   productId: 1,
+      //   operation: [
+      //     {
+      //       textProp: '修改'
+      //     },
+      //     {
+      //       textProp: '冻结'
+      //     }
+      //   ]
+      // }
     ]
     let forbidFun = (row) => {
       // 调用冻结接口
@@ -180,10 +180,22 @@ export default {
           textProp: '冻结'
         }
       ]
-      let forbidFun = (row) => {
+      let forbidFun = async (row) => {
         // 调用冻结接口
-        console.log(row.productName[0].textProp)
-        this.$router.push('/product/productFobidden')
+        // console.log(row.productName[0].textProp)
+        row.frozenStatus = '1'
+        let { data } = await productAPIs.updateProductFrozenStatus({id: row.prouctId, status: row.frozenStatus})
+        try {
+          console.log(data)
+          if (data && data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '冻结成功'
+            })
+            this.$router.push('/product/productFobidden')
+          }
+        } catch (error) {
+        }
       }
       this.pageInfo.total = data.data.totalCount
       data.data.pageList.forEach(item => {

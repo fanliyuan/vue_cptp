@@ -9,7 +9,7 @@ import userAPIs from '../api/user/userAPIs'
 export default (to, from, next) => {
   // console.log("userId", localStorage)
   if (localStorage.token) {
-    userAPIs.checkToken().then(({ data }) => {
+    userAPIs.checkToken({token: localStorage.token}).then(({ data }) => {
       // if (data.code === 10012) {
       //   next()
       // } else {
@@ -23,7 +23,6 @@ export default (to, from, next) => {
       next()
     })
   } else {
-    next(false)
     next({
       path: '/login',
       query: { redUrl: to.fullPath }

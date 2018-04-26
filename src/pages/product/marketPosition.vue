@@ -25,6 +25,7 @@
 <script>
 import Table from '../../components/table/Table'
 import marketPositionService from './service/marketPositionService'
+import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   components: {
     Table
@@ -66,7 +67,18 @@ export default {
     },
     editHandler () {
       // 调用编辑接口
-      console.log('编辑')
+      this.editMarketPositionInfo.dictDesc = this.editMarketPositionInfo.newValue
+      delete this.editMarketPositionInfo.oldValue
+      delete this.editMarketPositionInfo.newValue
+      dicAPIs.updateSystemDictVlue(this.editMarketPositionInfo).then(data => {
+        console.log(data)
+        if (data && data.code) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+        }
+      })
     },
     pageHandler (val) {
       this.pageInfo.pageNum = val
@@ -78,10 +90,48 @@ export default {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
       })
+    },
+    async loadAll () {
+      let { data } = await dicAPIs.selectInfoByValues({URI: 'SHICHANGDINGWEI'})
+      try {
+        data.data.forEach(item => {
+          item.operation = [
+            {
+              label: '修改'
+            },
+            {
+              label: '删除'
+            }
+          ]
+        })
+        let editFun = (row) => {
+          this.editVisibility = true
+          this.editMarketPositionInfo = {
+            oldValue: row.dictDesc,
+            newValue: '',
+            dictIndex: row.dictIndex,
+            id: row.id,
+            dictValue: row.dictValue,
+            dictType: row.dictType,
+            dictParent: row.dictParent
+          }
+        }
+        let delFun = (row) => {
+          this.$confirm(`是否删除 ${row.oldValue} 定位`).then(data => {
+          // 这里确认然后调用删除接口
+            if (data) console.log(row, '删除')
+          }).catch(err => {
+            if (err) this.$message('删除取消')
+          })
+        }
+        this.tableOption = marketPositionService().getTableOption({that: this, data: temp, delFun, editFun})
+      } catch (error) {
+      }
     }
   },
   mounted () {
     this.resetOption()
+    this.loadAll()
   }
 }
 </script>

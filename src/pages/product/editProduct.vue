@@ -1,10 +1,17 @@
+/*
+ * @Author: ChouEric
+ * @Date: 2018-04-26 16:53:31
+ * @Last Modified by:   ChouEric
+ * @Last Modified time: 2018-04-26 16:53:31
+*/
+
 <template>
   <div>
     <div class="myinput">
       <div class="box">
         <div style="margin-left:105px;">
           <!-- 这里该用循环,自动生成 -->
-          <el-radio-group v-model="productInfo.oneLevel" @change="dpsChange">
+          <el-radio-group v-model="productInfo.oneLevel" @change="oneLevelChange">
             <el-radio label="0">DAAS</el-radio>
             <el-radio label="1">PAAS</el-radio>
             <el-radio label="2">SAAS</el-radio>
@@ -13,15 +20,15 @@
       </div>
       <div class="box" v-if="twoFlag">
         <div class="label">所属类型</div>
-        <el-select v-model="productInfo.twoLevel" class="input">
+        <el-select v-model="productInfo.twoLevel" class="input" @change="twoLevelChange">
           <!-- 这里该用循环,自动生成 -->
-          <el-option v-for="item in twoList" :key="item.subId" :label="item.levelName" value="0"></el-option>
+          <el-option v-for="item in twoList" :key="item.subId" :label="item.levelName" :value="item.subId + ''"></el-option>
         </el-select>
       </div>
       <div class="box" v-if="threeFlag">
         <div class="label"></div>
-        <el-select v-model="productInfo.threeLevel" class="input">
-          <el-option v-for="item in threeList" :key="item.subId" :label="item.levelName" value="0"></el-option>
+        <el-select v-model="productInfo.threeLevel" class="input" @change="threeLevelChange">
+          <el-option v-for="item in threeList" :key="item.levelId" :label="item.levelName" :value="item.subId + ''"></el-option>
         </el-select>
       </div>
       <div class="box">
@@ -58,14 +65,14 @@ import projectAPIs from '../../api/project/projectAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', state: 0, productId: null, oneLevel: null, twoLevel: null, threeLevel: null },
+      productInfo: { productName: '', pm: '', state: 0, productId: null, oneLevel: null, twoLevel: '0', threeLevel: '0' },
       productManagerList: [],
       productLevelList: [],
       daasFlag: null,
       twoFlag: false,
-      twoList: null,
+      twoList: [],
       threeFlag: false,
-      threeList: null
+      threeList: []
     }
   },
   watch: {
@@ -96,11 +103,11 @@ export default {
         }
       }
       this.resetOption()
-    },
-    productInfo () {
-      this.levelDisplay()
-      console.log(this.productInfo)
     }
+    // productInfo () {
+    //   this.levelDisplay()
+    //   console.log(this.productInfo)
+    // }
   },
   mounted () {
     if (this.$route.params && this.$route.params.productId) {
@@ -117,6 +124,8 @@ export default {
       }
       // 这里是编辑需要初始值
       let productInfo = JSON.parse(sessionStorage.getItem('productInfo'))
+      // 预先加载分类表格
+      this.getTwoList(productInfo, this.getThreeList)
       for (let key in productInfo) {
         if (key === 'productName') {
           this.productInfo[key] = productInfo[key][0].textProp
@@ -124,7 +133,7 @@ export default {
           this.productInfo[key] = productInfo[key] + ''
         }
       }
-      this.getProdutLevelInfo()
+      this.levelDisplay()
     } else {
       this.breadCrumbOption = {
         bread: [
@@ -205,6 +214,34 @@ export default {
         })
       } else {
         // 这里调用新增接口
+        let params = {
+          marketTarget: this.productInfo.marketTarget,
+          name: this.productInfo.productName,
+          oneLevel: this.productInfo.oneLevel - 0,
+          twoLevel: this.productInfo.twoLevel - 0,
+          threeLevel: this.productInfo.threeLevel - 0,
+          pm: this.productInfo.pm,
+          tag: this.productInfo.tag,
+          status: this.productInfo.state - 0,
+          stateName: this.productInfo.stateName
+        }
+        productAPIs.addProduct(params).then(data => {
+          if (data && data.data && data.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: data.data.message
+            })
+          } else {
+            throw new Error(data.data.message)
+          }
+        }).catch(err => {
+          if (err) {
+            this.$message({
+              type: 'error',
+              message: err.message
+            })
+          }
+        })
       }
     },
     resetOption () {
@@ -213,39 +250,19 @@ export default {
         rightButtonOption: this.rightButtonOption
       })
     },
-    async getProdutLevelInfo () {
-      let { data } = await projectAPIs.getProdutLevelList({parentId: this.productInfo.oneLevel})
-      try {
-        if (this.productInfo.oneLevel === '1') {
-          this.twoList = data.data
-        } else if (this.productInfo.oneLevel === '2') {
-          let twoList = []
-          let threeList = []
-          data.data.forEach(item => {
-            if (!item.children) {
-              twoList.push(item)
-            } else {
-              threeList = item.children
-            }
-          })
-          this.twoList = twoList
-          this.threeList = threeList
-        } else {
-          console.log(data, 1111)
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
+    // 判断类型框是否显示
     levelDisplay () {
       switch (this.productInfo.oneLevel) {
         case '0':
           this.twoFlag = false
           this.threeFlag = false
+          this.productInfo.twoLevel = '0'
+          this.productInfo.threeLevel = '0'
           break
         case '1':
           this.twoFlag = true
           this.threeFlag = false
+          this.productInfo.threeLevel = '0'
           break
         case '2':
           this.twoFlag = true
@@ -253,10 +270,89 @@ export default {
           break
       }
     },
-    dpsChange (val) {
+    oneLevelChange (val) {
       this.productInfo.oneLevel = val
       this.levelDisplay()
-      this.getProdutLevelInfo()
+      if (val === '2') {
+        this.getTwoList({}, this.getThreeList)
+      } else {
+        this.getTwoList()
+      }
+      this.productInfo.twoLevel = '0'
+    },
+    twoLevelChange (val) {
+      this.productInfo.twoLevel = val
+      this.getThreeList()
+      this.productInfo.threeLevel = '0'
+    },
+    threeLevelChange (val) {
+    },
+    async getTwoList (productInfo = {}, cb) {
+      if (productInfo.twoLevel !== undefined) {
+        let { data } = await projectAPIs.getProdutLevelList({parentId: productInfo.oneLevel - 0})
+        try {
+          this.twoList = data.data
+          cb && cb(productInfo)
+        } catch (error) {
+        }
+      } else {
+        console.log('getTwoList ELse')
+        let { data } = await projectAPIs.getProdutLevelList({parentId: this.productInfo.oneLevel - 0})
+        try {
+          this.twoList = data.data
+          cb && cb(productInfo)
+        } catch (error) {
+        }
+      }
+    },
+    async getThreeList (productInfo = {}) {
+      if (productInfo.threeLevel !== undefined) {
+        console.log('进入有初始值')
+        let parentId
+        this.twoList.some(item => {
+          if (item.subId + '' === productInfo.twoLevel + '') {
+            parentId = item.levelId
+            return true
+          }
+        })
+        let { data } = await projectAPIs.getProdutLevelList({parentId})
+        try {
+          this.threeList = data.data
+          if (data.data.length === 0) {
+            this.productInfo.threeLevel = '0'
+            this.threeList = [
+              {
+                levelName: '暂无',
+                subId: '0'
+              }
+            ]
+          }
+        } catch (error) {
+        }
+      } else {
+        console.log('进入无初始值')
+        let parentId
+        this.twoList.some(item => {
+          if (item.subId + '' === this.productInfo.twoLevel) {
+            parentId = item.levelId
+            return true
+          }
+        })
+        let { data } = await projectAPIs.getProdutLevelList({parentId})
+        try {
+          this.threeList = data.data
+          if (data.data.length === 0) {
+            this.productInfo.threeLevel = '0'
+            this.threeList = [
+              {
+                levelName: '暂无',
+                subId: '0'
+              }
+            ]
+          }
+        } catch (error) {
+        }
+      }
     }
   }
 }

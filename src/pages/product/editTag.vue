@@ -25,6 +25,7 @@
 <script>
 import Table from '../../components/table/Table'
 import editTagService from './service/editTagService'
+import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   components: {
     Table
@@ -33,11 +34,11 @@ export default {
     let editFun = (row) => {
       this.editVisibility = true
       this.editTagInfo = {
-        oldValue: row.oldValue
+        oldValue: row.dictDesc
       }
     }
     let delFun = (row) => {
-      this.$confirm(`是否删除 ${row.oldValue} 标签`).then(data => {
+      this.$confirm(`是否删除 ${row.dictDesc} 标签`).then(data => {
       // 这里确认然后调用删除接口
         if (data) console.log(row, '删除')
       }).catch(err => {
@@ -66,7 +67,18 @@ export default {
     },
     editHandler () {
       // 调用编辑接口
-      console.log('编辑')
+      this.editTagInfo.dictDesc = this.editTagInfo.newValue
+      delete this.editTagInfo.newValue
+      delete this.editTagInfo.oldValue
+      dicAPIs.updateSystemDictVlue(this.editTagInfo).then(data => {
+        console.log(data)
+        if (data && data.code) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+        }
+      })
     },
     pageHandler (val) {
       this.pageInfo.pageNum = val
@@ -78,10 +90,58 @@ export default {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
       })
+    },
+    async loadAll () {
+      let { data } = await dicAPIs.selectInfoByValues({URI: 'CHANPINBIAOQIAN'})
+      try {
+        data.data.forEach(item => {
+          item.operation = [
+            {
+              textProp: '修改'
+            },
+            {
+              textProp: '删除'
+            }
+          ]
+        })
+        let editFun = (row) => {
+          this.editVisibility = true
+          this.editTagInfo = {
+            oldValue: row.dictDesc,
+            newValue: '',
+            dictIndex: row.dictIndex,
+            id: row.id,
+            dictValue: row.dictValue,
+            dictType: row.dictType,
+            dictParent: row.dictParent
+          }
+        }
+        let delFun = (row) => {
+          this.$confirm(`是否删除 ${row.dictDesc} 标签`).then(data => {
+          // 这里确认然后调用删除接口
+            if (data) {
+              return dicAPIs.deleteDictValue({id: row.id})
+            }
+          }).then(data => {
+            if (data && data.code) {
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+            }
+          }).catch(err => {
+            if (err) this.$message('删除取消')
+          })
+        }
+        this.tableOption = editTagService().getTableOption({that: this, data: data.data, editFun, delFun})
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mounted () {
     this.resetOption()
+    this.loadAll()
   }
 }
 </script>

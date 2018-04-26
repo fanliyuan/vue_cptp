@@ -25,11 +25,11 @@ class Option {
       }
     ]
   }
-  getTableOption ({that, editFun, delFun}) {
+  getTableOption ({that, editFun, delFun, data}) {
     let thead = [
       {
         label: '现有标签',
-        prop: 'oldValue'
+        prop: 'dictDesc'
       },
       {
         xtype: 'links',
@@ -46,19 +46,21 @@ class Option {
         linkStyle: 'display: inline-block;width:50%;text-align:center'
       }
     ]
-    let data = [
-      {
-        oldValue: '标签1',
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      }
-    ]
+    if (!(data instanceof Array)) {
+      data = [
+        {
+          dictDesc: '标签1',
+          operation: [
+            {
+              textProp: '修改'
+            },
+            {
+              textProp: '删除'
+            }
+          ]
+        }
+      ]
+    }
     return {
       thead,
       data,

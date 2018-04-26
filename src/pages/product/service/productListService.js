@@ -54,7 +54,7 @@ class Option {
     return {
       data,
       thead,
-      strip: true,
+      stripe: true,
       border: true
     }
   }
