@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-26 17:02:57
+ * @Last Modified time: 2018-04-27 18:35:12
 */
 
 <template>
@@ -48,7 +48,7 @@
         </el-col>
         <el-col :span="6">
           <!-- <el-input v-model="valueTags" placeholder="请输入内容" style="margin-top:30px"></el-input> -->
-          <span style="line-height:5;font-size:20px;">{{productInfo.tag}}</span>
+          <span style="line-height:5;font-size:20px;">{{productInfo.productTag}}</span>
         </el-col>
       </el-row>
     </div>
@@ -237,7 +237,7 @@
         </div>
       </el-row>
     </div>
-    <div class="padding border">
+    <!-- <div class="padding border">
       <el-row justify="space-between" type="flex">
         <el-col :span="12">
           <span style="line-height:3;font-size:20px;">人员列表</span>
@@ -247,7 +247,7 @@
       <div style="margin:20px 150px 0;">
         <Table :options="personTD"></Table>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -291,26 +291,32 @@ export default {
       try {
         if (data && data.code === 200) {
           this.productInfo = data.data
+          this.productInfo.marketTarget = '暂无'
+          this.productInfo.salesAmt = '1100.00万元'
+          this.productInfo.productTag = 'SAAS 政府'
+          this.productInfo.finishPercent = 50
+          this.productInfo.startTime = this.timeFormat(this.productInfo.startTime)
+          this.productInfo.endTime = this.timeFormat(this.productInfo.endTime)
         }
       } catch (error) {
       }
     },
     timeFormat (time) {
       let nowYear = new Date().getFullYear()
-      let timeFormat = +this.$moment(time, 'x').format('L').replace(/\//g,'').substr(0, 4)
-      if (nowYear > timeFormat) {
-        return this.$moment(time, 'x').format('ll')
-      } else {
-        let date = +this.$moment(time, 'x').format('L').replace(/\//g,'')
-        let now = +this.$moment().format('L').replace(/\//g,'')
-        if (date === now) {
-          return this.$moment(time, 'x').format('lll').substr(10)
-        } else if(date + 1 === now) {
-          return '昨天' + this.$moment(time, 'x').format('lll').substr(10)
-        } else {
-          return this.$moment(time, 'x').format('ll').substr(5)
-        }
-      }
+      let timeFormat = +this.$moment(time, 'x').format('L').replace(/\//g, '').substr(0, 4)
+      // if (nowYear > timeFormat) {
+      return this.$moment(time, 'x').format('ll')
+      // } else {
+      //   let date = +this.$moment(time, 'x').format('L').replace(/\//g, '')
+      //   let now = +this.$moment().format('L').replace(/\//g, '')
+      //   if (date === now) {
+      //     return this.$moment(time, 'x').format('lll').substr(10)
+      //   } else if (date + 1 === now) {
+      //     return '昨天' + this.$moment(time, 'x').format('lll').substr(10)
+      //   } else {
+      //     return this.$moment(time, 'x').format('ll').substr(5)
+      //   }
+      // }
     }
   },
   mounted () {

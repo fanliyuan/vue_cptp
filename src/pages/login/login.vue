@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-25 11:33:18
+ * @Last Modified time: 2018-04-27 18:21:47
  */
 <template>
   <el-container>
@@ -31,8 +31,8 @@
           </el-form-item>
           <el-form-item class="input_row code" prop="code">
             <el-input v-model="inputData.code" placeholder="请输入验证码" class="input_code" @keypress.enter.native="submitHandler"></el-input>
-            <img class="input_image" src="" alt="无法登录">
-            <span class="input_refresh"></span>
+            <img class="input_image" :src="codeImage" alt="无法登录">
+            <span class="input_refresh" @click="getCodeImage"></span>
           </el-form-item>
           <el-form-item class="input_row">
             <el-checkbox v-model="rememberFlag">记住账号</el-checkbox>
@@ -55,7 +55,7 @@ export default {
   data () {
     let codeCheck = (rule, val, cb) => {
       // 这里验证后台的验证码,用来比对
-      if (val !== '1234') {
+      if (val !== this.codeValue) {
         cb(new Error('验证码不正确'))
       } else {
         cb()
@@ -92,7 +92,9 @@ export default {
       userName: false,
       password: false,
       code: false,
-      rememberFlag: false
+      rememberFlag: false,
+      codeValue: '',
+      codeImage: ''
     }
   },
   methods: {
@@ -127,6 +129,15 @@ export default {
       }).catch(err => {
         if (err) console.log(err.message)
       })
+    },
+    async getCodeImage () {
+      let { data } = await userAPIs.getCodeImage({token: ''})
+      try {
+        this.codeImage = 'data:image/jpeg;base64,' + data.data.img
+        this.codeValue = data.data.code
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   watch: {
@@ -145,6 +156,7 @@ export default {
     } else {
       this.rememberFlag = false
     }
+    this.getCodeImage()
   }
 }
 </script>

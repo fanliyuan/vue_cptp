@@ -1,8 +1,8 @@
 /*
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
- * @Last Modified by:   ChouEric
- * @Last Modified time: 2018-04-26 16:53:31
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-04-27 17:42:09
 */
 
 <template>
@@ -48,11 +48,50 @@
       <div class="box">
         <div class="label">产品状态</div>
         <div class="input">
-          <el-radio v-model="productInfo.state" label="0">预立项</el-radio>
-          <el-radio v-model="productInfo.state" label="1">开发阶段</el-radio>
-          <el-radio v-model="productInfo.state" label="2">可销售</el-radio>
+          <el-radio v-model="productInfo.state" v-for="item in stateList" :label="item.dictIndex + ''" :key="item.dictIndex">{{item.dictDesc}}</el-radio>
         </div>
       </div>
+      <!-- 动态编辑标签,市场定位 -->
+      <!-- <div class="box box-tag">
+        <div class="label label-tag">产品标签</div>
+        <div class="input input-tag">
+          <el-tag
+            :key="tag"
+            v-for="tag in dynamicTags"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag)">
+            {{tag}}
+          </el-tag>
+          <el-select
+            class="input-new-tag"
+            v-if="inputVisible"
+            v-model="inputValue"
+            size="small"
+            ref="tagSelect"
+            @change="handleInputConfirm"
+          >
+            <el-option v-for="item in tagList" :key="item.dictIndex" :label="item.dictDesc" :value="item.dictDesc + ''"></el-option>
+          </el-select>
+          <el-input
+            class="input-new-tag input_hidden"
+            v-if="inputVisible"
+            ref="saveTagInput"
+            v-model="inputValue"
+            size="small"
+            @keyup.enter.native="handleInputConfirmNone"
+            @blur="handleInputConfirmNone"
+          >
+          </el-input>
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">添加新标签</el-button>
+        </div>
+      </div>
+      <div class="box">
+        <div class="label">市场定位</div>
+        <div class="input">
+          <el-radio v-model="productInfo.state" v-for="item in stateList" :label="item.dictIndex + ''" :key="item.dictIndex">{{item.dictDesc}}</el-radio>
+        </div>
+      </div> -->
       <div>
         <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
       </div>
@@ -62,17 +101,33 @@
 <script>
 import productAPIs from '../../api/product/productAPIs'
 import projectAPIs from '../../api/project/projectAPIs'
+import userAPIs from '../../api/user/userAPIs'
+import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', state: 0, productId: null, oneLevel: null, twoLevel: '0', threeLevel: '0' },
+      productInfo: { productName: '', pm: '', state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '0' },
       productManagerList: [],
+      stateList: [],
       productLevelList: [],
       daasFlag: null,
       twoFlag: false,
       twoList: [],
       threeFlag: false,
-      threeList: []
+      threeList: [],
+      dynamicTags: ['标签一', '标签二', '标签三'],
+      inputVisible: false,
+      inputValue: '',
+      tagList: [
+        {
+          dictDesc: '标签1',
+          dictIndex: '1'
+        },
+        {
+          dictDesc: '标签2',
+          dictIndex: '2'
+        }
+      ]
     }
   },
   watch: {
@@ -104,51 +159,10 @@ export default {
       }
       this.resetOption()
     }
-    // productInfo () {
-    //   this.levelDisplay()
-    //   console.log(this.productInfo)
-    // }
   },
   mounted () {
-    if (this.$route.params && this.$route.params.productId) {
-      this.breadCrumbOption = {
-        bread: [
-          {
-            label: '产品管理',
-            path: '/product'
-          },
-          {
-            label: '产品修改'
-          }
-        ]
-      }
-      // 这里是编辑需要初始值
-      let productInfo = JSON.parse(sessionStorage.getItem('productInfo'))
-      // 预先加载分类表格
-      this.getTwoList(productInfo, this.getThreeList)
-      for (let key in productInfo) {
-        if (key === 'productName') {
-          this.productInfo[key] = productInfo[key][0].textProp
-        } else {
-          this.productInfo[key] = productInfo[key] + ''
-        }
-      }
-      this.levelDisplay()
-    } else {
-      this.breadCrumbOption = {
-        bread: [
-          {
-            label: '产品管理',
-            path: '/product'
-          },
-          {
-            label: '产品添加'
-          }
-        ]
-      }
-    }
-    this.productManagerList = this.loadProductManagerList()
-    this.resetOption()
+    this.loadStateList(this.loadProductInfo)
+    this.loadProductManagerList()
   },
   methods: {
     querySearch (queryString, cb) {
@@ -161,27 +175,82 @@ export default {
         return (productManagerList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
     },
-    loadProductManagerList () {
-      // 这里是假数据,需要所有产品经理的数据
-      return [
-        {
-          value: '张三',
-          userId: 0
-        },
-        {
-          value: '李四',
-          userId: 1
+    async loadProductManagerList () {
+      // 所有产品经理
+      let { data } = await userAPIs.getUserByPostionId({positionId: 0})
+      try {
+        data.data.forEach(item => {
+          item.value = item.userName
+        })
+        this.productManagerList = data.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async loadStateList (cb) {
+      let { data } = await dicAPIs.selectInfoByValues({type: 'CHANPINZHUANGTAI'})
+      try {
+        data.data = data.data.filter(item => {
+          return item.dictIndex !== 0
+        })
+        this.stateList = data.data
+        cb && cb()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    loadProductInfo () {
+      if (this.$route.params && this.$route.params.productId) {
+        this.breadCrumbOption = {
+          bread: [
+            {
+              label: '产品管理',
+              path: '/product'
+            },
+            {
+              label: '产品修改'
+            }
+          ]
         }
-      ]
+        // 这里是编辑需要初始值
+        let productInfo = JSON.parse(sessionStorage.getItem('productInfo'))
+        this.getTwoList(productInfo, this.getThreeList)
+        for (let key in productInfo) {
+          if (key === 'productName') {
+            this.productInfo[key] = productInfo[key][0].textProp
+          } else {
+            this.productInfo[key] = productInfo[key] + ''
+          }
+        }
+        this.levelDisplay()
+      } else {
+        this.breadCrumbOption = {
+          bread: [
+            {
+              label: '产品管理',
+              path: '/product'
+            },
+            {
+              label: '产品添加'
+            }
+          ]
+        }
+      }
+      this.resetOption()
     },
     submitHandler () {
+      this.stateList.some(item => {
+        if (item.dictIndex + '' === this.productInfo.state + '') {
+          this.productInfo.stateName = item.dictDesc
+          return true
+        }
+      })
       if (this.$route.params && this.$route.params.productId) {
         // 这里调用编辑接口
         let params = {
           deptId: this.productInfo.deptId,
           finishiPercent: this.productInfo.finishiPercent,
           frozenStatus: this.productInfo.frozenStatus,
-          intro: this.productInfo.intro,
           marketTarget: this.productInfo.produtcMarketTarget,
           oneLevel: this.productInfo.oneLevel,
           pm: this.productInfo.pm,
@@ -223,7 +292,7 @@ export default {
           pm: this.productInfo.pm,
           tag: this.productInfo.tag,
           status: this.productInfo.state - 0,
-          stateName: this.productInfo.stateName
+          statusName: this.productInfo.stateName
         }
         productAPIs.addProduct(params).then(data => {
           if (data && data.data && data.data.code === 200) {
@@ -296,7 +365,6 @@ export default {
         } catch (error) {
         }
       } else {
-        console.log('getTwoList ELse')
         let { data } = await projectAPIs.getProdutLevelList({parentId: this.productInfo.oneLevel - 0})
         try {
           this.twoList = data.data
@@ -307,7 +375,6 @@ export default {
     },
     async getThreeList (productInfo = {}) {
       if (productInfo.threeLevel !== undefined) {
-        console.log('进入有初始值')
         let parentId
         this.twoList.some(item => {
           if (item.subId + '' === productInfo.twoLevel + '') {
@@ -330,7 +397,6 @@ export default {
         } catch (error) {
         }
       } else {
-        console.log('进入无初始值')
         let parentId
         this.twoList.some(item => {
           if (item.subId + '' === this.productInfo.twoLevel) {
@@ -353,6 +419,28 @@ export default {
         } catch (error) {
         }
       }
+    },
+    // 动态编辑标签,目前有问题
+    handleClose (tag) {
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
+    },
+    showInput () {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+        this.$refs.tagSelect.focus()
+      })
+    },
+    handleInputConfirm (val) {
+      let inputValue = this.inputValue
+      if (inputValue && this.dynamicTags.indexOf(inputValue) === -1) {
+        this.dynamicTags.push(inputValue)
+      }
+      this.inputVisible = false
+      this.inputValue = ''
+    },
+    handleInputConfirmNone (val) {
+      // console.log(val)
     }
   }
 }
@@ -371,12 +459,20 @@ export default {
     box-sizing: border-box;
     padding: 80px 0px;
     .box{
-      height: 62px;
+      min-height: 62px;
+      vertical-align: top;
+    }
+    .box-tag{
+      margin-top: -25px;
     }
     .label {
       width: 170px;
       display: inline-block;
       text-align: right;
+    }
+    .label-tag{
+      line-height: 62px;
+      vertical-align: top;
     }
     .silver{
       color: silver;
@@ -390,10 +486,31 @@ export default {
       margin-left: 10px;
       display: inline-block;
     }
+    .input-tag{
+      padding-top: 20px;
+    }
     .submit{
       margin-left: 200px;
       margin-top: 20px;
       padding: 10px 78px;
+    }
+    .el-tag{
+    margin-right: 10px;
+    margin-bottom: 10px;
+    }
+    .button-new-tag {
+      height: 32px;
+      line-height: 30px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .input-new-tag {
+      width: 90px;
+      vertical-align: bottom;
+    }
+    .input_hidden{
+      position: relative;
+      z-index: -999;
     }
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Table :options="tableOption" />
-    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
+    <!-- <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination> -->
     <el-dialog :visible.sync="visibility" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">市场定位名</span>
@@ -57,26 +57,52 @@ export default {
         pageNum: 1,
         pageSize: 10,
         total: 11
-      }
+      },
+      marketList: []
     }
   },
   methods: {
-    addHandler () {
+    async addHandler () {
       // 调用新增接口
-      console.log('提交')
+      let last = this.marketList[this.marketList.length - 1] ? this.marketList[this.marketList.length - 1] : {
+        dictIndex: 0 - 1,
+        dictParent: 0,
+        dictType: 'SHICHANGDINGWEI'
+      }
+      let { data } = await dicAPIs.saveDictValue({
+        dictDesc: this.addMarketPositionInfo,
+        dictIndex: last.dictIndex + 1,
+        dictParent: last.dictParent,
+        dictType: last.dictType,
+        dictValue: ''
+      })
+      try {
+        if (data && data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          })
+          this.visibility = false
+          this.loadAll()
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     editHandler () {
       // 调用编辑接口
       this.editMarketPositionInfo.dictDesc = this.editMarketPositionInfo.newValue
       delete this.editMarketPositionInfo.oldValue
       delete this.editMarketPositionInfo.newValue
-      dicAPIs.updateSystemDictVlue(this.editMarketPositionInfo).then(data => {
+      dicAPIs.updateSystemDictValue(this.editMarketPositionInfo).then(data => {
         console.log(data)
-        if (data && data.code) {
+        if (data && data.data && data.data.code === 200) {
           this.$message({
             type: 'success',
             message: '修改成功'
           })
+          this.editVisibility = false
+          this.loadAll()
         }
       })
     },
@@ -92,15 +118,16 @@ export default {
       })
     },
     async loadAll () {
-      let { data } = await dicAPIs.selectInfoByValues({URI: 'SHICHANGDINGWEI'})
+      let { data } = await dicAPIs.selectInfoByValues({type: 'SHICHANGDINGWEI'})
       try {
+        this.marketList = data.data
         data.data.forEach(item => {
           item.operation = [
             {
-              label: '修改'
+              textProp: '修改'
             },
             {
-              label: '删除'
+              textProp: '删除'
             }
           ]
         })
@@ -117,14 +144,24 @@ export default {
           }
         }
         let delFun = (row) => {
-          this.$confirm(`是否删除 ${row.oldValue} 定位`).then(data => {
+          this.$confirm(`是否删除 ${row.dictDesc} 定位`).then(data => {
           // 这里确认然后调用删除接口
-            if (data) console.log(row, '删除')
+            if (data) {
+              return dicAPIs.deleteDictValue({id: row.id})
+            }
+          }).then(data => {
+            if (data && data.data && data.data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+              this.loadAll()
+            }
           }).catch(err => {
             if (err) this.$message('删除取消')
           })
         }
-        this.tableOption = marketPositionService().getTableOption({that: this, data: temp, delFun, editFun})
+        this.tableOption = marketPositionService().getTableOption({that: this, data: data.data, delFun, editFun})
       } catch (error) {
       }
     }

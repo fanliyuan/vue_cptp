@@ -1,8 +1,8 @@
 /*
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:40
- * @Last Modified by:   ChouEric
- * @Last Modified time: 2018-04-26 16:53:40
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-04-27 17:52:35
 */
 
 <template>
@@ -41,8 +41,8 @@ export default {
       ],
       search: {
         searchHandler (val) {
-          if (!val) val = 'all'
-          this.$router.push(`/product/search/${val}`)
+          if (!val) return false
+          vm.$router.push(`/product/search/${val}`)
         }
       }
     }
@@ -91,7 +91,7 @@ export default {
       searchResult: null,
       tableOption: productListService(data).getTabelOptions({that: this, forbidFun}),
       pageInfo: {
-        total: 11,
+        total: 0,
         pageSize: 10,
         pageNum: 1
       },
@@ -101,11 +101,68 @@ export default {
   watch: {
     $route () {
       if (this.$route.params && this.$route.params.keyword) {
+        this.pageInfo.pageSize = 10
+        this.pageInfo.pageNum = 1
         this.breadCrumbOption = {bread: [{label: '产品管理', path: '/product'}, {label: '产品搜索'}]}
-        this.searchResult = {
-          keyword: this.$route.params.keyword,
-          total: 9
+        let getSearchResult = async () => {
+          let { data } = await productAPIs.getProductList({
+            name: this.$route.params.keyword,
+            pm: this.$route.params.keyword,
+            pageSize: this.pageInfo.pageSize,
+            pageNum: this.pageInfo.pageNum,
+            status: 0
+          })
+          try {
+            let operation = [
+              {
+                textProp: '修改'
+              },
+              {
+                textProp: '冻结'
+              }
+            ]
+            let forbidFun = async (row) => {
+              // 调用冻结接口
+              // console.log(row.productName[0].textProp)
+              // row.frozenStatus = '1'
+              let { data } = await productAPIs.updateProductFrozenStatus({id: row.prouctId, status: 1})
+              try {
+                if (data && data.code === 200) {
+                  this.$message({
+                    type: 'success',
+                    message: '冻结成功'
+                  })
+                  this.$router.push('/product/productFobidden')
+                }
+              } catch (error) {
+                console.log(error)
+              }
+            }
+            this.pageInfo.total = data.data.totalCount
+            if (!data.data.pageList) {
+              this.searchResult = {
+                keyword: this.$route.params.keyword,
+                total: 0
+              }
+              this.tableOption = productListService([]).getTabelOptions({that: this, forbidFun})
+              return false
+            }
+            data.data.pageList.forEach(item => {
+              item.operation = operation
+              item.productName = [{textProp: item.productName}]
+            })
+            this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun})
+            this.pageInfo.total = data.data.totalCount
+            this.searchResult = {
+              keyword: this.$route.params.keyword,
+              total: data.data.totalCount
+            }
+          } catch (error) {
+            console.log(error)
+            return null
+          }
         }
+        getSearchResult()
       } else {
         this.breadCrumbOption = {bread: [{label: '产品列表', path: '/product'}]}
         this.searchResult = null
@@ -116,8 +173,6 @@ export default {
   methods: {
     pageHandler (val) {
       this.pageInfo.pageNum = val
-      console.log(this.pageInfo)
-      // 接口
       this.getProductList()
     },
     resetOption () {
@@ -127,7 +182,7 @@ export default {
       })
     },
     async getStateList () {
-      let { data } = await dicAPIs.selectInfoByValues({ URI: 'CHANPINZHUANGTAI' })
+      let { data } = await dicAPIs.selectInfoByValues({ type: 'CHANPINZHUANGTAI' })
       let option = []
       try {
         let temp = []
@@ -145,6 +200,7 @@ export default {
           select: [
             {
               selectHandler (val) {
+                vm.$router.push('/product')
                 vm.status = val
                 vm.getProductList()
               },
@@ -155,8 +211,8 @@ export default {
           ],
           search: {
             searchHandler (val) {
-              if (!val) val = 'all'
-              this.$router.push(`/product/search/${val}`)
+              if (!val) return false
+              vm.$router.push(`/product/search/${val}`)
             }
           }
         }
@@ -166,10 +222,10 @@ export default {
     },
     async getProductList () {
       let { data } = await productAPIs.getProductList({
-        name: '',
+        name: this.searchResult ? this.searchResult.keyword : '',
         pageNum: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize,
-        pm: '',
+        pm: this.searchResult ? this.searchResult.keyword : '',
         status: this.status
       })
       let operation = [
@@ -183,10 +239,9 @@ export default {
       let forbidFun = async (row) => {
         // 调用冻结接口
         // console.log(row.productName[0].textProp)
-        row.frozenStatus = '1'
-        let { data } = await productAPIs.updateProductFrozenStatus({id: row.prouctId, status: row.frozenStatus})
+        // row.frozenStatus = '1'
+        let { data } = await productAPIs.updateProductFrozenStatus({id: row.productId, status: 1})
         try {
-          console.log(data)
           if (data && data.code === 200) {
             this.$message({
               type: 'success',
@@ -195,6 +250,7 @@ export default {
             this.$router.push('/product/productFobidden')
           }
         } catch (error) {
+          console.log(error)
         }
       }
       this.pageInfo.total = data.data.totalCount
@@ -206,6 +262,9 @@ export default {
     }
   },
   mounted () {
+    if (this.$route.params) {
+      this.$router.push('/product')
+    }
     this.resetOption()
     this.getStateList()
     this.getProductList()

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 18:14:13
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-24 14:08:27
+ * @Last Modified time: 2018-04-27 18:01:38
 */
 
 <template>
@@ -17,6 +17,7 @@
 import SelectSearch from '../../components/select/SelectSearch'
 import Table from '../../components/table/Table'
 import productListService from './service/productListService'
+import productAPIs from '../../api/product/productAPIs'
 export default {
   components: {
     SelectSearch,
@@ -34,20 +35,21 @@ export default {
       }
     }
     let data = [
-      {
-        productName: [
-          {
-            textProp: '产品1'
-          }
-        ],
-        productManager: '经理1',
-        productId: 1,
-        operation: [
-          {
-            textProp: '已冻结'
-          }
-        ]
-      }
+      // {
+      //   productName: [
+      //     {
+      //       textProp: '产品1'
+      //     }
+      //   ],
+      //   pm: '经理1',
+      //   productId: 1,
+      //   stateName: 111,
+      //   operation: [
+      //     {
+      //       textProp: '已冻结'
+      //     }
+      //   ]
+      // }
     ]
     let forbidFun = (row) => {
       // 调用冻结接口
@@ -82,7 +84,7 @@ export default {
       searchResult: null,
       tableOption: productListService(data).getTabelOptions({that: this, forbidFun, cancelForbid}),
       pageInfo: {
-        total: 11,
+        total: 0,
         pageSize: 10,
         pageNum: 1
       }
@@ -114,10 +116,63 @@ export default {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
       })
+    },
+    async getProductByFrozenStatus () {
+      let { data } = await productAPIs.getProductByFrozenStatus({ frozenStatus: '1', pageSize: this.pageInfo.pageSize, pageNum: this.pageInfo.pageNum }
+      )
+      try {
+        let forbidFun = (row) => {
+          // 调用冻结接口
+          // console.log(row.productName[0].textProp)
+          this.$router.push('/product/productFobidden')
+        }
+        let cancelForbid = async (row) => {
+          // 取消冻结接口
+          // console.log(row.productName[0].textProp, '取消冻结')
+          let { data } = await productAPIs.updateProductFrozenStatus({id: row.productId, status: '0'})
+          try {
+            console.log(data)
+            if (data && data.code === 200) {
+              this.$message(
+                {
+                  type: 'success',
+                  message: '取消冻结成功'
+                }
+              )
+              this.getProductByFrozenStatus()
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        if (!data.data.pageList) {
+          console.log(data)
+          this.pageInfo.total = 0
+          this.tableOption = productListService([]).getTabelOptions({that: this, forbidFun, cancelForbid})
+          return false
+        }
+        data.data.pageList.forEach(item => {
+          item.productName = [
+            {
+              textProp: item.productName
+            }
+          ]
+          item.operation = [
+            {
+              textProp: '已冻结'
+            }
+          ]
+        })
+        this.pageInfo.total = data.data.totalCount
+        this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun, cancelForbid})
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mounted () {
     this.resetOption()
+    this.getProductByFrozenStatus()
   }
 }
 </script>

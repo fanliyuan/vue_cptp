@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 11:26:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-26 10:12:46
+ * @Last Modified time: 2018-04-27 18:12:16
 */
 
 import apiBase from '../apiBase'
@@ -67,6 +67,16 @@ const module = {
       method: 'post',
       name: 'updateUser',
       url: '/updateUser'
+    },
+    {
+      method: 'post',
+      name: 'getUserByPostionId',
+      url: '/getUserByPostionId'
+    },
+    {
+      method: 'get',
+      name: 'getCodeImage',
+      url: '/getCodeImage'
     }
   ]
 }

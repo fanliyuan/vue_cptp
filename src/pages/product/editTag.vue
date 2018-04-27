@@ -1,7 +1,7 @@
 <template>
   <div>
     <Table :options="tableOption" />
-    <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
+    <!-- <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination> -->
     <el-dialog :visible.sync="visibility" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">标签名</span>
@@ -61,22 +61,43 @@ export default {
     }
   },
   methods: {
-    addHandler () {
+    async addHandler () {
       // 调用新增接口
-      console.log('提交')
+      let last = this.tagList[this.tagList.length - 1]
+      let { data } = await dicAPIs.saveDictValue({
+        dictDesc: this.addTagInfo,
+        dictIndex: last.dictIndex + 1,
+        dictParent: last.dictParent,
+        dictType: last.dictType,
+        dictValue: ''
+      })
+      try {
+        if (data && data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          })
+          this.visibility = false
+          this.loadAll()
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     editHandler () {
       // 调用编辑接口
       this.editTagInfo.dictDesc = this.editTagInfo.newValue
       delete this.editTagInfo.newValue
       delete this.editTagInfo.oldValue
-      dicAPIs.updateSystemDictVlue(this.editTagInfo).then(data => {
+      dicAPIs.updateSystemDictValue(this.editTagInfo).then(data => {
         console.log(data)
-        if (data && data.code) {
+        if (data && data.data && data.data.code === 200) {
           this.$message({
             type: 'success',
             message: '修改成功'
           })
+          this.editVisibility = false
+          this.loadAll()
         }
       })
     },
@@ -92,8 +113,9 @@ export default {
       })
     },
     async loadAll () {
-      let { data } = await dicAPIs.selectInfoByValues({URI: 'CHANPINBIAOQIAN'})
+      let { data } = await dicAPIs.selectInfoByValues({type: 'CHANPINBIAOQIAN'})
       try {
+        this.tagList = data.data
         data.data.forEach(item => {
           item.operation = [
             {
@@ -123,11 +145,12 @@ export default {
               return dicAPIs.deleteDictValue({id: row.id})
             }
           }).then(data => {
-            if (data && data.code) {
+            if (data && data.data && data.data.code === 200) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
               })
+              this.loadAll()
             }
           }).catch(err => {
             if (err) this.$message('删除取消')

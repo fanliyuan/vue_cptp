@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 13:27:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-26 16:30:24
+ * @Last Modified time: 2018-04-27 16:23:28
 */
 
 import apiBase from '../apiBase'
@@ -12,7 +12,7 @@ const module = {
   moduleName: 'dic',
   apis: [
     {
-      method: 'get',
+      method: 'post',
       name: 'selectInfoByValues',
       url: '/selectInfoByValues'
     },
@@ -22,14 +22,14 @@ const module = {
       url: '/saveDictValue'
     },
     {
-      method: 'delete',
+      method: 'post',
       name: 'deleteDictValue',
       url: '/deleteDictValue'
     },
     {
       method: 'post',
-      name: 'updateSystemDictVlue',
-      url: '/updateSystemDictVlue'
+      name: 'updateSystemDictValue',
+      url: '/updateSystemDictValue'
     }
   ]
 }

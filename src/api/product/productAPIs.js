@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 17:09:02
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-25 15:43:23
+ * @Last Modified time: 2018-04-27 13:26:33
 */
 
 import apiBase from '../apiBase'
@@ -35,6 +35,11 @@ const module = {
       method: 'post',
       name: 'updateProductFrozenStatus',
       url: '/updateProductFrozenStatus'
+    },
+    {
+      method: 'post',
+      name: 'getProductByFrozenStatus',
+      url: '/getProductByFrozenStatus'
     }
   ]
 }
