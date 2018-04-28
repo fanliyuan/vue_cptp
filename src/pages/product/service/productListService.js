@@ -47,7 +47,7 @@ class Option {
             console.log(row, '停用')
           }
         },
-        linkStyle: 'padding: 14px 40px;'
+        linkStyle: 'display: inline-block;width: 49%;'
       }
     ]
     let data = this.data

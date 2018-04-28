@@ -5,7 +5,7 @@
  *
  * 描述 ：中间件索引
  */
-import checkToken from './checkToken'
+// import checkToken from './checkToken'
 export default (to, from, next) => {
   let allow = false
   let partten = ['^/login']
@@ -22,7 +22,7 @@ export default (to, from, next) => {
     next()
   } else {
     // console.log(`需要鉴权`, to.fullPath)
-    checkToken(to, from, next)
-    // next()
+    // checkToken(to, from, next)
+    next()
   }
 }

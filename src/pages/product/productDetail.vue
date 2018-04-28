@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-27 18:35:12
+ * @Last Modified time: 2018-04-28 11:31:13
 */
 
 <template>
@@ -302,8 +302,8 @@ export default {
       }
     },
     timeFormat (time) {
-      let nowYear = new Date().getFullYear()
-      let timeFormat = +this.$moment(time, 'x').format('L').replace(/\//g, '').substr(0, 4)
+      // let nowYear = new Date().getFullYear()
+      // let timeFormat = +this.$moment(time, 'x').format('L').replace(/\//g, '').substr(0, 4)
       // if (nowYear > timeFormat) {
       return this.$moment(time, 'x').format('ll')
       // } else {

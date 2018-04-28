@@ -63,7 +63,7 @@ export default {
   methods: {
     async addHandler () {
       // 调用新增接口
-      let last = this.tagList[this.tagList.length - 1]
+      let last = this.tagList[this.tagList.length - 1] ? this.tagList[this.tagList.length - 1] : { dictIndex: -1, dictParent: 0, dictType: 'CHANPINBIAOQIAN' }
       let { data } = await dicAPIs.saveDictValue({
         dictDesc: this.addTagInfo,
         dictIndex: last.dictIndex + 1,
@@ -81,7 +81,7 @@ export default {
           this.loadAll()
         }
       } catch (error) {
-        console.log(error)
+        console.log()
       }
     },
     editHandler () {
@@ -158,7 +158,7 @@ export default {
         }
         this.tableOption = editTagService().getTableOption({that: this, data: data.data, editFun, delFun})
       } catch (error) {
-        console.log(error)
+        console.log()
       }
     }
   },

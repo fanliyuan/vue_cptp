@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-27 18:21:47
+ * @Last Modified time: 2018-04-28 13:40:49
  */
 <template>
   <el-container>
@@ -55,7 +55,7 @@ export default {
   data () {
     let codeCheck = (rule, val, cb) => {
       // 这里验证后台的验证码,用来比对
-      if (val !== this.codeValue) {
+      if (val !== this.codeValue || val === '') {
         cb(new Error('验证码不正确'))
       } else {
         cb()
@@ -118,25 +118,29 @@ export default {
           userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password})
             .then(data => {
               if (data.data && data.data.code === 200) {
+                this.message = null
                 localStorage.setItem('token', data.data.data.userToken)
                 localStorage.setItem('userName', data.data.data.userName)
                 this.$router.push('/')
+              } else {
+                this.getCodeImage()
+                this.codeValue = ''
+                this.message = data.data.data
               }
             })
         } else {
           throw new Error('表单验证未通过')
         }
       }).catch(err => {
-        if (err) console.log(err.message)
+        this.message = err.message
       })
     },
     async getCodeImage () {
-      let { data } = await userAPIs.getCodeImage({token: ''})
       try {
+        let { data } = await userAPIs.getCodeImage({token: ''})
         this.codeImage = 'data:image/jpeg;base64,' + data.data.img
         this.codeValue = data.data.code
       } catch (error) {
-        console.log(error)
       }
     }
   },

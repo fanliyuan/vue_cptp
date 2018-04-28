@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-27 17:42:09
+ * @Last Modified time: 2018-04-28 16:49:57
 */
 
 <template>
@@ -52,7 +52,7 @@
         </div>
       </div>
       <!-- 动态编辑标签,市场定位 -->
-      <!-- <div class="box box-tag">
+      <div class="box box-tag">
         <div class="label label-tag">产品标签</div>
         <div class="input input-tag">
           <el-tag
@@ -70,28 +70,36 @@
             size="small"
             ref="tagSelect"
             @change="handleInputConfirm"
-          >
+            >
             <el-option v-for="item in tagList" :key="item.dictIndex" :label="item.dictDesc" :value="item.dictDesc + ''"></el-option>
           </el-select>
-          <el-input
-            class="input-new-tag input_hidden"
-            v-if="inputVisible"
-            ref="saveTagInput"
-            v-model="inputValue"
-            size="small"
-            @keyup.enter.native="handleInputConfirmNone"
-            @blur="handleInputConfirmNone"
-          >
-          </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="showInput">添加新标签</el-button>
         </div>
       </div>
       <div class="box">
-        <div class="label">市场定位</div>
-        <div class="input">
-          <el-radio v-model="productInfo.state" v-for="item in stateList" :label="item.dictIndex + ''" :key="item.dictIndex">{{item.dictDesc}}</el-radio>
+        <div class="label label-tag">市场定位</div>
+        <div class="input input-tag">
+          <el-tag
+            :key="tag"
+            v-for="tag in dynamicMarket"
+            closable
+            :disable-transitions="false"
+            @close="handleCloseMarket(tag)">
+            {{tag}}
+          </el-tag>
+          <el-select
+            class="input-new-tag"
+            v-if="inputVisibleMarket"
+            v-model="inputValueMarket"
+            size="small"
+            ref="tagSelect"
+            @change="handleInputConfirmMarket"
+            >
+            <el-option v-for="item in marketList" :key="item.dictIndex" :label="item.dictDesc" :value="item.dictDesc + ''"></el-option>
+          </el-select>
+          <el-button v-else class="button-new-tag" size="small" @click="showInputMarket">添加新标签</el-button>
         </div>
-      </div> -->
+      </div>
       <div>
         <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
       </div>
@@ -115,19 +123,14 @@ export default {
       twoList: [],
       threeFlag: false,
       threeList: [],
-      dynamicTags: ['标签一', '标签二', '标签三'],
+      dynamicTags: [],
+      dynamicMarket: [],
       inputVisible: false,
+      inputVisibleMarket: false,
       inputValue: '',
-      tagList: [
-        {
-          dictDesc: '标签1',
-          dictIndex: '1'
-        },
-        {
-          dictDesc: '标签2',
-          dictIndex: '2'
-        }
-      ]
+      inputValueMarket: '',
+      tagList: [],
+      marketList: []
     }
   },
   watch: {
@@ -160,9 +163,11 @@ export default {
       this.resetOption()
     }
   },
-  mounted () {
+  beforeMount () {
     this.loadStateList(this.loadProductInfo)
     this.loadProductManagerList()
+    this.getTagList()
+    this.getMarketList()
   },
   methods: {
     querySearch (queryString, cb) {
@@ -177,26 +182,26 @@ export default {
     },
     async loadProductManagerList () {
       // 所有产品经理
-      let { data } = await userAPIs.getUserByPostionId({positionId: 0})
       try {
+        let { data } = await userAPIs.getUserByPostionId({positionId: 0})
         data.data.forEach(item => {
           item.value = item.userName
         })
         this.productManagerList = data.data
       } catch (error) {
-        console.log(error)
+        console.log()
       }
     },
     async loadStateList (cb) {
-      let { data } = await dicAPIs.selectInfoByValues({type: 'CHANPINZHUANGTAI'})
       try {
+        let { data } = await dicAPIs.selectInfoByValues({type: 'CHANPINZHUANGTAI'})
         data.data = data.data.filter(item => {
           return item.dictIndex !== 0
         })
         this.stateList = data.data
         cb && cb()
       } catch (error) {
-        console.log(error)
+        console.log()
       }
     },
     loadProductInfo () {
@@ -357,33 +362,37 @@ export default {
     threeLevelChange (val) {
     },
     async getTwoList (productInfo = {}, cb) {
-      if (productInfo.twoLevel !== undefined) {
-        let { data } = await projectAPIs.getProdutLevelList({parentId: productInfo.oneLevel - 0})
-        try {
-          this.twoList = data.data
-          cb && cb(productInfo)
-        } catch (error) {
+      try {
+        if (productInfo.twoLevel !== undefined) {
+          let { data } = await projectAPIs.getProdutLevelList({parentId: productInfo.oneLevel - 0})
+          try {
+            this.twoList = data.data
+            cb && cb(productInfo)
+          } catch (error) {
+          }
+        } else {
+          let { data } = await projectAPIs.getProdutLevelList({parentId: this.productInfo.oneLevel - 0})
+          try {
+            this.twoList = data.data
+            cb && cb(productInfo)
+          } catch (error) {
+          }
         }
-      } else {
-        let { data } = await projectAPIs.getProdutLevelList({parentId: this.productInfo.oneLevel - 0})
-        try {
-          this.twoList = data.data
-          cb && cb(productInfo)
-        } catch (error) {
-        }
+      } catch (error) {
+        console.log()
       }
     },
     async getThreeList (productInfo = {}) {
-      if (productInfo.threeLevel !== undefined) {
-        let parentId
-        this.twoList.some(item => {
-          if (item.subId + '' === productInfo.twoLevel + '') {
-            parentId = item.levelId
-            return true
-          }
-        })
-        let { data } = await projectAPIs.getProdutLevelList({parentId})
-        try {
+      try {
+        if (productInfo.threeLevel !== undefined) {
+          let parentId
+          this.twoList.some(item => {
+            if (item.subId + '' === productInfo.twoLevel + '') {
+              parentId = item.levelId
+              return true
+            }
+          })
+          let { data } = await projectAPIs.getProdutLevelList({parentId})
           this.threeList = data.data
           if (data.data.length === 0) {
             this.productInfo.threeLevel = '0'
@@ -394,18 +403,15 @@ export default {
               }
             ]
           }
-        } catch (error) {
-        }
-      } else {
-        let parentId
-        this.twoList.some(item => {
-          if (item.subId + '' === this.productInfo.twoLevel) {
-            parentId = item.levelId
-            return true
-          }
-        })
-        let { data } = await projectAPIs.getProdutLevelList({parentId})
-        try {
+        } else {
+          let parentId
+          this.twoList.some(item => {
+            if (item.subId + '' === this.productInfo.twoLevel) {
+              parentId = item.levelId
+              return true
+            }
+          })
+          let { data } = await projectAPIs.getProdutLevelList({parentId})
           this.threeList = data.data
           if (data.data.length === 0) {
             this.productInfo.threeLevel = '0'
@@ -416,19 +422,28 @@ export default {
               }
             ]
           }
-        } catch (error) {
         }
+      } catch (error) {
+        console.log()
       }
     },
     // 动态编辑标签,目前有问题
     handleClose (tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
     },
+    handleCloseMarket (tag) {
+      this.dynamicMarket.splice(this.dynamicMarket.indexOf(tag), 1)
+    },
     showInput () {
       this.inputVisible = true
       this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-        this.$refs.tagSelect.focus()
+        // console.log(this.$refs.tagSelect.focus())
+      })
+    },
+    showInputMarket () {
+      this.inputVisibleMarket = true
+      this.$nextTick(_ => {
+        // console.log(this.$refs.tagSelect.focus())
       })
     },
     handleInputConfirm (val) {
@@ -438,9 +453,30 @@ export default {
       }
       this.inputVisible = false
       this.inputValue = ''
+      this.$refs.tagSelect.$refs.input = {}
+      this.$refs.tagSelect.$refs.input.focus = () => {}
     },
-    handleInputConfirmNone (val) {
-      // console.log(val)
+    handleInputConfirmMarket (val) {
+      let inputValue = this.inputValueMarket
+      if (inputValue && this.dynamicMarket.indexOf(inputValue) === -1) {
+        this.dynamicMarket.push(inputValue)
+      }
+      this.inputVisibleMarket = false
+      this.inputValueMarket = ''
+      this.$refs.tagSelect.$refs.input = {}
+      this.$refs.tagSelect.$refs.input.focus = () => {}
+    },
+    async getTagList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({type: 'CHANPINBIAOQIAN'})
+        this.tagList = data.data
+      } catch (error) {}
+    },
+    async getMarketList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({type: 'SHICHANGDINGWEI'})
+        this.marketList = data.data
+      } catch (error) {}
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 18:14:13
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-27 18:01:38
+ * @Last Modified time: 2018-04-28 14:26:20
 */
 
 <template>
@@ -142,7 +142,7 @@ export default {
               this.getProductByFrozenStatus()
             }
           } catch (error) {
-            console.log(error)
+            console.log()
           }
         }
         if (!data.data.pageList) {
@@ -166,7 +166,7 @@ export default {
         this.pageInfo.total = data.data.totalCount
         this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun, cancelForbid})
       } catch (error) {
-        console.log(error)
+        console.log()
       }
     }
   },
