@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-28 13:40:49
+ * @Last Modified time: 2018-04-28 17:18:49
  */
 <template>
   <el-container>
@@ -166,7 +166,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .el-container{
-  background: url('/static/img/login_bg.jpg');
+  background: url('/static/img/login_bg.jpg') no-repeat;
   height: 100%;
   .logo{
     margin-top: 20px;

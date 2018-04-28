@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-28 16:49:57
+ * @Last Modified time: 2018-04-28 17:30:53
 */
 
 <template>
@@ -275,6 +275,7 @@ export default {
               type: 'success',
               message: data.data.message
             })
+            this.$router.push('/product')
           } else {
             throw new Error(data.data.message)
           }
@@ -305,6 +306,7 @@ export default {
               type: 'success',
               message: data.data.message
             })
+            this.$router.push('/product')
           } else {
             throw new Error(data.data.message)
           }

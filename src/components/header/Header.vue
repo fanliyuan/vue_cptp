@@ -56,6 +56,9 @@ export default {
               message: '退出成功'
             })
           }
+        }).catch(err => {
+          if (err) {
+          }
         })
       }
       this.$router.push('/login')
