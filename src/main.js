@@ -19,9 +19,9 @@ import 'swiper/dist/css/swiper.css'
 import moment from 'moment'
 
 // ueditor
-import './assets/js/lib/ueditor/ueditor.config.js'
-import './assets/js/lib/ueditor/ueditor.all.js'
-import './assets/js/lib/ueditor/lang/zh-cn/zh-cn.js'
+// import './assets/js/lib/ueditor/ueditor.config.js'
+// import './assets/js/lib/ueditor/ueditor.all.js'
+// import './assets/js/lib/ueditor/lang/zh-cn/zh-cn.js'
 
 import lodash from 'lodash'
 

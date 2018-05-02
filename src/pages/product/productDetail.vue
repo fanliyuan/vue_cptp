@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-02 15:31:04
+ * @Last Modified time: 2018-05-02 16:54:35
 */
 
 <template>
@@ -10,7 +10,7 @@
     <div class="padding border">
       <el-row style="width:100%;height:80px;" class="">
         <el-col :span="2">
-          <img :src="productInfo.logoUrl || '../../assets/img/unload.jpg'" alt="暂无" width="80" height="80">
+          <img :src="productInfo.logoUrl || '/staticm/img/unload.jpg'" alt="暂无" width="80" height="80">
           <!-- <div style="width:80px;height:80px;background-color:silver"></div> -->
         </el-col>
         <el-col :span="10">
@@ -103,9 +103,9 @@
             <el-col :span="4" :class="!fileInfo.productDemandFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/00.png" alt="" v-if="fileInfo.productDemandFlag === 1">
-                  <img src="../../assets/img/fileIcons/01.png" v-else>
-                  <!-- <img src="../../assets/img/fileIcons/00.png" alt=""> -->
+                  <img src="/staticm/img/fileIcons/00.png" alt="" v-if="fileInfo.productDemandFlag === 1">
+                  <img src="/staticm/img/fileIcons/01.png" v-else>
+                  <!-- <img src="/staticm/img/fileIcons/00.png" alt=""> -->
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">产品需求分析</p>
@@ -117,8 +117,8 @@
             <el-col :span="4" :class="!fileInfo.productPptFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/10.png" alt="" v-if="fileInfo.productPptFlag === 1">
-                  <img src="../../assets/img/fileIcons/11.png" v-else>
+                  <img src="/staticm/img/fileIcons/10.png" alt="" v-if="fileInfo.productPptFlag === 1">
+                  <img src="/staticm/img/fileIcons/11.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">PPT</p>
@@ -130,8 +130,8 @@
             <el-col :span="4" :class="!fileInfo.productProtoFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/20.png" alt="" v-if="fileInfo.productProtoFlag === 1">
-                  <img src="../../assets/img/fileIcons/21.png" v-else>
+                  <img src="/staticm/img/fileIcons/20.png" alt="" v-if="fileInfo.productProtoFlag === 1">
+                  <img src="/staticm/img/fileIcons/21.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">原型</p>
@@ -143,8 +143,8 @@
             <el-col :span="4" :class="!fileInfo.productPrdFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/30.png" alt="" v-if="fileInfo.productPrdFlag === 1">
-                  <img src="../../assets/img/fileIcons/31.png" v-else>
+                  <img src="/staticm/img/fileIcons/30.png" alt="" v-if="fileInfo.productPrdFlag === 1">
+                  <img src="/staticm/img/fileIcons/31.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">PRD</p>
@@ -156,8 +156,8 @@
             <el-col :span="4" :class="!fileInfo.productUedFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/40.png" alt="" v-if="fileInfo.productUedFlag === 1">
-                  <img src="../../assets/img/fileIcons/41.png" v-else>
+                  <img src="/staticm/img/fileIcons/40.png" alt="" v-if="fileInfo.productUedFlag === 1">
+                  <img src="/staticm/img/fileIcons/41.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">UED</p>
@@ -171,8 +171,8 @@
             <el-col :span="4" :class="!fileInfo.productHelpFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/50.png" alt="" v-if="fileInfo.productHelpFlag === 1">
-                  <img src="../../assets/img/fileIcons/51.png" v-else>
+                  <img src="/staticm/img/fileIcons/50.png" alt="" v-if="fileInfo.productHelpFlag === 1">
+                  <img src="/staticm/img/fileIcons/51.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">帮助 Doc</p>
@@ -184,8 +184,8 @@
             <el-col :span="4" :class="!fileInfo.productDvFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/60.png" alt="" v-if="fileInfo.productDvFlag === 1">
-                  <img src="../../assets/img/fileIcons/61.png" v-else>
+                  <img src="/staticm/img/fileIcons/60.png" alt="" v-if="fileInfo.productDvFlag === 1">
+                  <img src="/staticm/img/fileIcons/61.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">演示视频</p>
@@ -197,8 +197,8 @@
             <el-col :span="4" :class="!fileInfo.productPvFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/70.png" alt="" v-if="fileInfo.productPvFlag === 1">
-                  <img src="../../assets/img/fileIcons/71.png" v-else>
+                  <img src="/staticm/img/fileIcons/70.png" alt="" v-if="fileInfo.productPvFlag === 1">
+                  <img src="/staticm/img/fileIcons/71.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">宣传视频</p>
@@ -210,8 +210,8 @@
             <el-col :span="4" :class="!fileInfo.productIntroFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/80.png" alt="" v-if="fileInfo.productIntroFlag === 1">
-                  <img src="../../assets/img/fileIcons/81.png" v-else>
+                  <img src="/staticm/img/fileIcons/80.png" alt="" v-if="fileInfo.productIntroFlag === 1">
+                  <img src="/staticm/img/fileIcons/81.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">一页纸简介</p>
@@ -223,8 +223,8 @@
             <el-col :span="4" :class="!fileInfo.productWbFlag? 'classNo' : ''">
               <div style="width:200px;margin:0 auto;">
                 <div style="width:80px;height:100px;margin:0 auto 20px" class="marginb20">
-                  <img src="../../assets/img/fileIcons/90.png" alt="" v-if="fileInfo.productWbFlag === 1">
-                  <img src="../../assets/img/fileIcons/91.png" v-else>
+                  <img src="/staticm/img/fileIcons/90.png" alt="" v-if="fileInfo.productWbFlag === 1">
+                  <img src="/staticm/img/fileIcons/91.png" v-else>
                 </div>
                 <div style="margin:0 auto;text-aglin:center;text-align:center">
                   <p class="margin10">产品白皮书</p>

@@ -45,7 +45,7 @@
               <el-option v-for="item in twoList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
             </el-select>
           </div>
-          <div class="name select"  v-if="threeList.length > 0">
+          <!-- <div class="name select"  v-if="threeList.length > 0">
             <el-select class="input" v-model="classInfo.threeClass" @change="productSelcet('three',classInfo.threeClass)">
               <el-option v-for="item in threeList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
             </el-select>
@@ -54,7 +54,7 @@
             <el-select class="input" v-model="classInfo.fourClass" @change="productSelcet('four', classInfo.fourClass)">
               <el-option v-for="item in fourList" :key="item.productId" :label="item.productName" :value="item.productId + ''"></el-option>
             </el-select>
-          </div>
+          </div> -->
       </div>
       <div>
         <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
@@ -143,6 +143,7 @@ export default {
     },
     addHandler () {
       this.showInfo.oneShow = true
+      console.log(dicAPIs)
       // 接下来需要获取类别
     },
     resetOption () {

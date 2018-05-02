@@ -118,11 +118,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .el-container{
-  background: url('../../asets/img/login_bg.jpg');
+  background: url('/staticm/img/login_bg.jpg');
   height: 100%;
   .logo{
     margin-top: 20px;
-    background: url('../../asets/img/login_logo.png');
+    background: url('/staticm/img/login_logo.png');
     width: 181px;
     height: 53px;
   }
@@ -138,7 +138,7 @@ export default {
   .input{
     width: 942px;
     height: 551px;
-    background-image: url('../../asets/login_input.png');
+    background-image: url('/staticm/img/login_input.png');
     position: relative;
     margin: 183px auto 0;
     .login{

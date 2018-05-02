@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-02 15:34:52
+ * @Last Modified time: 2018-05-02 17:26:11
  */
 <template>
   <el-container>
@@ -66,7 +66,6 @@ export default {
       inputData: {
         userName: '',
         password: '',
-        email: '',
         code: ''
       },
       disabledFlag: true,
@@ -116,12 +115,6 @@ export default {
           // let { data } = await userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password})
           // console.log(data)
           localStorage.removeItem('token')
-          if (this.inputData.userName.indexOf('@') === -1) {
-            this.inputData.email = ''
-          } else {
-            this.inputData.email = this.inputData.userName
-            this.inputData.userName = ''
-          }
           userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password, email: this.inputData.email})
             .then(data => {
               if (data.data && data.data.code === 200) {
@@ -176,11 +169,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .el-container{
-  background: url('../../asets/img/login_bg.jpg') no-repeat;
+  background: url('/staticm/img/login_bg.jpg') no-repeat;
   height: 100%;
   .logo{
     margin-top: 20px;
-    background: url('../../asets/img/login_logo.png');
+    background: url('/staticm/img/login_logo.png');
     width: 181px;
     height: 53px;
   }
@@ -196,7 +189,7 @@ export default {
   .input{
     width: 942px;
     height: 551px;
-    background-image: url('../../asets/img/login_input.png');
+    background-image: url('/staticm/img/login_input.png');
     position: relative;
     margin: 183px auto 0;
     .input_header{
@@ -240,7 +233,7 @@ export default {
         height: 18px;
         vertical-align: middle;
         cursor: pointer;
-        background: url('../../asets/img/login_refresh.png')
+        background: url('/staticm/img/login_refresh.png')
       }
       .forget{
         display: inline-block;
