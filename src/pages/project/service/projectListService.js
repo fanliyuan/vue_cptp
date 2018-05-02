@@ -35,39 +35,23 @@ class Option {
       }
     ]
   }
-  getSelectSearchOption ({ that }) {
+  getSelectSearchOption ({ that, selectList, selectFun }) {
     return {
       select: [
         {
           value: '0',
-          option: [
-            {
-              label: '选择1',
-              value: '0'
-            },
-            {
-              label: '选择2',
-              value: '1'
-            }
-          ],
+          option: selectList[0] ? selectList[0] : [],
           selectHandler (val) {
-            console.log(val)
+            val = +val
+            selectFun && selectFun(val, 0)
           }
         },
         {
-          value: '1',
-          option: [
-            {
-              label: '选择11',
-              value: '0'
-            },
-            {
-              label: '选择21',
-              value: '1'
-            }
-          ],
+          value: '0',
+          option: selectList[1] ? selectList[1] : [],
           selectHandler (val) {
-            console.log(val)
+            val = +val
+            selectFun && selectFun(0, val)
           }
         }
       ],

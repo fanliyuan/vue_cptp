@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 16:07:51
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-25 16:26:39
+ * @Last Modified time: 2018-05-02 14:17:20
 */
 
 import apiBase from '../apiBase'
@@ -50,6 +50,11 @@ const module = {
       method: 'post',
       name: 'updateProject',
       url: '/updateProject'
+    },
+    {
+      method: 'post',
+      name: 'getProductList',
+      url: '/getProductList'
     }
   ]
 }

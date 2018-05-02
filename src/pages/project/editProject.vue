@@ -25,16 +25,35 @@
           </div>
           <div v-else class="name">
             <span>暂无产品</span>
-            <span @click="addHandler" class="fr">添加</span>
+            <span @click="addHandler" class="fr click">添加</span>
           </div>
-          <div class="name select" v-if="showInfo.firstShow">
-            <el-input class="input" v-model="classInfo.firstClass"></el-input>
+          <!--
+            <div class="box" v-if="twoFlag">
+              <div class="label">所属类型</div>
+              <el-select v-model="productInfo.twoLevel" class="input" @change="twoLevelChange">
+                <el-option v-for="item in twoList" :key="item.subId" :label="item.levelName" :value="item.subId + ''"></el-option>
+              </el-select>
+            </div>
+           -->
+          <div class="name select" v-if="showInfo.oneShow">
+            <el-select class="input" v-model="classInfo.oneClass" @change="productSelcet('one', classInfo.oneClass)">
+              <el-option v-for="item in oneList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
+            </el-select>
           </div>
-          <div class="name select" v-if="showInfo.secondShow">
-            <el-input class="input" v-model="classInfo.secondClass"></el-input>
+          <div class="name select" v-if="twoList.length > 0">
+            <el-select class="input" v-model="classInfo.twoClass" @change="productSelcet('two' ,classInfo.twoClass)">
+              <el-option v-for="item in twoList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
+            </el-select>
           </div>
-          <div class="name select"  v-if="showInfo.thirdShow">
-            <el-input class="input" v-model="classInfo.thirdClass"></el-input>
+          <div class="name select"  v-if="threeList.length > 0">
+            <el-select class="input" v-model="classInfo.threeClass" @change="productSelcet('three',classInfo.threeClass)">
+              <el-option v-for="item in threeList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
+            </el-select>
+          </div>
+          <div class="name select"  v-if="fourList.length > 0">
+            <el-select class="input" v-model="classInfo.fourClass" @change="productSelcet('four', classInfo.fourClass)">
+              <el-option v-for="item in fourList" :key="item.productId" :label="item.productName" :value="item.productId + ''"></el-option>
+            </el-select>
           </div>
       </div>
       <div>
@@ -45,12 +64,15 @@
 </template>
 <script>
 import editProjectService from './service/editProjectService'
+import dicAPIs from '../../api/dic/dicAPIs'
+import projectAPIs from '../../api/project/projectAPIs'
 export default {
   data () {
     return {
       breadCrumbOption: {},
       projectInfo: {
-        oldName: '111',
+        oldName: '',
+        projectName: '',
         products: [
           {
             productId: 1,
@@ -62,8 +84,30 @@ export default {
           }
         ]
       },
-      classInfo: {},
-      showInfo: {firstShow: false, secondShow: false, thirdShow: false}
+      classInfo: {oneClass: '', twoClass: '', threeClass: '', fourClass: ''},
+      showInfo: {oneShow: false, twoShow: false, threeShow: false, fourShow: false},
+      oneList: [
+        {
+          levelName: 'DAAS',
+          levelId: '0'
+        },
+        {
+          levelName: 'PAAS',
+          levelId: '1'
+        },
+        {
+          levelName: 'SAAS',
+          levelId: '2'
+        }
+      ],
+      twoList: [],
+      threeList: [],
+      fourList: [],
+      params: {
+        oneLevel: 0,
+        twoLevel: 0,
+        threeLevel: 0
+      }
     }
   },
   mounted () {
@@ -98,8 +142,7 @@ export default {
       }
     },
     addHandler () {
-      // console.log('添加产品')
-      this.showInfo.firstShow = true
+      this.showInfo.oneShow = true
       // 接下来需要获取类别
     },
     resetOption () {
@@ -107,6 +150,52 @@ export default {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
       })
+    },
+    productSelcet (flag, val) {
+      switch (flag) {
+        case 'one':
+          // 执行第一类
+          if (val === '0') {
+            this.twoList = []
+            this.threeList = []
+            this.getProductList()
+          } else {
+            this.fourList = []
+            this.getProdutLevelList(val)
+          }
+          break
+        case 'two':
+          // 执行函数二
+          this.getProdutLevelList(val)
+          break
+        case 'three':
+          // 执行函数三
+          break
+        case 'four':
+          // 执行函数四
+          break
+        default:
+          // 执行默认函数
+          break
+      }
+    },
+    async getProdutLevelList (val) {
+      try {
+        let { data } = await projectAPIs.getProdutLevelList({parentId: +val})
+        if (val === '1' || val === '2') {
+          this.twoList = data.data
+        } else {
+          this.threeList = data.data
+        }
+      } catch (error) {}
+    },
+    async getProductList () {
+      try {
+        let {oneLevel, twoLevel, threeLevel} = this.params
+        let {data} = await projectAPIs.getProductList({oneLevel, twoLevel, threeLevel})
+        // console.log(data)
+        this.fourList = data.data
+      } catch (error) {}
     }
   }
 }

@@ -10,6 +10,8 @@
 import SelectSearch from '../../components/select/SelectSearch'
 import Table from '../../components/table/Table'
 import projectListService from './service/projectListService'
+import dicAPIs from '../../api/dic/dicAPIs'
+import projectAPIs from '../../api/project/projectAPIs'
 export default {
   components: {
     SelectSearch,
@@ -22,7 +24,7 @@ export default {
     return {
       breadCrumbOption: projectListService().getBreadCrumbOption(),
       rightButtonOption: projectListService().getRightButtonOption({that: this}),
-      selectSearchOption: projectListService().getSelectSearchOption({that: this}),
+      selectSearchOption: projectListService().getSelectSearchOption({that: this, selectList: []}),
       tableOption: projectListService().getTableOption({that: this, delFun}),
       searchResult: null,
       pageInfo: {
@@ -67,10 +69,42 @@ export default {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
       })
+    },
+    async getSelectList () {
+      try {
+        let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMEN'})
+        let managerList = await dicAPIs.selectInfoByValues({type: 'FUZEREN'})
+        departmentList.data.data.forEach(item => {
+          item.value = item.dictIndex + ''
+          item.label = item.dictDesc
+        })
+        managerList.data.data.forEach(item => {
+          item.value = item.dictIndex + ''
+          item.label = item.dictDesc
+        })
+        let selectFun = async (deptId, leaderId) => {
+          try {
+            let {data} = await projectAPIs.filterProductList(
+              {
+                deptId,
+                leaderId,
+                pageNum: this.pageInfo.pageNum,
+                pageSize: this.pageInfo.pageSize
+              }
+            )
+            console.log(data)
+            // 这里项目列表数据
+          } catch (error) {}
+        }
+        this.selectSearchOption = projectListService().getSelectSearchOption({that: this, selectList: [departmentList.data.data, managerList.data.data], selectFun})
+      } catch (error) {}
     }
   },
   mounted () {
     this.resetOption()
+  },
+  created () {
+    this.getSelectList()
   }
 }
 </script>

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-28 17:54:53
+ * @Last Modified time: 2018-05-02 15:33:21
 */
 
 <template>
@@ -127,7 +127,7 @@ export default {
     font-size: 20px;
     color: white;
     position: relative;
-    background: url('/static/img/breadcrumb-bg.png') no-repeat;
+    background: url('../asets/img/breadcrumb-bg.png') no-repeat;
     .header_div{
       display: inline-block;
       vertical-align: top;

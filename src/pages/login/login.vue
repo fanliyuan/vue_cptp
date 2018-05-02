@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-28 17:18:49
+ * @Last Modified time: 2018-05-02 15:34:52
  */
 <template>
   <el-container>
@@ -66,6 +66,7 @@ export default {
       inputData: {
         userName: '',
         password: '',
+        email: '',
         code: ''
       },
       disabledFlag: true,
@@ -115,7 +116,13 @@ export default {
           // let { data } = await userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password})
           // console.log(data)
           localStorage.removeItem('token')
-          userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password})
+          if (this.inputData.userName.indexOf('@') === -1) {
+            this.inputData.email = ''
+          } else {
+            this.inputData.email = this.inputData.userName
+            this.inputData.userName = ''
+          }
+          userAPIs.login({userName: this.inputData.userName, userPassword: this.inputData.password, email: this.inputData.email})
             .then(data => {
               if (data.data && data.data.code === 200) {
                 this.message = null
@@ -125,7 +132,10 @@ export default {
               } else {
                 this.getCodeImage()
                 this.codeValue = ''
-                this.message = data.data.data
+                // this.message = data.data.message
+                if (data.data.message !== '登录成功') {
+                  this.message = '用户名或密码错误'
+                }
               }
             })
         } else {
@@ -166,11 +176,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .el-container{
-  background: url('/static/img/login_bg.jpg') no-repeat;
+  background: url('../../asets/img/login_bg.jpg') no-repeat;
   height: 100%;
   .logo{
     margin-top: 20px;
-    background: url('/static/img/login_logo.png');
+    background: url('../../asets/img/login_logo.png');
     width: 181px;
     height: 53px;
   }
@@ -186,7 +196,7 @@ export default {
   .input{
     width: 942px;
     height: 551px;
-    background-image: url('/static/img/login_input.png');
+    background-image: url('../../asets/img/login_input.png');
     position: relative;
     margin: 183px auto 0;
     .input_header{
@@ -230,7 +240,7 @@ export default {
         height: 18px;
         vertical-align: middle;
         cursor: pointer;
-        background: url('/static/img/login_refresh.png')
+        background: url('../../asets/img/login_refresh.png')
       }
       .forget{
         display: inline-block;

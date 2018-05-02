@@ -10,7 +10,7 @@
     <el-row>
       <el-col class="logo" style="line-height:95px;width: 315px">
         <router-link :to="{ path: '/' }">
-          <img src="/static/img/logo.png">
+          <img src="../../assets/img/logo.png">
         </router-link>
       </el-col>
       <el-col style="margin-left:-60px; display: inline-block; width: auto">
@@ -18,7 +18,7 @@
       </el-col>
       <el-col class="adminInfo" style="margin-right: 30px;float: right; width: auto">
         <p class="head_text">
-          <!-- <img src="/static/img/avatar.png" alt="默认头像" style=""> -->
+          <!-- <img src="../../assets/img/avatar.png" alt="默认头像" style=""> -->
           <a href="javascript:;" @click="meHandler">
             <i class="iconfont icon-gerenzhongxin1"></i>
             &nbsp;

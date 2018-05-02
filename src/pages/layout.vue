@@ -102,7 +102,7 @@ export default {
 <style lang="less" scoped>
   .breadcrumb{
     height: 60px;
-    background: url('/static/img/breadcrumb-bg.png') no-repeat;
+    background: url('../assets/img/breadcrumb-bg.png') no-repeat;
     .manager_background{
       font-size: 20px;
       line-height: 60px;
