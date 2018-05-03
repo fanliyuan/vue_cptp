@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:12:58
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-24 13:58:53
+ * @Last Modified time: 2018-05-03 18:55:24
  */
 
 <template>
@@ -18,13 +18,14 @@
         <el-input type="password" class="input" placeholder="请再次输入新登录密码" v-model="inputData.confirmPassword"></el-input>
       </el-form-item>
       <el-form-item class="box mt10">
-        <el-button type="primary" @click="submitHandler(inputRule)" :disabled="disabledFlag">确认</el-button>
+        <el-button type="primary" @click="submitHandler('myinput')" :disabled="disabledFlag">确认</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
 import meService from './service/meService'
+import userAPIs from '../../api/user/userAPIs'
 export default {
   data () {
     let checkPassword = (rule, val, cb) => {
@@ -88,9 +89,31 @@ export default {
   },
   methods: {
     submitHandler (formName) {
-      this.$refs[formName].validate((flag, err) => {
+      this.$refs[formName].validate(async (flag, err) => {
         if (flag) {
-          alert('验证通过,可以提交表单')
+          // alert('验证通过,可以提交表单')
+          try {
+            let { data } = await userAPIs.updatePwd({
+              userId: sessionStorage.getItem('userId'),
+              userOldPassword: this.inputData.oldPassword,
+              userNewPassword: this.inputData.confirmPassword
+            })
+            if (data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '修改密码成功'
+              })
+            } else {
+              throw new Error(data.message)
+            }
+          } catch (error) {
+            if (error) {
+              this.$message({
+                type: 'error',
+                message: error.message
+              })
+            }
+          }
         }
       })
     },

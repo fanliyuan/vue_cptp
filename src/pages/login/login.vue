@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-02 17:26:11
+ * @Last Modified time: 2018-05-03 18:46:37
  */
 <template>
   <el-container>
@@ -121,6 +121,7 @@ export default {
                 this.message = null
                 localStorage.setItem('token', data.data.data.userToken)
                 localStorage.setItem('userName', data.data.data.userName)
+                sessionStorage.setItem('userId', data.data.data.userId)
                 this.$router.push('/')
               } else {
                 this.getCodeImage()
@@ -129,6 +130,10 @@ export default {
                 if (data.data.message !== '登录成功') {
                   this.message = '用户名或密码错误'
                 }
+              }
+            }).catch(err => {
+              if (err) {
+                this.$alert('断网了或者服务器错误')
               }
             })
         } else {
@@ -145,6 +150,13 @@ export default {
         this.codeValue = data.data.code
       } catch (error) {
       }
+    },
+    imageError () {
+      // this.$alert('网络不通畅或者服务器错误')
+      this.$confirm('网络不通畅或者服务器错误,点击确认刷新页面').then(() => {
+        window.location.reload()
+      }).catch(() => {
+      })
     }
   },
   watch: {

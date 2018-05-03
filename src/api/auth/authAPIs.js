@@ -11,25 +11,33 @@ import apiFactory from '../apiFactory'
 const module = {
   moduleName: 'auth',
   apis: [{
-    // 登录
     method: 'post', // 请求方式
-    name: 'login', // 接口名称
-    url: '/login' // 接口全路径
+    name: 'deleteRole', // 接口名称
+    url: '/deleteRole' // 接口全路径
   }, {
-    // 登出
-    method: 'post', // 请求方式
-    name: 'logout', // 接口名称
-    url: '/logout' // 接口全路径
+    method: 'get', // 请求方式
+    name: 'getRoleInfoById', // 接口名称
+    url: '/getRoleInfoById' // 接口全路径
   }, {
-    // home
-    method: 'post', // 请求方式
-    name: 'home', // 接口名称
-    url: '/home' // 接口全路径
+    method: 'get', // 请求方式
+    name: 'getRoleInfoByUserId', // 接口名称
+    url: '/getRoleInfoByUserId' // 接口全路径
   }, {
-    // 检查访问权限
     method: 'post', // 请求方式
-    name: 'checkToken', // 接口名称
-    url: '/checkToken' // 接口全路径
+    name: 'saveRole', // 接口名称
+    url: '/saveRole' // 接口全路径
+  }, {
+    method: 'post',
+    name: 'selectRoleInfoAll',
+    url: '/selectRoleInfoAll'
+  }, {
+    method: 'post',
+    name: 'selectUserInfoByRoleName',
+    url: '/selectUserInfoByRoleName'
+  }, {
+    method: 'post',
+    name: 'updateRole',
+    url: '/updateRole'
   }]
 }
 

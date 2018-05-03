@@ -3,7 +3,7 @@
     <el-dialog :visible.sync="addPosition" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">职位名</span>
-        <el-input v-model="positionValue" class="input"></el-input>
+        <el-input v-model="editPositionInfo.dictDesc" class="input"></el-input>
       </div>
       <el-button type="primary" class="button" @click="addHandler">确定</el-button>
     </el-dialog>
@@ -12,11 +12,11 @@
     <el-dialog :visible.sync="editPosition" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">原职位名</span>
-        <el-input v-model="editPositionInfo.oldValue" class="input" readonly=""></el-input>
+        <el-input v-model="editPositionInfo.nowPosition" class="input" readonly=""></el-input>
       </div>
       <div class="dialogbox">
         <span class="label">新职位名</span>
-        <el-input v-model="editPositionInfo.newValue" class="input"></el-input>
+        <el-input v-model="editPositionInfo.dictDesc" class="input"></el-input>
       </div>
       <el-button type="primary" class="button" @click="editHandler">确定</el-button>
     </el-dialog>
@@ -35,6 +35,8 @@
 <script>
 import Tabel from '../../components/table/Table'
 import editPositionService from './service/editPositionService'
+import dicAPIs from '../../api/dic/dicAPIs'
+// import authAPIs from '../../api/auth/authAPIs'
 export default {
   components: {
     Tabel
@@ -42,16 +44,13 @@ export default {
   data () {
     let vm = this
     let editFun = (row) => {
-      this.editPositionInfo = {
-        oldValue: row.nowPosition
-      }
+      this.editPositionInfo.dictDesc = ''
       this.editPosition = true
     }
     let delFun = (row) => {
       this.$confirm(`是否删除 ${row.nowPosition} 职位`).then(data => {
         if (data) {
-          // 这里调用删除接口
-          console.log('确认删除')
+          this.deleteDictValue(row)
         } else {
           this.$message('取消删除')
         }
@@ -84,23 +83,53 @@ export default {
         }
       ],
       addPosition: false,
-      positionValue: '',
       editPosition: false,
-      editPositionInfo: {},
+      editPositionInfo: {dictDesc: '', dictType: ''},
       pageInfo: {
         pageSize: 10,
         pageNum: 1,
-        total: 11
+        total: 0
       }
     }
   },
   methods: {
-    addHandler () {
-      alert(`${this.positionValue}添加成功`)
+    async addHandler () {
+      // alert(`${this.positionValue}添加成功`)
+      // let lastPositionInfo = this.tableOptions[this.tableOptions.length - 1]
+      let editPositionInfo = {
+        dictDesc: this.editPositionInfo.dictDesc,
+        dictType: 'ZHIWEIXINXI',
+        dictIndex: this.tableOptions.data.length,
+        dictParent: 0,
+        dictValue: ''
+      }
+      try {
+        let { data } = await dicAPIs.saveDictValue(editPositionInfo)
+        if (data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          })
+          this.getPositionList()
+        }
+      } catch (error) {}
+      this.addPosition = false
     },
-    editHandler () {
+    async editHandler () {
       // 这里调用更新接口
-      alert(`${this.editPositionInfo.oldValue}修改成功`)
+      // alert(`${this.editPositionInfo.oldValue}修改成功`)
+      delete this.editPositionInfo.nowPosition
+      delete this.editPositionInfo.operation
+      try {
+        let { data } = await dicAPIs.updateSystemDictValue(this.editPositionInfo)
+        if (data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+          this.getPositionList()
+        }
+      } catch (error) {}
       this.editPosition = false
     },
     pageHandler (val) {
@@ -113,10 +142,57 @@ export default {
         breadCrumbOption: this.breadCrumbOptions,
         rightButtonOption: this.rightButtonOptions
       })
+    },
+    async getPositionList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
+        let editFun = (row) => {
+          this.editPositionInfo = row
+          this.editPositionInfo.dictDesc = ''
+          this.editPosition = true
+        }
+        let delFun = (row) => {
+          this.$confirm(`是否删除 ${row.nowPosition} 职位`).then(data => {
+            if (data) {
+              // 这里调用删除接口
+              this.deleteDictValue(row)
+            } else {
+              this.$message('取消删除')
+            }
+          }).catch(err => {
+            if (err) {
+              this.$message('取消删除')
+            }
+          })
+        }
+        data.data.forEach(item => {
+          item.nowPosition = item.dictDesc
+          item.operation = [
+            {
+              textProp: '修改'
+            },
+            {
+              textProp: '删除'
+            }
+          ]
+        })
+        this.tableOptions = editPositionService(data.data).getTableOption({editFun, delFun})
+      } catch (error) {}
+    },
+    async deleteDictValue (row) {
+      let { data } = await dicAPIs.deleteDictValue({ id: row.id })
+      if (data.code === 200) {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+        this.getPositionList()
+      }
     }
   },
   mounted () {
     this.resetOption()
+    this.getPositionList()
   }
 }
 </script>

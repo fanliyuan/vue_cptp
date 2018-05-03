@@ -6,11 +6,11 @@ class Option {
     let thead = [
       {
         label: '类型职位',
-        prop: 'positionClass'
+        prop: 'parentDesc'
       },
       {
         label: '职位',
-        prop: 'position'
+        prop: 'dictDesc'
       },
       {
         xtype: 'links',
@@ -18,7 +18,6 @@ class Option {
         prop: 'operation',
         OnClick (val, row) {
           if (val.textProp === '修改') {
-            console.log(row)
             editFun && editFun(row)
           } else {
             delFun && delFun(row)
@@ -28,20 +27,7 @@ class Option {
         linkClassName: 'myoperation'
       }
     ]
-    let data = [
-      {
-        positionClass: '领导类型',
-        position: '领导职位',
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      }
-    ]
+    let data = this.data ? this.data : []
     return {
       thead,
       data,

@@ -10,6 +10,8 @@
 import Table from '../../components/table/Table'
 import userAuthListService from './service/userAuthListService'
 import SelectSearch from '../../components/select/SelectSearch'
+import dicAPIs from '../../api/dic/dicAPIs'
+import authAPIs from '../../api/auth/authAPIs'
 export default {
   components: {
     Table,
@@ -31,13 +33,50 @@ export default {
       }
     ]
     // let userAuthListOptions = userAuthListService(temp).getOptions()
+    // 以下代码执行顺序有问题-----------------------------------
+    let roleList = []
+    let positionTypeList = []
+    let positionList = []
+    // let getRoleList = async () => {
+    //   try {
+    //     let { data } = await dicAPIs.selectInfoByValues({type: 'JIAOSELEIXING'})
+    //     data.data.forEach(item => {
+    //       item.label = item.dictDesc
+    //       item.value = item.id + ''
+    //     })
+    //     roleList = data.data
+    //   } catch (error) {}
+    // }
+    // let getPositionTypeList = async () => {
+    //   try {
+    //     let { data } = await dicAPIs.selectInfoByValues({type: 'JIAOSELEIXING'})
+    //     data.data.forEach(item => {
+    //       item.label = item.dictDesc
+    //       item.value = item.id + ''
+    //     })
+    //     positionTypeList = data.data
+    //   } catch (error) {}
+    // }
+    // let getPositionList = async () => {
+    //   try {
+    //     let { data } = await dicAPIs.selectInfoByValues({type: 'JIAOSELEIXING'})
+    //     data.data.forEach(item => {
+    //       item.label = item.dictDesc
+    //       item.value = item.id + ''
+    //     })
+    //     positionList = data.data
+    //   } catch (error) {}
+    // }
+    // getRoleList()
+    // getPositionTypeList()
+    // getPositionList()
     return {
       tableOptions: userAuthListService(temp).getOptions({that: this}),
-      selectSearchOptions: userAuthListService().selectSearchOptions({that: this}),
+      selectSearchOptions: userAuthListService().selectSearchOptions({that: this, roleList, positionTypeList, positionList}),
       rightButtonOptions: userAuthListService().rightOptions({that: this}),
       breadcrumbOptions: userAuthListService().breadcrumbOptions(),
       searchResult: null,
-      pageInfo: {pageNum: 1, pageSize: 10, total: 11}
+      pageInfo: {pageNum: 1, pageSize: 10, total: 0}
     }
   },
   watch: {
@@ -81,10 +120,73 @@ export default {
         breadCrumbOption: this.breadcrumbOptions,
         rightButtonOption: this.rightButtonOptions
       })
+    },
+    async getSelectData () {
+      let roleList
+      let positionTypeList
+      let positionList
+      let selectFun1 = async (val) => {
+        let { data } = await authAPIs.selectRoleInfoAll({
+          pageNum: this.pageInfo.pageNum,
+          pageSize: this.pageInfo.pageSize,
+          roleId: +val,
+          postionInfoId: -1,
+          postionTypeId: -1,
+          userName: '',
+          userAccount: ''
+        })
+        console.log(data.data)
+      }
+      let selectFun2 = async (val) => {
+        let { data } = await authAPIs.selectRoleInfoAll({
+          pageNum: this.pageInfo.pageNum,
+          pageSize: this.pageInfo.pageSize,
+          roleId: -1,
+          postionInfoId: -1,
+          postionTypeId: +val,
+          userName: '',
+          userAccount: ''
+        })
+        console.log(data.data)
+      }
+      let selectFun3 = async (val) => {
+        let { data } = await authAPIs.selectRoleInfoAll({
+          pageNum: this.pageInfo.pageNum,
+          pageSize: this.pageInfo.pageSize,
+          roleId: -1,
+          postionInfoId: +val,
+          postionTypeId: -1,
+          userName: '',
+          userAccount: ''
+        })
+        console.log(data.data)
+      }
+      try {
+        var {data} = await dicAPIs.selectInfoByValues({type: 'JIAOSELEIXING'})//   eslint-disable-line
+        data.data.forEach(item => {
+          item.label = item.dictDesc
+          item.value = item.dictIndex + ''
+        })
+        roleList = data.data
+        var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEILEIXING'})//   eslint-disable-line
+        data.data.forEach(item => {
+          item.label = item.dictDesc
+          item.value = item.dictIndex + ''
+        })
+        positionTypeList = data.data
+        var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEIXINXI'})//   eslint-disable-line
+        data.data.forEach(item => {
+          item.label = item.dictDesc
+          item.value = item.dictIndex + ''
+        })
+        positionList = data.data
+        this.selectSearchOptions = userAuthListService().selectSearchOptions({that: this, roleList, positionTypeList, positionList, selectFun1, selectFun2, selectFun3})
+      } catch (error) {}
     }
   },
   mounted () {
     this.resetOption()
+    this.getSelectData()
   }
 }
 </script>

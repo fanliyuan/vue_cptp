@@ -14,7 +14,6 @@ class Option {
         prop: 'operation',
         OnClick (val, row) {
           if (val.textProp === '修改') {
-            console.log(row)
             editFun && editFun(row)
           } else {
             delFun && delFun(row)
@@ -24,18 +23,7 @@ class Option {
         linkClassName: 'myoperation'
       }
     ]
-    let data = [
-      {
-        nowPosition: '领导',
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      }
+    let data = this.data ? this.data : [
     ]
     return {
       thead,

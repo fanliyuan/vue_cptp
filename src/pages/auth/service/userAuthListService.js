@@ -64,57 +64,30 @@ class TabelOptions {
     }
     return options
   }
-  selectSearchOptions ({that}) {
+  selectSearchOptions ({that, roleList, positionTypeList, positionList, selectFun1, selectFun2, selectFun3}) {
     return {
       select: [
         {
           selectHandler (val) {
-            console.log(val)
+            selectFun1 && selectFun1(val)
           },
-          value: '2',
+          value: null,
           className: 'my-select',
-          option: [
-            {
-              label: '选择一',
-              value: '1'
-            },
-            {
-              label: '选择二',
-              value: '2'
-            }
-          ]
+          option: roleList
         },
         {
           selectHandler (val) {
-            console.log(val)
+            selectFun2 && selectFun2(val)
           },
-          value: '2',
-          option: [
-            {
-              label: '选择一',
-              value: '1'
-            },
-            {
-              label: '选择二',
-              value: '2'
-            }
-          ]
+          value: null,
+          option: positionTypeList
         },
         {
           selectHandler (val) {
-            console.log(val)
+            selectFun3 && selectFun3(val)
           },
-          value: '2',
-          option: [
-            {
-              label: '选择一',
-              value: '1'
-            },
-            {
-              label: '选择二',
-              value: '2'
-            }
-          ]
+          value: null,
+          option: positionList
         }
       ],
       search: {

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 13:27:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-27 16:23:28
+ * @Last Modified time: 2018-05-03 15:36:08
 */
 
 import apiBase from '../apiBase'
@@ -30,6 +30,21 @@ const module = {
       method: 'post',
       name: 'updateSystemDictValue',
       url: '/updateSystemDictValue'
+    },
+    {
+      method: 'post',
+      name: 'deleteDictValue',
+      url: '/deleteDictValue'
+    },
+    {
+      method: 'post',
+      name: 'queryDictValueInfo',
+      url: '/queryDictValueInfo'
+    },
+    {
+      method: 'post',
+      name: 'selectSystemDictValueInfo',
+      url: '/selectSystemDictValueInfo'
     }
   ]
 }
