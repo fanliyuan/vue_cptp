@@ -37,24 +37,24 @@
            -->
           <div class="name select" v-if="showInfo.oneShow">
             <el-select class="input" v-model="classInfo.oneClass" @change="productSelcet('one', classInfo.oneClass)">
-              <el-option v-for="item in oneList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
+              <el-option v-for="(item, index) in oneList" :key="item.levelId" :label="item.levelName" :value="index + '-' + item.levelId"></el-option>
             </el-select>
           </div>
           <div class="name select" v-if="twoList.length > 0">
             <el-select class="input" v-model="classInfo.twoClass" @change="productSelcet('two' ,classInfo.twoClass)">
-              <el-option v-for="item in twoList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
+              <el-option v-for="(item, index) in twoList" :key="item.levelId" :label="item.levelName" :value="index + '-' + item.levelId"></el-option>
             </el-select>
           </div>
-          <!-- <div class="name select"  v-if="threeList.length > 0">
+          <div class="name select"  v-if="threeList.length > 0">
             <el-select class="input" v-model="classInfo.threeClass" @change="productSelcet('three',classInfo.threeClass)">
-              <el-option v-for="item in threeList" :key="item.levelId" :label="item.levelName" :value="item.levelId + ''"></el-option>
+              <el-option v-for="(item, index) in threeList" :key="item.levelId" :label="item.levelName" :value="index + '-' + item.levelId"></el-option>
             </el-select>
           </div>
           <div class="name select"  v-if="fourList.length > 0">
             <el-select class="input" v-model="classInfo.fourClass" @change="productSelcet('four', classInfo.fourClass)">
-              <el-option v-for="item in fourList" :key="item.productId" :label="item.productName" :value="item.productId + ''"></el-option>
+              <el-option v-for="(item, index) in fourList" :key="item.productId" :label="item.productName" :value="index + '-' + item.levelId"></el-option>
             </el-select>
-          </div> -->
+          </div>
       </div>
       <div>
         <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
@@ -156,24 +156,37 @@ export default {
       switch (flag) {
         case 'one':
           // 执行第一类
-          if (val === '0') {
+          if (val.split('-')[1] === '0') {
             this.twoList = []
             this.threeList = []
+            this.params.oneLevel = 0
+            this.params.twoLevel = 0
+            this.params.threeLevel = 0
             this.getProductList()
           } else {
             this.fourList = []
-            this.getProdutLevelList(val)
+            this.params.oneLevel = +val.split('-')[0]
+            this.getProdutLevelList(val.split('-')[1])
           }
           break
         case 'two':
           // 执行函数二
-          this.getProdutLevelList(val)
+          this.params.twoLevel = +val.split('-')[0]
+          if (this.params.oneLevel === '1') {
+            this.threeList = []
+            this.params.threeLevel = 0
+            this.getProductList()
+          } else {
+            this.getProdutLevelList(val.split('-')[1])
+          }
           break
         case 'three':
           // 执行函数三
+          this.params.threeLevel = +val.split('-')[1]
+          this.getProductList()
           break
         case 'four':
-          // 执行函数四
+          // 这里是选择产品
           break
         default:
           // 执行默认函数
@@ -184,9 +197,17 @@ export default {
       try {
         let { data } = await projectAPIs.getProdutLevelList({parentId: +val})
         if (val === '1' || val === '2') {
+          this.classInfo.twoClass = null
           this.twoList = data.data
         } else {
-          this.threeList = data.data
+          this.classInfo.threeClass = null
+          if (data.data.length === 0) {
+            this.params.threeLevel = 0
+            this.threeList = []
+            this.getProductList()
+          } else {
+            this.threeList = data.data
+          }
         }
       } catch (error) {}
     },

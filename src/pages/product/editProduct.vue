@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-28 17:30:53
+ * @Last Modified time: 2018-05-03 09:45:40
 */
 
 <template>
@@ -114,7 +114,7 @@ import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '0' },
+      productInfo: { productName: '', pm: '', state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '0', productMarketTarget: null, productTag: null },
       productManagerList: [],
       stateList: [],
       productLevelList: [],
@@ -219,6 +219,10 @@ export default {
         }
         // 这里是编辑需要初始值
         let productInfo = JSON.parse(sessionStorage.getItem('productInfo'))
+        // this.productInfo.productMarketTarget = productInfo.productMarketTarget
+        // this.productInfo.productTag = productInfo.productTag
+        this.dynamicMarket = productInfo.productMarketTarget ? productInfo.productMarketTarget.split(',') : []
+        this.dynamicTags = productInfo.productTag ? productInfo.productTag.split(',') : []
         this.getTwoList(productInfo, this.getThreeList)
         for (let key in productInfo) {
           if (key === 'productName') {
@@ -256,12 +260,12 @@ export default {
           deptId: this.productInfo.deptId,
           finishiPercent: this.productInfo.finishiPercent,
           frozenStatus: this.productInfo.frozenStatus,
-          marketTarget: this.productInfo.produtcMarketTarget,
+          marketTarget: this.productMarketTarget,
           oneLevel: this.productInfo.oneLevel,
           pm: this.productInfo.pm,
           productId: this.productInfo.productId,
           productName: this.productInfo.productName,
-          productTag: this.productInfo.productTag,
+          productTag: this.productTag,
           projectId: this.productInfo.projectId,
           rdm: this.productInfo.rdm,
           state: this.productInfo.state,
@@ -290,13 +294,13 @@ export default {
       } else {
         // 这里调用新增接口
         let params = {
-          marketTarget: this.productInfo.marketTarget,
+          marketTarget: this.productMarketTarget,
           name: this.productInfo.productName,
           oneLevel: this.productInfo.oneLevel - 0,
           twoLevel: this.productInfo.twoLevel - 0,
           threeLevel: this.productInfo.threeLevel - 0,
           pm: this.productInfo.pm,
-          tag: this.productInfo.tag,
+          tag: this.productTag,
           status: this.productInfo.state - 0,
           statusName: this.productInfo.stateName
         }
@@ -429,7 +433,7 @@ export default {
         console.log()
       }
     },
-    // 动态编辑标签,目前有问题
+    // 动态编辑标签
     handleClose (tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
     },
@@ -479,6 +483,14 @@ export default {
         let { data } = await dicAPIs.selectInfoByValues({type: 'SHICHANGDINGWEI'})
         this.marketList = data.data
       } catch (error) {}
+    }
+  },
+  computed: {
+    productTag () {
+      return this.dynamicTags.join(',')
+    },
+    productMarketTarget () {
+      return this.dynamicMarket.join(',')
     }
   }
 }
