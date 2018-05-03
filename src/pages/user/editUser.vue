@@ -3,32 +3,61 @@
     <div class="myinput">
       <div class="box">
         <div class="label">用户名</div>
-        <div class="silver username" v-if="userInfo.oldName">{{userInfo.oldName}}</div>
+        <div class="silver username" v-if="userInfo.userName">{{userInfo.userName}}</div>
         <el-input class="input" v-else v-model="userInfo.userName"></el-input>
       </div>
       <div class="box">
-        <div class="label">账号</div>
-        <el-input class="input" v-model="userInfo.account"></el-input>
+        <div class="label">邮箱</div>
+        <el-input class="input" v-model="userInfo.userEmail"></el-input>
       </div>
       <div class="box">
         <div class="label">手机号</div>
-        <el-input class="input" v-model="userInfo.mobile"></el-input>
+        <el-input class="input" v-model="userInfo.userPhone"></el-input>
       </div>
       <div class="box">
         <div class="label">部门</div>
-        <el-input class="input" v-model="userInfo.department"></el-input>
-      </div>
-      <div class="box">
-        <div class="label">职位</div>
-        <el-input class="input" v-model="userInfo.position"></el-input>
+        <el-select class="input" v-model="userInfo.deptId" placeholder="请选择" >
+          <el-option
+            v-for="deptInfo in deptList"
+            :key="deptInfo.id"
+            :label="deptInfo.dictDesc"
+            :value="deptInfo.dictIndex"
+          >
+          </el-option>
+        </el-select>
       </div>
       <div class="box">
         <div class="label">职位类型</div>
-        <el-input class="input" v-model="userInfo.positionClass"></el-input>
+          <el-select class="input" v-model="userInfo.positionTypeId" placeholder="请选择" >
+            <el-option
+              v-for="positionTypeInfo in positionTypeList"
+              :key="positionTypeInfo.id"
+              :label="positionTypeInfo.dictDesc"
+              :value="positionTypeInfo.dictIndex">
+            </el-option>
+          </el-select>
+      </div>
+      <div class="box">
+        <div class="label">职位</div>
+          <el-select class="input" v-model="userInfo.positionId" placeholder="请选择" >
+            <el-option
+              v-for="positionInfo in positionList"
+              :key="positionInfo.id"
+              :label="positionInfo.dictDesc"
+              :value="positionInfo.dictIndex">
+            </el-option>
+          </el-select>
       </div>
       <div class="box">
         <div class="label">角色</div>
-        <el-input class="input" v-model="userInfo.role"></el-input>
+        <el-select class="input"  v-model="userInfo.roleId" placeholder="请选择" >
+            <el-option
+              v-for="roleInfo in roleList"
+              :key="roleInfo.id"
+              :label="roleInfo.dictDesc"
+              :value="roleInfo.dictIndex">
+            </el-option>
+          </el-select>
       </div>
       <div>
         <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
@@ -38,20 +67,32 @@
 </template>
 <script>
 import editUser from './service/editUserService'
+import userAPIs from '../../api/user/userAPIs'
+import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
       breadCrumbOptions: editUser().getOptions().breadCrumbOptions,
       userInfo: {
-        oldName: null,
+        token: null,
+        userId: null,
         userName: null,
-        account: null,
-        mobile: null,
-        deparment: null,
-        position: null,
-        positionClass: null,
-        role: null
-      }
+        userEmail: null,
+        userPhone: null,
+        deptId: null,
+        deptName: null,
+        positionId: null,
+        positionName: null,
+        positionTypeId: null,
+        positionTypeName: null,
+        roleId: null,
+        roleName: null
+      },
+      positionTypeList: [],
+      positionList: [],
+      deptList: [],
+      roleList: []
+
     }
   },
   watch: {
@@ -76,12 +117,92 @@ export default {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
     }
     this.resetOption()
+
+    this.initData()
   },
   methods: {
-    submitHandler () {
-      // 这里调用修改或者添加接口
-      console.log('修改提交')
+    initData () {
+      this.userInfo.token = '3984dcf753c3ad'
+
+      let params1 = { 'token': '3984dcf753c3ad',
+        'type': 'BUMENLEIXING'}
+
+      let params2 = { 'token': '3984dcf753c3ad',
+        'type': 'ZHIWEILEIXING'}
+
+      let params3 = {'token': '3984dcf753c3ad',
+        'type': 'ZHIWEIXINXI'}
+
+      let params4 = {'token': '3984dcf753c3ad',
+        'type': 'JIAOSELEIXING'}
+
+      dicAPIs.selectInfoByValues(params1).then(response => {
+        if (response.data.code === 200) {
+          this.deptList = response.data.data
+
+          console.log(this.deptInfo)
+        } else {
+          console.log('错误')
+        }
+      })
+
+      dicAPIs.selectInfoByValues(params2).then(response => {
+        if (response.data.code === 200) {
+          this.positionTypeList = response.data.data
+
+          console.log(this.positionTypeInfo)
+        } else {
+          console.log('错误')
+        }
+      })
+
+      dicAPIs.selectInfoByValues(params3).then(response => {
+        if (response.data.code === 200) {
+          this.positionList = response.data.data
+
+          console.log(this.positionInfo)
+        } else {
+          console.log('错误')
+        }
+      })
+
+      dicAPIs.selectInfoByValues(params4).then(response => {
+        if (response.data.code === 200) {
+          this.roleList = response.data.data
+
+          console.log(this.roleInfo)
+        } else {
+          console.log('错误')
+        }
+      })
     },
+
+    getDictDesc (dictList, selIndex) {
+      console.log(dictList)
+
+      for (var index in dictList) {
+        if (dictList[index].dictIndex === selIndex) {
+          return dictList[index].dictDesc
+        }
+      }
+    },
+
+    submitHandler () {
+      this.userInfo.deptName = this.getDictDesc(this.deptList, this.userInfo.deptId)
+
+      this.userInfo.positionTypeName = this.getDictDesc(this.positionTypeList, this.userInfo.positionTypeId)
+
+      this.userInfo.positionName = this.getDictDesc(this.positionList, this.userInfo.positionId)
+
+      this.userInfo.roleName = this.getDictDesc(this.roleList, this.userInfo.roleId)
+
+      console.log(this.userInfo)
+
+      userAPIs.addUser(this.userInfo).then(response => {
+        console.log(response.data)
+      })
+    },
+
     resetOption () {
       this.$emit('data', {
         breadCrumbOption: this.breadCrumbOptions,
