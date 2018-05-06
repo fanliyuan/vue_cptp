@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 11:26:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-27 18:12:16
+ * @Last Modified time: 2018-05-04 10:14:10
 */
 
 import apiBase from '../apiBase'
@@ -77,6 +77,11 @@ const module = {
       method: 'get',
       name: 'getCodeImage',
       url: '/getCodeImage'
+    },
+    {
+      method: 'post',
+      name: 'getUserInfoById',
+      url: '/getUserInfoById'
     }
   ]
 }

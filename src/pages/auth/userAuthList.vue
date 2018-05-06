@@ -20,17 +20,6 @@ export default {
   data () {
     // 展示数据
     let temp = [
-      {
-        userName: '用户名1',
-        account: '账户',
-        look: '√',
-        edit: '×',
-        opetate: [
-          {
-            textProp: '编辑'
-          }
-        ]
-      }
     ]
     // let userAuthListOptions = userAuthListService(temp).getOptions()
     // 以下代码执行顺序有问题-----------------------------------
@@ -76,7 +65,10 @@ export default {
       rightButtonOptions: userAuthListService().rightOptions({that: this}),
       breadcrumbOptions: userAuthListService().breadcrumbOptions(),
       searchResult: null,
-      pageInfo: {pageNum: 1, pageSize: 10, total: 0}
+      pageInfo: {pageNum: 1, pageSize: 10, total: 0},
+      positionInfoId: 0,
+      positionTypeId: 0,
+      roleId: 0
     }
   },
   watch: {
@@ -97,6 +89,10 @@ export default {
           keyword: this.$route.params.keyword,
           total: 9
         }
+        this.roleId = 0
+        this.postionInfoId = 0
+        this.positionTypeId = 0
+        this.getDataList(true)
       } else {
         this.breadcrumbOptions = {
           bread: [
@@ -106,6 +102,7 @@ export default {
           ]
         }
         this.searchResult = null
+        this.getDataList()
       }
       this.resetOption()
     }
@@ -114,6 +111,7 @@ export default {
     pageHandler (val) {
       this.pageInfo.pageNum = val
       // 调用数据请求接口,带分页参数
+      this.getDataList()
     },
     resetOption () {
       this.$emit('data', {
@@ -126,67 +124,150 @@ export default {
       let positionTypeList
       let positionList
       let selectFun1 = async (val) => {
-        let { data } = await authAPIs.selectRoleInfoAll({
-          pageNum: this.pageInfo.pageNum,
-          pageSize: this.pageInfo.pageSize,
-          roleId: +val,
-          postionInfoId: -1,
-          postionTypeId: -1,
-          userName: '',
-          userAccount: ''
-        })
-        console.log(data.data)
+        this.roleId = +val
+        this.positionInfoId = 0
+        this.positionTypeId = 0
+        this.selectSearchOptions.select[1].value = null
+        this.selectSearchOptions.select[2].value = null
+        this.getDataList()
       }
       let selectFun2 = async (val) => {
-        let { data } = await authAPIs.selectRoleInfoAll({
-          pageNum: this.pageInfo.pageNum,
-          pageSize: this.pageInfo.pageSize,
-          roleId: -1,
-          postionInfoId: -1,
-          postionTypeId: +val,
-          userName: '',
-          userAccount: ''
-        })
-        console.log(data.data)
+        this.roleId = 0
+        this.positionTypeId = +val
+        this.positionInfoId = 0
+        this.selectSearchOptions.select[0].value = null
+        this.selectSearchOptions.select[2].value = null
+        this.getDataList()
       }
       let selectFun3 = async (val) => {
-        let { data } = await authAPIs.selectRoleInfoAll({
-          pageNum: this.pageInfo.pageNum,
-          pageSize: this.pageInfo.pageSize,
-          roleId: -1,
-          postionInfoId: +val,
-          postionTypeId: -1,
-          userName: '',
-          userAccount: ''
-        })
-        console.log(data.data)
+        this.roleId = 0
+        this.positionTypeId = 0
+        this.positionInfoId = +val
+        this.selectSearchOptions.select[1].value = null
+        this.selectSearchOptions.select[0].value = null
+        this.getDataList()
       }
       try {
         var {data} = await dicAPIs.selectInfoByValues({type: 'JIAOSELEIXING'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
-          item.value = item.dictIndex + ''
+          item.value = item.id + ''
         })
         roleList = data.data
         var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEILEIXING'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
-          item.value = item.dictIndex + ''
+          item.value = item.id + ''
         })
         positionTypeList = data.data
         var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEIXINXI'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
-          item.value = item.dictIndex + ''
+          item.value = item.id + ''
         })
         positionList = data.data
         this.selectSearchOptions = userAuthListService().selectSearchOptions({that: this, roleList, positionTypeList, positionList, selectFun1, selectFun2, selectFun3})
       } catch (error) {}
+    },
+    async getDataList (searchFlag) {
+      try {
+        let { data } = await authAPIs.selectRoleInfoAll({
+          pageNum: this.pageInfo.pageNum,
+          pageSize: this.pageInfo.pageSize,
+          userAccount: this.userAccount,
+          userName: this.userName,
+          postionInfoId: this.positionInfoId,
+          postionTypeId: this.positionTypeId,
+          roleId: this.roleId
+        })
+        let opetate = [
+          {
+            textProp: '编辑'
+          }
+        ]
+        let authList = [{
+          label: 'look'
+        }, {
+          label: 'download'
+        }, {
+          label: 'upload'
+        }, {
+          label: 'edit'
+        }, {
+          label: 'del'
+        }]
+        if (data.code === 200) {
+          data.data.pageList.forEach(item => {
+            item.opetate = opetate
+            // item.userName = item.userName ? item.userName : '暂无'
+            // item.userAccount = item.userAccount ? item.userAccount : '暂无'
+            authList.forEach((sub, index) => {
+              item[sub.label] = item.powerList.split(',').indexOf(index + '') === -1 ? '×' : '√'
+            })
+            /*
+            item.powerList.split(',').forEach(sub => {
+              switch (sub) {
+                case '0':
+                  item.look = '√'
+                  break
+                case '1':
+                  item.download = '√'
+                  break
+                case '2':
+                  item.upload = '√'
+                  break
+                case '3':
+                  item.edit = '√'
+                  break
+                case '4':
+                  item.del = '√'
+                  break
+                default:
+                  item.look = '×'
+                  item.download = '×'
+                  item.upload = '×'
+                  item.edit = '×'
+                  item.del = '×'
+                  break
+              }
+            })
+            */
+          })
+          if (searchFlag) {
+            this.searchResult.total = data.data.totalCount
+          }
+          this.pageInfo.total = data.data.totalCount
+          this.tableOptions = userAuthListService(data.data.pageList).getOptions({ that: this })
+        } else {
+          this.tableOptions = userAuthListService([]).getOptions({ that: this })
+          this.pageInfo.total = 0
+          this.searchResult = null
+        }
+      } catch (error) {
+        this.$alert('网络不通,或者服务器错误')
+      }
     }
   },
   mounted () {
     this.resetOption()
     this.getSelectData()
+    this.getDataList()
+  },
+  computed: {
+    userAccount () {
+      if (this.searchResult && this.searchResult.keyword && this.searchResult.keyword.indexOf('@') !== -1) {
+        return this.searchResult.keyword
+      } else {
+        return ''
+      }
+    },
+    userName () {
+      if (this.searchResult && this.searchResult.keyword && this.searchResult.keyword.indexOf('@') === -1) {
+        return this.searchResult.keyword
+      } else {
+        return ''
+      }
+    }
   }
 }
 </script>

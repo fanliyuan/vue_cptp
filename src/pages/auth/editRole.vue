@@ -23,13 +23,13 @@
     </el-dialog>
     <el-table :data="tableData">
       <el-table-column align="center" label="角色" prop="roleName"></el-table-column>
-      <el-table-column align="center" label="职位类型" prop="positionClass"></el-table-column>
+      <el-table-column align="center" label="职位类型" prop="postionTypeName"></el-table-column>
       <el-table-column align="center" label="权限">
-        <el-table-column align="center" label="查看" width="100" prop="positionClass"></el-table-column>
-        <el-table-column align="center" label="下载" width="100" prop="positionClass"></el-table-column>
-        <el-table-column align="center" label="上传" width="100" prop="positionClass"></el-table-column>
-        <el-table-column align="center" label="编辑" width="100" prop="positionClass"></el-table-column>
-        <el-table-column align="center" label="删除" width="100" prop="positionClass"></el-table-column>
+        <el-table-column align="center" label="查看" width="100" prop="look"></el-table-column>
+        <el-table-column align="center" label="下载" width="100" prop="download"></el-table-column>
+        <el-table-column align="center" label="上传" width="100" prop="upload"></el-table-column>
+        <el-table-column align="center" label="编辑" width="100" prop="edit"></el-table-column>
+        <el-table-column align="center" label="删除" width="100" prop="del"></el-table-column>
       </el-table-column>
       <el-table-column align="center" label="操作" prop="operate">
         <template slot-scope="scope">
@@ -64,6 +64,7 @@
 </template>
 <script>
 // import dicAPIs from '../../api/dic/dicAPIs'
+import authAPIs from '../../api/auth/authAPIs'
 export default {
   data () {
     let vm = this
@@ -100,7 +101,9 @@ export default {
             {
               label: '删除'
             }
-          ]
+          ],
+          look: '√',
+          edit: '×'
         }
       ],
       operate: {
@@ -127,7 +130,7 @@ export default {
       pageInfo: {
         pageSize: 10,
         pageNum: 1,
-        total: 11
+        total: 0
       }
     }
   },
@@ -144,7 +147,7 @@ export default {
     },
     pageHandler (val) {
       this.pageInfo.pageNum = val
-      console.log(this.pageInfo)
+      this.getDataList()
       // 调用接口
     },
     resetOption () {
@@ -152,10 +155,53 @@ export default {
         breadCrumbOption: this.breadCrumOption,
         rightButtonOption: this.rightButtonOptions
       })
+    },
+    async getDataList () {
+      try {
+        let { data } = await authAPIs.selectRoleInfoAll({
+          pageNum: this.pageInfo.pageNum,
+          pageSize: this.pageInfo.pageSize,
+          userAccount: this.userAccount,
+          userName: this.userName,
+          postionInfoId: this.positionInfoId,
+          postionTypeId: this.positionTypeId,
+          roleId: this.roleId
+        })
+        let operate = [
+          {
+            label: '编辑'
+          },
+          {
+            label: '删除'
+          }
+        ]
+        let authList = [{
+          label: 'look'
+        }, {
+          label: 'download'
+        }, {
+          label: 'upload'
+        }, {
+          label: 'edit'
+        }, {
+          label: 'del'
+        }]
+        if (data.code === 200) {
+          data.data.pageList.forEach(item => {
+            item.operate = operate
+            authList.forEach((sub, index) => {
+              item[sub.label] = item.powerList.split(',').indexOf(index + '') === '-1' ? '×' : '√'
+            })
+          })
+          this.pageInfo.total = data.data.totalCount
+          this.tableData = data.data.pageList
+        }
+      } catch (error) {}
     }
   },
   mounted () {
     this.resetOption()
+    this.getDataList()
   }
 }
 </script>

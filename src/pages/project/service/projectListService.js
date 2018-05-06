@@ -35,23 +35,23 @@ class Option {
       }
     ]
   }
-  getSelectSearchOption ({ that, selectList, selectFun }) {
+  getSelectSearchOption ({ that, departmentList = [], managerList = [], selectFun1, selectFun2 }) {
     return {
       select: [
         {
           value: '0',
-          option: selectList[0] ? selectList[0] : [],
+          option: departmentList,
           selectHandler (val) {
             val = +val
-            selectFun && selectFun(val, 0)
+            selectFun1 && selectFun1(val, 0)
           }
         },
         {
-          value: '0',
-          option: selectList[1] ? selectList[1] : [],
+          value: null,
+          option: managerList,
           selectHandler (val) {
             val = +val
-            selectFun && selectFun(0, val)
+            selectFun2 && selectFun2(0, val)
           }
         }
       ],

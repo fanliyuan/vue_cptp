@@ -5,10 +5,13 @@
         <span class="label">职位类型</span>
         <el-input v-model="positionClassValue" class="input"></el-input>
       </div>
-      <!-- <div class="dialogbox">
+      <div class="dialogbox">
         <span class="label">对应职位</span>
-        <el-input v-model="positionClassValue" class="input"></el-input>
-      </div> -->
+        <!-- <el-input v-model="editPositionClassInfo.newPosition" class="input"></el-input> -->
+        <el-select v-model="editPositionClassInfo.newPosition" class="input" @change="changeHandler">
+          <el-option v-for="item in positionList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc"></el-option>
+        </el-select>
+      </div>
       <el-button type="primary" class="button" @click="addHandler">确定</el-button>
     </el-dialog>
     <Tabel :options="tableOptions" />
@@ -20,14 +23,17 @@
       </div>
       <div class="dialogbox">
         <span class="label">新职位类型</span>
-        <el-input v-model="editPositionClassInfo.newPositionClass" class="input"></el-input>
+        <!-- <el-input v-model="editPositionClassInfo.newPositionClass" class="input"></el-input> -->
+        <el-select v-model="editPositionClassInfo.newPositionClass" class="input" @change="positionClassSelectHandler">
+          <el-option v-for="item in positionClassList" :label="item.dictDesc" :value="item.id" :key="item.id"></el-option>
+        </el-select>
       </div>
       <div class="dialogbox">
         <span class="label">对应的职位</span>
-        <!-- <el-input v-model="editPositionClassInfo.newPosition" class="input"></el-input> -->
-        <el-select v-model="editPositionClassInfo.newPosition" class="input" @change="changeHandler">
+        <el-input v-model="editPositionClassInfo.dictDesc" class="input" disabled></el-input>
+        <!-- <el-select v-model="editPositionClassInfo.newPosition" class="input" @change="changeHandler">
           <el-option v-for="item in positionList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc"></el-option>
-        </el-select>
+        </el-select> -->
       </div>
       <el-button type="primary" class="button" @click="editHandler">确定</el-button>
     </el-dialog>
@@ -75,12 +81,13 @@ export default {
           }
         ]
       },
-      tableOptions: editPositionClassService().getTableOption({editFun, delFun}),
+      tableOptions: editPositionClassService([]).getTableOption({editFun, delFun}),
       rightButtonOptions: [
         {
           label: '添加职位类型',
           fun () {
             vm.addPositionClass = true
+            // vm.getPositionList()
           }
         }
       ],
@@ -94,9 +101,11 @@ export default {
         total: 0
       },
       positionList: [],
+      positionClassList: [],
       positionDictDesc: '',
       positionInfo: {},
-      positionClassLength: 0
+      positionClassLength: 0,
+      positionParent: 0
     }
   },
   methods: {
@@ -114,58 +123,75 @@ export default {
         // let flag1
         // let flag2
         var { data } = await dicAPIs.saveDictValue(param)
+        // let parentId
         if (data.code === 200) {
-          // flag1 = true
-          this.$message({
-            type: 'success',
-            message: '添加成功'
-          })
-          this.getDataList()
-        }
-        // var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
-        // if (data.code === 200) {
-        //   flag2 = true
-        // }
-        // if (flag1 && flag2) {
-        //   this.$message({
-        //     type: 'success',
-        //     message: '修改成功'
-        //   })
-        //   this.getDataList()
-        // }
-      } catch (error) {}
-    },
-    async editHandler () {
-      // 这里调用更新接口
-      // alert(`${this.editPositionClassInfo.oldValue}修改成功`)
-      // console.log(this.editPositionClassInfo)
-      // this.updateSystemDictValue()
-      let param = {
-        dictDesc: this.editPositionClassInfo.newPositionClass,
-        dictType: 'ZHIWEILEIXING',
-        dictIndex: this.editPositionClassInfo.parentIndex,
-        dictParent: 0,
-        id: this.editPositionClassInfo.dictParent,
-        dictValue: ''
-      }
-      this.positionInfo.dictParent = this.editPositionClassInfo.dictParent
-      try {
-        let flag1
-        let flag2
-        var {data} = await dicAPIs.updateSystemDictValue(param)
-        if (data.code === 200) {
-          flag1 = true
+          this.positionInfo.dictParent = data.data.id
         }
         var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
         if (data.code === 200) {
-          flag2 = true
-        }
-        if (flag1 && flag2) {
           this.$message({
             type: 'success',
             message: '修改成功'
           })
+          this.positionInfo = {}
           this.getDataList()
+        }
+      } catch (error) {}
+      this.addPositionClass = false
+      this.editPositionClassInfo.newPosition = null
+    },
+    async editHandler () {
+      // 这里调用更新接口, 这里原来有同时修改职位类型和职位接口 *************************************************
+      // alert(`${this.editPositionClassInfo.oldValue}修改成功`)
+      // console.log(this.editPositionClassInfo)
+      // this.updateSystemDictValue()
+      // let param = {
+      //   dictDesc: this.editPositionClassInfo.newPositionClass,
+      //   dictType: 'ZHIWEILEIXING',
+      //   dictIndex: this.editPositionClassInfo.parentIndex,
+      //   dictParent: 0,
+      //   id: this.editPositionClassInfo.dictParent,
+      //   dictValue: ''
+      // }
+      // this.positionInfo.dictParent = this.editPositionClassInfo.dictParent
+      // try {
+      //   let flag1
+      //   let flag2
+      //   var {data} = await dicAPIs.updateSystemDictValue(param)
+      //   if (data.code === 200) {
+      //     flag1 = true
+      //   }
+      //   var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
+      //   if (data.code === 200) {
+      //     flag2 = true
+      //   }
+      //   if (flag1 && flag2) {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '修改成功'
+      //     })
+      //     this.getDataList()
+      //     this.positionInfo = {}
+      //   }
+      // } catch (error) {}
+      // this.editPositionClass = false
+      // this.editPositionClassInfo.newPosition = null
+      // 这里只能修改职位信息的职位类型 ***************************************************************************
+      try {
+        let { data } = await dicAPIs.updateSystemDictValue({
+          dictDesc: this.editPositionClassInfo.dictDesc,
+          dictIndex: this.editPositionClassInfo.dictIndex,
+          dictParent: this.positionParent,
+          dictType: this.editPositionClassInfo.dictType,
+          dictValue: this.editPositionClassInfo.dictValue,
+          id: this.editPositionClassInfo.id
+        })
+        if (data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+          this.getPositionList()
         }
       } catch (error) {}
       this.editPositionClass = false
@@ -181,70 +207,73 @@ export default {
         rightButtonOption: this.rightButtonOptions
       })
     },
-    async getDataList () {
-      try {
-        var { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
-        let arr = []
-        let operation = [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-        this.positionClassLength = data.data.length
-        data.data.forEach(async (item) => {
-          try {
-            var { data } = await dicAPIs.queryDictValueInfo({ parentId: item.id })
-            if (data.code === 200) {
-              data.data.forEach(sub => {
-                sub.parentDesc = item.dictDesc
-                sub.parentIndex = item.dictIndex
-                sub.operation = operation
-                arr.push(sub)
-              })
-            }
-          } catch (error) {}
-        })
-        let editFun = async (row) => {
-          this.editPositionClassInfo = row
-          // this.this.positionDictDesc = row.dictDesc
-          this.editPositionClass = true
-          // let arr = this.tableOptions.data.filter(item => {
-          //   return item.dictParent = row.dictParent
-          // })
-          // this.positionList = arr
-          let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
-          if (data.code === 200) {
-            this.positionList = data.data
-          }
-        }
-        let delFun = async (row) => {
-          this.$confirm(`是否删除 ${row.parentDesc} 职位类型`).then(data => {
-            if (data) {
-              // 这里调用删除接口
-              alert('这里暂时不知道删除职位类型还是职位,如果是职位类型,那么删除的有点多吧')
-              // let { data } = await dicAPIs.deleteDictValue({ id: row.id })
-              // if (data.code === 200) {
-              //   this.$message({
-              //     type: 'success',
-              //     message: '删除成功'
-              //   })
-              // }
-            } else {
-              this.$message('取消删除')
-            }
-          }).catch(err => {
-            if (err) {
-              this.$message('取消删除')
-            }
-          })
-        }
-        this.tableOptions = editPositionClassService(arr).getTableOption({editFun, delFun})
-        // var { data } = await dicAPIs.queryDictValueInfo({ parentId:})
-      } catch (error) {}
-    },
+    // async getDataList () {
+    //   try {
+    //     var { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
+    //     let arr = []
+    //     let operation = [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //     this.positionClassLength = data.data.length
+    //     data.data.forEach(async (item) => {
+    //       try {
+    //         var { data } = await dicAPIs.queryDictValueInfo({ parentId: item.id })
+    //         if (data.code === 200) {
+    //           data.data.forEach(sub => {
+    //             sub.parentDesc = item.dictDesc
+    //             sub.parentIndex = item.dictIndex
+    //             sub.operation = operation
+    //             arr.push(sub)
+    //           })
+    //         }
+    //       } catch (error) {}
+    //     })
+    //     let editFun = async (row) => {
+    //       this.editPositionClassInfo = row
+    //       // this.this.positionDictDesc = row.dictDesc
+    //       this.editPositionClass = true
+    //       // let arr = this.tableOptions.data.filter(item => {
+    //       //   return item.dictParent = row.dictParent
+    //       // })
+    //       // this.positionList = arr
+    //       try {
+    //         let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
+    //         if (data.code === 200) {
+    //           this.positionList = data.data
+    //         }
+    //       } catch (error) {}
+    //     }
+    //     let delFun = async (row) => {
+    //       this.$confirm(`是否删除 ${row.parentDesc} 职位类型`).then(async (data) => {
+    //         if (data) {
+    //           // 这里调用删除接口
+    //           // alert('这里暂时不知道删除职位类型还是职位,如果是职位类型,那么删除的有点多吧')
+    //           let { data } = await dicAPIs.deleteDictValue({ id: row.id })
+    //           if (data.code === 200) {
+    //             this.$message({
+    //               type: 'success',
+    //               message: '删除成功'
+    //             })
+    //             this.getDataList()
+    //           }
+    //         } else {
+    //           this.$message('取消删除')
+    //         }
+    //       }).catch(err => {
+    //         if (err) {
+    //           this.$message('取消删除')
+    //         }
+    //       })
+    //     }
+    //     this.tableOptions = editPositionClassService(arr).getTableOption({editFun, delFun})
+    //     // var { data } = await dicAPIs.queryDictValueInfo({ parentId:})
+    //   } catch (error) {}
+    // },
     async changeHandler (val) {
       try {
         let { data } = await dicAPIs.selectSystemDictValueInfo({ id: val })
@@ -252,11 +281,92 @@ export default {
           this.positionInfo = data.data
         }
       } catch (error) {}
+    },
+    async getPositionList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
+        if (data.code === 200) {
+          this.positionList = data.data
+          this.getTableOption()
+        }
+      } catch (error) {}
+    },
+    async getPositionClassList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
+        if (data.code === 200) {
+          this.positionClassList = data.data
+        }
+      } catch (error) {}
+    },
+    getTableOption () {
+      let operation = [
+        {
+          textProp: '修改'
+        },
+        {
+          textProp: '删除'
+        }
+      ]
+      let arr = []
+      this.positionList.forEach(async (item) => {
+        try {
+          let { data } = await dicAPIs.selectSystemDictValueInfo({ id: item.dictParent })
+          if (data.code === 200) {
+            item.parentDesc = data.data.dictDesc
+            item.operation = operation
+            arr.push(item)
+          }
+        } catch (error) {}
+      })
+      let editFun = async (row) => {
+        this.editPositionClassInfo = row
+        // this.this.positionDictDesc = row.dictDesc
+        this.editPositionClass = true
+        // let arr = this.tableOptions.data.filter(item => {
+        //   return item.dictParent = row.dictParent
+        // })
+        // this.positionList = arr
+        // try {
+        //   let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
+        //   if (data.code === 200) {
+        //     this.positionList = data.data
+        //   }
+        // } catch (error) {}
+      }
+      let delFun = async (row) => {
+        this.$confirm(`是否删除 ${row.parentDesc} 职位类型`).then(async (data) => {
+          if (data) {
+            // 这里调用删除接口
+            // alert('这里暂时不知道删除职位类型还是职位,如果是职位类型,那么删除的有点多吧')
+            let { data } = await dicAPIs.deleteDictValue({ id: row.id })
+            if (data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+              this.getDataList()
+            }
+          } else {
+            this.$message('取消删除')
+          }
+        }).catch(err => {
+          if (err) {
+            this.$message('取消删除')
+          }
+        })
+      }
+      this.tableOptions = editPositionClassService(arr).getTableOption({editFun, delFun})
+    },
+    positionClassSelectHandler (val) {
+      this.positionParent = +val
     }
   },
   mounted () {
     this.resetOption()
-    this.getDataList()
+    this.getPositionList()
+    this.getPositionClassList()
+    // this.getDataList()
   }
 }
 </script>

@@ -10,19 +10,19 @@ class TabelOptions {
       },
       {
         label: '账号',
-        prop: 'account'
+        prop: 'userAccount'
       },
       {
         label: '角色',
-        prop: 'role'
+        prop: 'roleName'
       },
       {
         label: '职位类型',
-        prop: 'positionClass'
+        prop: 'postionTypeName'
       },
       {
         label: '职位',
-        prop: 'position'
+        prop: 'postionInfoName'
       },
       {
         label: '查看',
@@ -42,7 +42,7 @@ class TabelOptions {
       },
       {
         label: '删除',
-        prop: 'delete'
+        prop: 'del'
       },
       {
         xtype: 'links',
@@ -92,7 +92,7 @@ class TabelOptions {
       ],
       search: {
         searchHandler (val) {
-          if (!val) return that.$router.push(`/auth/search/${'all'}`)
+          if (!val) return that.$router.push(`/auth`)
           that.$router.push(`/auth/search/${val}`)
         }
       }

@@ -31,7 +31,13 @@ export default {
         pageSize: 10,
         pageNum: 1,
         total: 11
-      }
+      },
+      departmentList: [],
+      departmentId: -1,
+      managerList: [],
+      selectFun1: () => {},
+      deptId: -1,
+      leaderId: -1
     }
   },
   watch: {
@@ -70,6 +76,7 @@ export default {
         rightButtonOption: this.rightButtonOption
       })
     },
+    // 级联不能混写
     async getSelectList () {
       try {
         let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMEN'})
@@ -96,15 +103,78 @@ export default {
             // 这里项目列表数据
           } catch (error) {}
         }
-        this.selectSearchOption = projectListService().getSelectSearchOption({that: this, selectList: [departmentList.data.data, managerList.data.data], selectFun})
+        this.selectSearchOption = projectListService().getSelectSearchOption({that: this, departmentList: departmentList.data.data, managerList: managerList.data.data, selectFun})
+      } catch (error) {}
+    },
+    async getDepartmenttList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'BUMEN' })
+        if (data.code === 200) {
+          data.data.forEach(item => {
+            item.value = item.dictIndex + ''
+            item.label = item.dictDesc
+          })
+        }
+        this.departmentList = data.data
+        let selectFun1 = (val) => {
+          this.departmentId = +val
+          this.getManagerList(+val)
+        }
+        this.selectFun1 = selectFun1
+        this.selectSearchOption = projectListService().getSelectSearchOption({
+          that: this,
+          departmentList: this.departmentList,
+          selectFun1
+        })
+      } catch (error) {}
+    },
+    async getManagerList (val) {
+      try {
+        let { data } = await dicAPIs.queryDictValueInfo({ parentId: val })
+        let selectFun2 = (val) => {
+          // 这里调用数据更新接口
+          // console.log(val, '更新数据')
+          this.deptId = -1
+          this.pageInfo.pageNum = 1
+          this.getDataList()
+        }
+        if (data.code === 200) {
+          data.data.forEach(item => {
+            item.value = item.dictIndex + ''
+            item.label = item.dictDesc
+          })
+        }
+        this.selectSearchOption = projectListService().getSelectSearchOption({
+          that: this,
+          departmentList: this.departmentList,
+          selectFun1: this.selectFun1,
+          managerList: data.data,
+          selectFun2
+        })
+      } catch (error) {}
+    },
+    async getDataList () {
+      try {
+        let {data} = await projectAPIs.filterProductList(
+          {
+            deptId: this.deptId,
+            leaderId: this.leaderId,
+            pageNum: this.pageInfo.pageNum,
+            pageSize: this.pageInfo.pageSize
+          }
+        )
+        console.log(data)
+        // 这里项目列表数据
       } catch (error) {}
     }
   },
   mounted () {
     this.resetOption()
+    this.getDepartmenttList()
+    this.getDataList()
   },
   created () {
-    this.getSelectList()
+    // this.getSelectList()
   }
 }
 </script>

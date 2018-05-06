@@ -8,50 +8,51 @@
       <div class="box">
         <div class="label">角色</div>
         <!-- <el-input class="input" v-model="authInfo.role"></el-input> -->
-        <el-select v-model="authInfo.role" placeholder="请选择角色" class="input">
-          <el-option :key="0" :value="0" :label="'普通用户'"></el-option>
-          <el-option :key="1" :value="1" :label="'管理员'"></el-option>
-          <el-option :key="2" :value="2" :label="'超级管理员'"></el-option>
+        <el-select v-model="authInfo.roleId" placeholder="请选择角色" class="input" @change="roleSelectHandler">
+          <el-option v-for="item in roleList" :value="item.id" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
         <div class="label">职位类型</div>
         <!-- <el-input class="input" v-model="authInfo.positionClass"></el-input>
          -->
-        <el-select v-model="authInfo.positionClass" placeholder="请选择职位类型" class="input">
-          <el-option :key="0" :value="0" :label="'普通用户'"></el-option>
-          <el-option :key="1" :value="1" :label="'项目组成员'"></el-option>
+        <el-select v-model="authInfo.postionType" placeholder="请选择职位类型" class="input" @change="positionTypeSelectHandler">
+          <el-option v-for="item in positionTypeList" :value="item.id" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
         <div class="label">职位</div>
         <!-- <el-input class="input" v-model="authInfo.position"></el-input> -->
-        <el-select v-model="authInfo.position" placeholder="请选择职位" class="input">
-          <el-option :key="0" :value="0" :label="'UI'"></el-option>
-          <el-option :key="1" :value="1" :label="'UE'"></el-option>
+        <el-select v-model="authInfo.postionInfoType" placeholder="请选择职位" class="input" @change="positionSelectHandler">
+          <el-option v-for="item in positionList" :value="item.id" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
-        <div class="label">权限</div>
-        <el-checkbox-group v-model="authInfo.authList" class="input" style="display: inline-block">
-          <el-checkbox label="查看"></el-checkbox>
-          <el-checkbox label="下载"></el-checkbox>
+        <div class="label" style="vertical-align: top;">权限</div>
+        <el-checkbox-group v-model="authCheckList" class="input" style="display: inline-block" @change="authSelectHandler">
+          <el-checkbox v-for="item in authList" :label="item.dictDesc"  :key="item.dictDesc"></el-checkbox>
         </el-checkbox-group>
       </div>
       <div>
-        <el-button type="primary" class="submit">提交</el-button>
+        <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import dicAPIs from '../../api/dic/dicAPIs'
+import authAPIs from '../../api/auth/authAPIs'
 export default {
   data () {
     return {
       breadCrumbOptions: {bread: [{label: '权限管理', path: '/auth'}, {label: '编辑权限'}]},
       authInfo: {
-        authList: []
-      }
+      },
+      roleList: [],
+      positionTypeList: [],
+      positionList: [],
+      authCheckList: [],
+      authList: []
     }
   },
   methods: {
@@ -60,11 +61,115 @@ export default {
         breadCrumbOption: this.breadCrumbOptions,
         rightButtonOption: null
       })
+    },
+    async getRolelist () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'JIAOSELEIXING' })
+        if (data.code === 200) {
+          this.roleList = data.data
+        }
+      } catch (error) {}
+    },
+    async getPositionTypeList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
+        if (data.code === 200) {
+          this.positionTypeList = data.data
+        }
+      } catch (error) {}
+    },
+    async getPositionList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
+        if (data.code === 200) {
+          this.positionList = data.data
+        }
+      } catch (error) {}
+    },
+    async getAuthList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'QUANXIANLEIXING' })
+        if (data.code === 200) {
+          this.authList = data.data
+        }
+      } catch (error) {}
+    },
+    async updateRole () {
+      let params = {
+        deptName: this.authInfo.deptName,
+        deptType: this.authInfo.deptType,
+        id: this.authInfo.id,
+        positionInfoName: this.authInfo.postionInfoName,
+        positionInfoType: this.authInfo.postionInfoType,
+        positionType: this.authInfo.postionType,
+        positionTypeName: this.authInfo.postionTypeName,
+        powerList: this.authInfo.powerList,
+        roleId: this.authInfo.roleId,
+        roleName: this.authInfo.roleName,
+        userId: this.authInfo.userId
+      }
+      console.log(params)
+      try {
+        let { data } = await authAPIs.updateRole(params)
+        if (data.code === 200) {
+          console.log(data.data)
+        }
+      } catch (error) {}
+    },
+    submitHandler () {
+      this.updateRole()
+    },
+    roleSelectHandler (val) {
+      this.authInfo.roleId = val
+      this.roleList.some(item => {
+        if (item.id === val) {
+          this.authInfo.roleName = item.dictDesc
+        }
+      })
+      console.log(val)
+      console.log(this.authInfo.roleName)
+    },
+    positionTypeSelectHandler (val) {
+      this.authInfo.positionType = val
+      this.positionTypeList.some(item => {
+        if (item.id === val) {
+          this.authInfo.postionTypeName = item.dictDesc
+        }
+      })
+    },
+    positionSelectHandler (val) {
+      this.authInfo.positionInfoType = val
+      this.positionList.some(item => {
+        if (item.id === val) {
+          this.authInfo.postionInfoName = item.dictDesc
+        }
+      })
+    },
+    authSelectHandler (val) {
+      this.authInfo.powerList = []
+      val.forEach(item => {
+        this.authList.forEach(sub => {
+          if (item === sub.dictDesc) {
+            this.authInfo.powerList.push(sub.dictIndex)
+          }
+        })
+      })
+      this.authInfo.powerList = this.authInfo.powerList.join(',')
+    },
+    async getDefault () {
+      try {
+        await this.getRolelist()
+        await this.getPositionList()
+        await this.getPositionTypeList()
+        await this.getAuthList()
+        this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
+        console.log(this.authInfo.postionInfoType)
+      } catch (error) {}
     }
   },
   mounted () {
-    this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
     this.resetOption()
+    this.getDefault()
   }
 }
 </script>
@@ -105,6 +210,13 @@ export default {
       margin-left: 200px;
       margin-top: 20px;
       padding: 10px 78px;
+    }
+    .el-checkbox + .el-checkbox {
+      margin-left: 0;
+    }
+    .el-checkbox{
+      margin-right: 24px;
+      margin-bottom: 8px;
     }
   }
 </style>

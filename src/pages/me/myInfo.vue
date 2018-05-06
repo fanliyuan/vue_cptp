@@ -3,7 +3,7 @@
     <div class="myinput">
       <div class="box">
         <div class="label">邮箱</div>
-        <div class="silver username" v-if="userInfo.email">{{userInfo.email}}</div>
+        <div class="silver username" v-if="userInfo.userEmail">{{userInfo.userEmail}}</div>
         <router-link to="/me/changePassword" class="button">修改密码</router-link>
       </div>
       <div class="box">
@@ -12,11 +12,11 @@
       </div>
       <div class="box">
         <div class="label">角色</div>
-        <div class="silver username" v-if="userInfo.role">{{userInfo.role}}</div>
+        <div class="silver username" v-if="userInfo.roleName">{{userInfo.roleName}}</div>
       </div>
       <div class="box">
         <div class="label">手机号</div>
-        <div class="silver username" v-if="userInfo.mobile">{{userInfo.mobile}}</div>
+        <div class="silver username" v-if="userInfo.userPhone">{{userInfo.userPhone}}</div>
         <!-- 这里需要验证码接口 -->
         <!-- <router-link to="/me/changeMobile" class="button">修改手机号</router-link> -->
       </div>
@@ -25,21 +25,36 @@
 </template>
 <script>
 import meService from './service/meService'
+import userAPIs from '../../api/user/userAPIs'
+// import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
       breadCrumbOption: meService().getBreadCrumbOption(),
-      userInfo: {}
+      userInfo: {
+        userEmail: '数据不存在',
+        userName: '数据不存在',
+        roleName: '数据不存在',
+        userPhone: '数据不存在'
+      }
     }
   },
   methods: {
-    getUserInfo () {
-      // 调用获取用户信息接口赋值
-      this.userInfo = {
-        email: 'admin@youedata.com',
-        userName: '希尔维斯特',
-        role: '超级管理员',
-        mobile: '12312345678'
+    async getUserInfo () {
+      try {
+        let { data } = await userAPIs.getUserInfoById({ userId: sessionStorage.userId })
+        if (data.code === 200) {
+          this.userInfo = data.data
+        } else {
+          throw new Error('数据不存在')
+        }
+      } catch (error) {
+        this.userInfo = {
+          userEmail: '数据不存在',
+          userName: '数据不存在',
+          roleName: '数据不存在',
+          userPhone: '数据不存在'
+        }
       }
     },
     resetOption () {

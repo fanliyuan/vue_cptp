@@ -50,7 +50,7 @@ export default {
       // 授权模块
       auth: {
         host: '',
-        url: ''
+        url: '/user'
       },
       // 模板管理
       template: {
