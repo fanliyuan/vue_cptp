@@ -18,132 +18,13 @@ export default {
   },
   data () {
     let vm = this
-    // 展示数据
-    let temp = [
-      {
-        userName: '用户名1',
-        account: '账户',
-        userId: 1,
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ],
-        mobile: 13312341234
-      },
-      {
-        userName: '用户名2',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ],
-        mobile: 111111111
-      },
-      {
-        userName: '用户名3',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名4',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名5',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名6',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名7',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名8',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名9',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
-      },
-      {
-        userName: '用户名10',
-        account: '账户',
-        opetate: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '停用'
-          }
-        ]
+
+    let uploadUser = () => {
+        console.log('上传')
+        localStorage.removeItem('token')
+        userAPIs.login({userName: 'aad', userPassword: '123youe'})
       }
-    ]
+
     // 搜索的假数据
     let selectSearchOptions = {
       select: [
@@ -204,16 +85,23 @@ export default {
         }
       }
     }
-    let uploadUser = () => {
-      console.log('上传')
-      localStorage.removeItem('token')
-      userAPIs.login({userName: 'aad', userPassword: '123youe'})
-    }
     return {
-      TableOptions: userListService(temp).getOptions({that: this}).tableOptions,
-      rightbuttonOptions: userListService(temp).getOptions({that: this, uploadUser}).rightbuttonOptions,
+
+      TableOptions: {},
+      rightbuttonOptions: userListService([]).getOptions({that: vm, uploadUser}).rightbuttonOptions,
       breadcrumbOptions: {bread: [{label: '用户列表', path: '/user'}]},
       selectSearchOptions: selectSearchOptions,
+      filterUserDTO: {
+        deptId: -1,
+        pageNum: 1,
+        pageSize: 10,
+        token: '3984dcf753c3ad',
+        userPositionId: -1,
+        userRoleId: -1
+
+      },
+      userList: [],
+      userDisplayList: [],
       searchResult: null,
       pageInfo: {
         total: 11,
@@ -238,6 +126,7 @@ export default {
     }
   },
   methods: {
+
     pageHandler (val) {
       this.pageInfo.pageNum = val
       // 重新调用数据请求接口
@@ -247,10 +136,52 @@ export default {
         breadCrumbOption: this.breadcrumbOptions,
         rightButtonOption: this.rightbuttonOptions
       })
+    },
+    initData () {
+
+      console.log("test test test")
+
+      console.log(this.rightbuttonOptions )
+
+      console.log("test test test")
+      
+
+      userAPIs.filterUserList(this.filterUserDTO).then(response => {
+        this.userList = response.data.data.listInfo
+
+        for (var index in this.userList) {
+          var userDisplayInfo = {
+
+            userName: this.userList[index].userName,
+            userEmail: this.userList[index].userEmail,
+            userPhone: this.userList[index].userPhone,
+            deptName: this.userList[index].deptName,
+            positionName: this.userList[index].positionName,
+            positionTypeName: this.userList[index].positionTypeName,
+            roleName: this.userList[index].roleName,
+            privilegeName: this.userList[index].privilegeName,
+            opetate: [
+              {
+                textProp: '修改'
+              },
+              {
+                textProp: this.userList[index].isDisable === 0 ? '停用' : '启用'
+
+              }
+            ]
+          }
+
+          this.userDisplayList.push(userDisplayInfo)
+        };
+
+        this.TableOptions = userListService(this.userDisplayList).getOptions({that: this}).tableOptions
+
+      })
     }
   },
   mounted () {
     this.resetOption()
+    this.initData()
   }
 }
 </script>

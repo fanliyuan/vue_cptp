@@ -10,27 +10,27 @@ class TabelOptions {
       },
       {
         label: '账号',
-        prop: 'account'
+        prop: 'userEmail'
       },
       {
         label: '手机号',
-        prop: 'mobile'
+        prop: 'userPhone'
       },
       {
         label: '部门',
-        prop: 'department'
+        prop: 'deptName'
       },
       {
         label: '职位',
-        prop: 'position'
+        prop: 'positionName'
       },
       {
         label: '角色',
-        prop: 'role'
+        prop: 'roleName'
       },
       {
         label: '权限',
-        prop: 'auth'
+        prop: 'privilegeName'
       },
       {
         xtype: 'links',
