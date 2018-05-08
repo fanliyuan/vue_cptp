@@ -17,14 +17,14 @@
         <!-- <el-input class="input" v-model="authInfo.positionClass"></el-input>
          -->
         <el-select v-model="authInfo.postionType" placeholder="请选择职位类型" class="input" @change="positionTypeSelectHandler">
-          <el-option v-for="item in positionTypeList" :value="item.id" :label="item.dictDesc" :key="item.id"></el-option>
+          <el-option v-for="item in positionTypeList" :value="item.dictIndex" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
         <div class="label">职位</div>
         <!-- <el-input class="input" v-model="authInfo.position"></el-input> -->
         <el-select v-model="authInfo.postionInfoType" placeholder="请选择职位" class="input" @change="positionSelectHandler">
-          <el-option v-for="item in positionList" :value="item.id" :label="item.dictDesc" :key="item.id"></el-option>
+          <el-option v-for="item in positionList" :value="item.dictIndex" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
@@ -108,13 +108,20 @@ export default {
         roleName: this.authInfo.roleName,
         userId: this.authInfo.userId
       }
-      console.log(params)
       try {
         let { data } = await authAPIs.updateRole(params)
-        if (data.code === 200) {
-          console.log(data.data)
+        if (data.code) {
+          this.$message({
+            type: 'success',
+            message: data.message
+          })
         }
-      } catch (error) {}
+        this.$router.push('/auth')
+      } catch (error) {
+        this.$confirm('操作失败,点击确认将返回列表页').then(_ => {
+          this.$router.push('/auth')
+        }).catch(_ => {})
+      }
     },
     submitHandler () {
       this.updateRole()
@@ -132,7 +139,7 @@ export default {
     positionTypeSelectHandler (val) {
       this.authInfo.positionType = val
       this.positionTypeList.some(item => {
-        if (item.id === val) {
+        if (item.dictIndex === val) {
           this.authInfo.postionTypeName = item.dictDesc
         }
       })
@@ -140,7 +147,7 @@ export default {
     positionSelectHandler (val) {
       this.authInfo.positionInfoType = val
       this.positionList.some(item => {
-        if (item.id === val) {
+        if (item.dictIndex === val) {
           this.authInfo.postionInfoName = item.dictDesc
         }
       })
@@ -163,7 +170,6 @@ export default {
         await this.getPositionTypeList()
         await this.getAuthList()
         this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
-        console.log(this.authInfo.postionInfoType)
       } catch (error) {}
     }
   },

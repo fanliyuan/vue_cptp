@@ -96,7 +96,7 @@ export default {
         url: '/portalInterface'
       }
     },
-    defaultHost: 'http://192.168.0.151:8769/api/back', // 'http://192.168.112.3:8089',//'',//'http://210.13.50.98:10133', //http://www.youedata.com/portalInterface/goods/category
+    defaultHost: 'http://192.168.0.151:8769/api/back', // 'http://192.168.0.151:8769/api/back',//'http://192.168.108.5:8769/api/back',//'http://210.13.50.98:10133', //http://www.youedata.com/portalInterface/goods/category
     defaultUrl: ''
   },
   siteInfo: {

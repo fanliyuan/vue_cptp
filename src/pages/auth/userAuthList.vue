@@ -151,19 +151,19 @@ export default {
         var {data} = await dicAPIs.selectInfoByValues({type: 'JIAOSELEIXING'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
-          item.value = item.id + ''
+          item.value = item.dictIndex + ''
         })
         roleList = data.data
         var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEILEIXING'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
-          item.value = item.id + ''
+          item.value = item.dictIndex + ''
         })
         positionTypeList = data.data
         var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEIXINXI'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
-          item.value = item.id + ''
+          item.value = item.dictIndex + ''
         })
         positionList = data.data
         this.selectSearchOptions = userAuthListService().selectSearchOptions({that: this, roleList, positionTypeList, positionList, selectFun1, selectFun2, selectFun3})

@@ -2,7 +2,7 @@ class TabelOptions {
   constructor (data) {
     this.data = data
   }
-  getOptions ({that, editUser, enableUser, disableUser, uploadUser}) {
+  getOptions ({that, editUser = () => {}, enableUser = () => {}, disableUser = () => {}, uploadUser = () => {}}) {
     let thead = [
       {
         label: '用户名',
@@ -35,7 +35,7 @@ class TabelOptions {
       {
         xtype: 'links',
         label: '操作',
-        prop: 'opetate',
+        prop: 'operate',
         textProp: 'textProp',
         OnClick (val, row) {
           // 调用不同的接口
@@ -45,8 +45,10 @@ class TabelOptions {
             that.$router.push(`/user/editUser/${row.userId}`)
           } else if (val.textProp === '启用') {
             // console.log(row, '启用')
+            enableUser && enableUser(row)
           } else {
-            console.log(row, '停用')
+            // console.log(row, '停用')
+            disableUser && disableUser(row)
           }
         },
         linkStyle: 'display:inline-block; width: 50%;'

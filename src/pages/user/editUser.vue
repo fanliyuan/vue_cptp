@@ -1,10 +1,16 @@
+/*
+ * @Author: ChouEric
+ * @Date: 2018-05-07 16:55:03
+ * @Last Modified by: ChouEric
+ * @Last Modified time: 2018-05-07 18:11:22
+*/
 <template>
   <div>
     <div class="myinput">
       <div class="box">
         <div class="label">用户名</div>
         <div class="silver username" v-if="userInfo.userName">{{userInfo.userName}}</div>
-        <el-input class="input" v-else v-model="userInfo.userName"></el-input>
+        <el-input class="input" v-else v-model="userInfo.newName"></el-input>
       </div>
       <div class="box">
         <div class="label">邮箱</div>
@@ -77,6 +83,7 @@ export default {
         token: null,
         userId: null,
         userName: null,
+        newName: null,
         userEmail: null,
         userPhone: null,
         deptId: null,
@@ -117,30 +124,18 @@ export default {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
     }
     this.resetOption()
-
     this.initData()
   },
   methods: {
     initData () {
-      this.userInfo.token = '3984dcf753c3ad'
-
-      let params1 = { 'token': '3984dcf753c3ad',
-        'type': 'BUMENLEIXING'}
-
-      let params2 = { 'token': '3984dcf753c3ad',
-        'type': 'ZHIWEILEIXING'}
-
-      let params3 = {'token': '3984dcf753c3ad',
-        'type': 'ZHIWEIXINXI'}
-
-      let params4 = {'token': '3984dcf753c3ad',
-        'type': 'JIAOSELEIXING'}
+      let params1 = { type: 'BUMENLEIXING' }
+      let params2 = { type: 'ZHIWEILEIXING' }
+      let params3 = { type: 'ZHIWEIXINXI' }
+      let params4 = { type: 'JIAOSELEIXING' }
 
       dicAPIs.selectInfoByValues(params1).then(response => {
         if (response.data.code === 200) {
           this.deptList = response.data.data
-
-          console.log(this.deptInfo)
         } else {
           console.log('错误')
         }
@@ -149,8 +144,6 @@ export default {
       dicAPIs.selectInfoByValues(params2).then(response => {
         if (response.data.code === 200) {
           this.positionTypeList = response.data.data
-
-          console.log(this.positionTypeInfo)
         } else {
           console.log('错误')
         }
@@ -159,8 +152,6 @@ export default {
       dicAPIs.selectInfoByValues(params3).then(response => {
         if (response.data.code === 200) {
           this.positionList = response.data.data
-
-          console.log(this.positionInfo)
         } else {
           console.log('错误')
         }
@@ -169,17 +160,12 @@ export default {
       dicAPIs.selectInfoByValues(params4).then(response => {
         if (response.data.code === 200) {
           this.roleList = response.data.data
-
-          console.log(this.roleInfo)
         } else {
           console.log('错误')
         }
       })
     },
-
     getDictDesc (dictList, selIndex) {
-      console.log(dictList)
-
       for (var index in dictList) {
         if (dictList[index].dictIndex === selIndex) {
           return dictList[index].dictDesc
@@ -187,7 +173,7 @@ export default {
       }
     },
 
-    submitHandler () {
+    async submitHandler () {
       this.userInfo.deptName = this.getDictDesc(this.deptList, this.userInfo.deptId)
 
       this.userInfo.positionTypeName = this.getDictDesc(this.positionTypeList, this.userInfo.positionTypeId)
@@ -196,13 +182,59 @@ export default {
 
       this.userInfo.roleName = this.getDictDesc(this.roleList, this.userInfo.roleId)
 
-      console.log(this.userInfo)
-
-      userAPIs.addUser(this.userInfo).then(response => {
-        console.log(response.data)
-      })
+      let params = {
+        deptId: this.userInfo.deptId,
+        deptName: this.userInfo.deptName,
+        positionId: this.userInfo.positionId,
+        positionName: this.userInfo.positionName,
+        positionTypeId: this.userInfo.positionTypeId,
+        positionTypeName: this.userInfo.positionTypeName,
+        roleId: this.userInfo.roleId,
+        roleName: this.userInfo.roleName,
+        userEmail: this.userInfo.userEmail,
+        userPhone: this.userInfo.userPhone,
+        userName: this.userInfo.userName,
+        userId: this.userInfo.userId
+      }
+      try {
+        if (this.$route.params && this.$route.params.userId) {
+          let { data } = await userAPIs.updateUser(params)
+          if (data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: data.message
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '修改失败'
+            })
+          }
+        } else {
+          delete params.userId
+          params.userName = this.userInfo.newName
+          let { data } = await userAPIs.addUser(params)
+          if (data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: data.message
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '新增失败'
+            })
+          }
+        }
+        this.$router.push('/user')
+      } catch (error) {
+        if (error) {
+          this.$confirm('操作失败,点击确认将返回列表页').then(_ => {
+            this.$router.push('/user')
+          }).catch(_ => {})
+        }
+      }
     },
-
     resetOption () {
       this.$emit('data', {
         breadCrumbOption: this.breadCrumbOptions,

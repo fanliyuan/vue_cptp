@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 11:26:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-04 10:14:10
+ * @Last Modified time: 2018-05-07 17:45:17
 */
 
 import apiBase from '../apiBase'
@@ -82,6 +82,16 @@ const module = {
       method: 'post',
       name: 'getUserInfoById',
       url: '/getUserInfoById'
+    },
+    {
+      method: 'post',
+      name: 'addUser',
+      url: '/addUser'
+    },
+    {
+      method: 'post',
+      name: 'updataUserIsDisable',
+      url: '/updataUserIsDisable'
     }
   ]
 }

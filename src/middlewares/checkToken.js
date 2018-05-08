@@ -7,20 +7,18 @@
  */
 import userAPIs from '../api/user/userAPIs'
 export default (to, from, next) => {
-  // console.log("userId", localStorage)
   if (localStorage.token) {
     userAPIs.checkToken({token: localStorage.token}).then(({ data }) => {
-      // if (data.code === 10012) {
-      //   next()
-      // } else {
-      //   next({
-      //     path: '/login',
-      //     query: { redUrl: to.fullPath }
-      //   })
-      // }
-      next()
+      if (data) {
+        next()
+      } else {
+        next({
+          path: '/login',
+          query: { redUrl: to.fullPath }
+        })
+      }
     }).catch(ex => {
-      next()
+      window.alert('网络不通畅')
     })
   } else {
     next({

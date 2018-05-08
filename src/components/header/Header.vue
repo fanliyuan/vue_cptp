@@ -14,7 +14,7 @@
         </router-link>
       </el-col>
       <el-col style="margin-left:-60px; display: inline-block; width: auto">
-        <span class="headerText">产品资源全景浏览器</span>
+        <span class="headerText">产品图谱</span>
       </el-col>
       <el-col class="adminInfo" style="margin-right: 30px;float: right; width: auto">
         <p class="head_text">
