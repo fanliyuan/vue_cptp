@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-03 18:46:37
+ * @Last Modified time: 2018-05-08 15:55:40
  */
 <template>
   <el-container>
@@ -36,7 +36,7 @@
           </el-form-item>
           <el-form-item class="input_row">
             <el-checkbox v-model="rememberFlag">记住账号</el-checkbox>
-            <router-link :to="'/forget'" class="forget">忘记密码?</router-link>
+            <!-- <router-link :to="'/forget'" class="forget">忘记密码?</router-link> -->
           </el-form-item>
           <el-form-item class="message" :title="message">
             {{message}}

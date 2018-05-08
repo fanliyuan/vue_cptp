@@ -9,7 +9,7 @@
         <div class="label">角色</div>
         <!-- <el-input class="input" v-model="authInfo.role"></el-input> -->
         <el-select v-model="authInfo.roleId" placeholder="请选择角色" class="input" @change="roleSelectHandler">
-          <el-option v-for="item in roleList" :value="item.id" :label="item.dictDesc" :key="item.id"></el-option>
+          <el-option v-for="item in roleList" :value="item.dictIndex" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
@@ -51,8 +51,8 @@ export default {
       roleList: [],
       positionTypeList: [],
       positionList: [],
-      authCheckList: [],
-      authList: []
+      authList: [],
+      authCheckList: []
     }
   },
   methods: {
@@ -129,7 +129,7 @@ export default {
     roleSelectHandler (val) {
       this.authInfo.roleId = val
       this.roleList.some(item => {
-        if (item.id === val) {
+        if (item.dictIndex === val) {
           this.authInfo.roleName = item.dictDesc
         }
       })
@@ -143,6 +143,8 @@ export default {
           this.authInfo.postionTypeName = item.dictDesc
         }
       })
+      console.log(val)
+      console.log(this.authInfo.roleName)
     },
     positionSelectHandler (val) {
       this.authInfo.positionInfoType = val
@@ -170,6 +172,17 @@ export default {
         await this.getPositionTypeList()
         await this.getAuthList()
         this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
+        this.authInfo.positionType = this.authInfo.positionType
+        this.authInfo.roleId = this.authInfo.roleId
+        this.authInfo.positionInfoType = this.authInfo.positionInfoType
+        this.authInfo.powerList = this.authInfo.powerList.split(',')
+        this.authInfo.powerList.forEach(item => {
+          this.authList.forEach(sub => {
+            if (+item === sub.dictIndex) {
+              this.authCheckList.push(sub.dictDesc)
+            }
+          })
+        })
       } catch (error) {}
     }
   },

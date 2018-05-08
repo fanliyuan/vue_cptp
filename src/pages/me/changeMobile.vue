@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:09:39
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-24 13:58:54
+ * @Last Modified time: 2018-05-08 10:07:10
  */
 
 <template>
@@ -11,10 +11,11 @@
       <el-form-item class="box" prop="oldMobile">
         <el-input class="input" v-model.number="inputData.oldMobile" placeholder="请输入原手机号"></el-input>
       </el-form-item>
-      <el-form-item class="box" prop="code">
+      <!-- 这里需要获取验证码 -->
+      <!-- <el-form-item class="box" prop="code">
         <el-input class="input short" v-model="inputData.code" placeholder="验证码"></el-input>
         <el-form-item class="input button">获取验证码</el-form-item>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item class="box" prop="newMobile">
         <el-input class="input" v-model.number="inputData.newMobile" placeholder="请输入新手机号"></el-input>
       </el-form-item>
@@ -29,6 +30,7 @@
 </template>
 <script>
 import meService from './service/meService'
+import userAPIs from '../../api/user/userAPIs'
 export default {
   data () {
     let mobileCheck = (rule, val, cb) => {
@@ -57,7 +59,7 @@ export default {
       breadCrumbOption: meService().getBreadCrumbOption({type: 'mobile'}),
       inputData: {
         oldMobile: '',
-        code: '',
+        // code: '',
         newMobile: '',
         confirmMobile: ''
       },
@@ -75,12 +77,12 @@ export default {
             trigger: 'blur'
           }
         ],
-        code: [
-          {
-            required: true,
-            message: '请输入验证码'
-          }
-        ],
+        // code: [
+        //   {
+        //     required: true,
+        //     message: '请输入验证码'
+        //   }
+        // ],
         newMobile: [
           {
             required: true,
@@ -101,7 +103,7 @@ export default {
         ]
       },
       oldMobile: false,
-      code: false,
+      // code: false,
       newMobile: false,
       confirmMobile: false
     }
@@ -109,12 +111,30 @@ export default {
   methods: {
     validateHandler (item, res) {
       this[item] = res
-      this.disabledFlag = !(this.oldMobile && this.code && this.newMobile && this.confirmMobile)
+      this.disabledFlag = !(this.oldMobile && this.newMobile && this.confirmMobile)
     },
     submitHandler () {
-      this.$refs.myInput.validate().then(data => {
+      this.$refs.myInput.validate().then(async (data) => {
         if (data) {
           // 这里调用接口
+          try {
+            let {data} = await userAPIs.updatePhone({
+              userId: sessionStorage.getItem('userId'),
+              userPhone: this.inputData.confirmMobile
+            })
+            if (data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '手机号修改成功'
+              })
+            }
+          } catch (error) {
+            this.$message({
+              type: 'error',
+              message: '操作失败'
+            })
+          }
+          this.$router.push('/me')
         } else {
           throw new Error('表单验证未通过')
         }

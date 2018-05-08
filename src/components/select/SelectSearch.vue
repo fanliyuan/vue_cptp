@@ -43,4 +43,7 @@ export default {
   .el-icon-search{
     font-size: 24px;
   }
+  .el-icon-search{
+    cursor: pointer;
+  }
 </style>

@@ -4,26 +4,30 @@
       <div class="dialogbox">
         <span class="label">角色名称</span>
         <el-input v-model="roleInfo.roleName" class="input"></el-input>
+        <!-- <el-select v-model="roleInfo.roleName">
+          <el-option v-for=""></el-option>
+        </el-select> -->
       </div>
       <div class="dialogbox">
         <span class="label">职位类型</span>
-        <el-input v-model="roleInfo.positionClass" class="input"></el-input>
+        <!-- <el-input v-model="roleInfo.positionClass" class="input"></el-input> -->
+        <el-select v-model="roleInfo.positionClass" class="input" @change="positionTypeSelectHandler">
+          <el-option v-for="item in positionTypeList" :value="item.dictDesc" :label="item.dictDesc" :key="item.id"></el-option>
+        </el-select>
       </div>
       <div class="dialogbox">
         <span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;权限</span>
-        <el-checkbox-group v-model="roleInfo.auth" class="input">
-          <el-checkbox label="查看" :value="0"></el-checkbox>
-          <el-checkbox label="下载" :value="1"></el-checkbox>
-          <el-checkbox label="上传" :value="2"></el-checkbox>
-          <el-checkbox label="编辑" :value="3"></el-checkbox>
-          <el-checkbox label="删除" :value="4"></el-checkbox>
+        <el-checkbox-group v-model="authCheckList" class="input" @change="authSelectHandler">
+          <!-- 这里用循环 -->
+          <!-- <el-checkbox label="查看" :value="0"></el-checkbox> -->
+          <el-checkbox v-for="item in authList" :label="item.dictDesc" :key="item.id"></el-checkbox>
         </el-checkbox-group>
       </div>
       <el-button type="primary" class="button" @click="addHandler">确定</el-button>
     </el-dialog>
     <el-table :data="tableData">
       <el-table-column align="center" label="角色" prop="roleName"></el-table-column>
-      <el-table-column align="center" label="职位类型" prop="postionTypeName"></el-table-column>
+      <el-table-column align="center" label="职位类型" prop="positionTypeName"></el-table-column>
       <el-table-column align="center" label="权限">
         <el-table-column align="center" label="查看" width="100" prop="look"></el-table-column>
         <el-table-column align="center" label="下载" width="100" prop="download"></el-table-column>
@@ -46,16 +50,15 @@
       </div>
       <div class="dialogbox">
         <span class="label">职位类型</span>
-        <el-input v-model="roleInfo.positionClass" class="input"></el-input>
+        <el-input v-model="roleInfo.positionTypeName" readonly class="input"></el-input>
+        <!-- <el-select v-model="roleInfo.positionClass" class="input">
+          <el-option v-for="item in positionTypeList" :value="item.dictDesc" :label="item.dictDesc" :key="item.id"></el-option>
+        </el-select> -->
       </div>
       <div class="dialogbox">
         <span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;权限</span>
-        <el-checkbox-group v-model="roleInfo.auth" class="input">
-          <el-checkbox label="查看" :value="0"></el-checkbox>
-          <el-checkbox label="下载" :value="1"></el-checkbox>
-          <el-checkbox label="上传" :value="2"></el-checkbox>
-          <el-checkbox label="编辑" :value="3"></el-checkbox>
-          <el-checkbox label="删除" :value="4"></el-checkbox>
+        <el-checkbox-group v-model="authCheckList" class="input" @change="authSelectHandler">
+          <el-checkbox v-for="item in authList" :label="item.dictDesc" :key="item.id"></el-checkbox>
         </el-checkbox-group>
       </div>
       <el-button type="primary" class="button" @click="editHandler">确定</el-button>
@@ -63,7 +66,7 @@
   </div>
 </template>
 <script>
-// import dicAPIs from '../../api/dic/dicAPIs'
+import dicAPIs from '../../api/dic/dicAPIs'
 import authAPIs from '../../api/auth/authAPIs'
 export default {
   data () {
@@ -85,26 +88,17 @@ export default {
           label: '添加角色',
           fun (val) {
             vm.addRole = true
+            vm.authCheckList = []
+            vm.roleInfo.roleName = ''
+            vm.roleInfo.positionType = 0
+            vm.roleInfo.positionTypeName = ''
           }
         }
       ],
       addRole: false,
       editRole: false,
-      roleInfo: {auth: [], roleName: ''},
+      roleInfo: {roleName: '', powerList: ''},
       tableData: [
-        {
-          roleName: '领导',
-          operate: [
-            {
-              label: '编辑'
-            },
-            {
-              label: '删除'
-            }
-          ],
-          look: '√',
-          edit: '×'
-        }
       ],
       operate: {
         handler (item, row) {
@@ -112,11 +106,41 @@ export default {
             // 编辑
             vm.editRole = true
             vm.roleInfo.roleName = row.roleName
+            vm.roleInfo.positionTypeName = row.positionTypeName
+            vm.roleInfo.powerList = row.powerList
+            vm.roleInfo.id = row.id
+            vm.roleInfo.positionType = row.positionType
+            vm.roleInfo.powerList = vm.roleInfo.powerList.split(',')
+            vm.authCheckList = []
+            vm.roleInfo.powerList.forEach(item => {
+              vm.authList.forEach(sub => {
+                if (+item === +sub.dictIndex) {
+                  vm.authCheckList.push(sub.dictDesc)
+                }
+              })
+            })
           } else {
             vm.$confirm(`确认要删除角色: ${row.roleName}`)
-              .then(data => {
-                if (data) {
+              .then(async (flag) => {
+                if (flag) {
                   // 调用删除接口
+                  try {
+                    let {data} = await authAPIs.deleteRole({
+                      id: row.id
+                    })
+                    if (data.code === 200) {
+                      vm.$message({
+                        type: 'success',
+                        message: '删除成功'
+                      })
+                      vm.getDataList()
+                    } else {
+                      vm.$message({
+                        type: 'error',
+                        message: '操作失败'
+                      })
+                    }
+                  } catch (error) {}
                 } else {
                   vm.$message('取消删除')
                 }
@@ -131,18 +155,79 @@ export default {
         pageSize: 10,
         pageNum: 1,
         total: 0
-      }
+      },
+      authList: [],
+      positionTypeList: [],
+      authCheckList: [],
+      userAccount: '',
+      userName: '',
+      postionInfoId: -1,
+      positionTypeId: -1,
+      roleId: -1
     }
   },
   methods: {
-    addHandler () {
+    async addHandler () {
       // 这里调用添加接口
-      console.log('调用添加角色接口')
+      if (!this.roleInfo.positionTypeName) {
+        this.$message({
+          type: 'error',
+          message: '职位类型选择为空'
+        })
+        return false
+      }
+      // this.roleInfo.positionTypeName 不能选择
+      delete this.roleInfo.positionClass
+      delete this.roleInfo.id
+      this.positionTypeList.some(item => {
+        if (item.dictDesc === this.roleInfo.positionTypeName) {
+          this.roleInfo.positionType = item.dictIndex
+          return true
+        }
+      })
+      this.roleInfo.powerList = []
+      this.authCheckList.forEach(item => {
+        this.authList.forEach(sub => {
+          if (sub.dictDesc === item) {
+            this.roleInfo.powerList.push(sub.dictIndex + '')
+          }
+        })
+      })
+      this.roleInfo.powerList = this.roleInfo.powerList.join(',')
+      try {
+        let {data} = await authAPIs.saveRole(this.roleInfo)
+        if (data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '添加成功'
+          })
+          this.getDataList()
+        }
+      } catch (error) {}
       this.addRole = false
     },
-    editHandler () {
+    async editHandler () {
       // 调用编辑接口
-      console.log('编辑')
+      this.roleInfo.powerList = []
+      this.authCheckList.forEach(item => {
+        this.authList.forEach(sub => {
+          if (sub.dictDesc === item) {
+            this.roleInfo.powerList.push(sub.dictIndex + '')
+          }
+        })
+      })
+      this.roleInfo.powerList = this.roleInfo.powerList.join(',')
+      try {
+        let {data} = await authAPIs.updateRole(this.roleInfo)
+        if (data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+          this.getDataList()
+        }
+        this.roleInfo = {}
+      } catch (error) {}
       this.editRole = false
     },
     pageHandler (val) {
@@ -158,15 +243,7 @@ export default {
     },
     async getDataList () {
       try {
-        let { data } = await authAPIs.selectRoleInfoAll({
-          pageNum: this.pageInfo.pageNum,
-          pageSize: this.pageInfo.pageSize,
-          userAccount: this.userAccount,
-          userName: this.userName,
-          postionInfoId: this.positionInfoId,
-          postionTypeId: this.positionTypeId,
-          roleId: this.roleId
-        })
+        let { data } = await authAPIs.getUserRoleList({token: localStorage.token})
         let operate = [
           {
             label: '编辑'
@@ -187,21 +264,66 @@ export default {
           label: 'del'
         }]
         if (data.code === 200) {
-          data.data.pageList.forEach(item => {
+          // 换了接口
+          // data.data.pageList.forEach(item => {
+          //   item.operate = operate
+          //   authList.forEach((sub, index) => {
+          //     item[sub.label] = item.powerList.split(',').indexOf(index + '') === '-1' ? '×' : '√'
+          //   })
+          // })
+          // this.pageInfo.total = data.data.totalCount
+          // this.tableData = data.data.pageList
+          data.data.forEach(item => {
             item.operate = operate
             authList.forEach((sub, index) => {
               item[sub.label] = item.powerList.split(',').indexOf(index + '') === '-1' ? '×' : '√'
             })
           })
           this.pageInfo.total = data.data.totalCount
-          this.tableData = data.data.pageList
+          this.tableData = data.data
         }
       } catch (error) {}
+    },
+    async getAuthList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'QUANXIANLEIXING' })
+        if (data.code === 200) {
+          this.authList = data.data
+          this.authList.reverse()
+        }
+      } catch (error) {}
+    },
+    async getPositionTypeList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
+        if (data.code === 200) {
+          this.positionTypeList = data.data
+        }
+      } catch (error) {}
+    },
+    async getDefault () {
+      try {
+        this.authList.length === 0 && await this.getAuthList()
+        this.positionTypeList.length === 0 && await this.getPositionTypeList()
+      } catch (error) {}
+    },
+    authSelectHandler (val) {
+      // val.forEach(item => {
+      //   this.authCheckList.forEach(sub => {
+      //     if (item === sub.dictDesc) {
+      //       arr.push(sub.dictIndex)
+      //     }
+      //   })
+      // })
+    },
+    positionTypeSelectHandler (val) {
+      this.roleInfo.positionTypeName = val
     }
   },
   mounted () {
     this.resetOption()
     this.getDataList()
+    this.getDefault()
   }
 }
 </script>
@@ -233,5 +355,17 @@ export default {
   width: 50%;
   box-sizing: border-box;
   text-align: center;
+}
+</style>
+<style lang="less">
+.el-table {
+  thead {
+    color: white;
+    &.is-group{
+      th{
+        background: #52b3a6 !important;
+      }
+    }
+  }
 }
 </style>

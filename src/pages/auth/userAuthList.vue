@@ -66,9 +66,9 @@ export default {
       breadcrumbOptions: userAuthListService().breadcrumbOptions(),
       searchResult: null,
       pageInfo: {pageNum: 1, pageSize: 10, total: 0},
-      positionInfoId: 0,
-      positionTypeId: 0,
-      roleId: 0
+      positionInfoId: null,
+      positionTypeId: null,
+      roleId: null
     }
   },
   watch: {
@@ -89,9 +89,9 @@ export default {
           keyword: this.$route.params.keyword,
           total: 9
         }
-        this.roleId = 0
-        this.postionInfoId = 0
-        this.positionTypeId = 0
+        this.roleId = -1
+        this.postionInfoId = -1
+        this.positionTypeId = -1
         this.getDataList(true)
       } else {
         this.breadcrumbOptions = {
@@ -125,26 +125,26 @@ export default {
       let positionList
       let selectFun1 = async (val) => {
         this.roleId = +val
-        this.positionInfoId = 0
-        this.positionTypeId = 0
-        this.selectSearchOptions.select[1].value = null
-        this.selectSearchOptions.select[2].value = null
+        this.positionInfoId = -1
+        this.positionTypeId = -1
+        this.selectSearchOptions.select[1].value = -1
+        this.selectSearchOptions.select[2].value = -1
         this.getDataList()
       }
       let selectFun2 = async (val) => {
-        this.roleId = 0
+        this.roleId = -1
         this.positionTypeId = +val
-        this.positionInfoId = 0
-        this.selectSearchOptions.select[0].value = null
-        this.selectSearchOptions.select[2].value = null
+        this.positionInfoId = -1
+        this.selectSearchOptions.select[0].value = -1
+        this.selectSearchOptions.select[2].value = -1
         this.getDataList()
       }
       let selectFun3 = async (val) => {
-        this.roleId = 0
-        this.positionTypeId = 0
+        this.roleId = -1
+        this.positionTypeId = -1
         this.positionInfoId = +val
-        this.selectSearchOptions.select[1].value = null
-        this.selectSearchOptions.select[0].value = null
+        this.selectSearchOptions.select[1].value = -1
+        this.selectSearchOptions.select[0].value = -1
         this.getDataList()
       }
       try {
@@ -153,20 +153,26 @@ export default {
           item.label = item.dictDesc
           item.value = item.dictIndex + ''
         })
+        data.data.unshift({value: -1, label: '全部角色'})
         roleList = data.data
         var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEILEIXING'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
           item.value = item.dictIndex + ''
         })
+        data.data.unshift({value: -1, label: '全部职位类型'})
         positionTypeList = data.data
         var {data} = await dicAPIs.selectInfoByValues({type: 'ZHIWEIXINXI'})//   eslint-disable-line
         data.data.forEach(item => {
           item.label = item.dictDesc
           item.value = item.dictIndex + ''
         })
+        data.data.unshift({value: -1, label: '全部职位'})
         positionList = data.data
         this.selectSearchOptions = userAuthListService().selectSearchOptions({that: this, roleList, positionTypeList, positionList, selectFun1, selectFun2, selectFun3})
+        this.selectSearchOptions.select[0].value = -1
+        this.selectSearchOptions.select[1].value = -1
+        this.selectSearchOptions.select[2].value = -1
       } catch (error) {}
     },
     async getDataList (searchFlag) {
@@ -176,9 +182,9 @@ export default {
           pageSize: this.pageInfo.pageSize,
           userAccount: this.userAccount,
           userName: this.userName,
-          postionInfoId: this.positionInfoId,
-          postionTypeId: this.positionTypeId,
-          roleId: this.roleId
+          postionInfoId: this.positionInfoId === null ? -1 : this.positionInfoId,
+          postionTypeId: this.positionTypeId === null ? -1 : this.positionTypeId,
+          roleId: this.roleId === null ? -1 : this.roleId
         })
         let opetate = [
           {
@@ -204,34 +210,6 @@ export default {
             authList.forEach((sub, index) => {
               item[sub.label] = item.powerList.split(',').indexOf(index + '') === -1 ? '×' : '√'
             })
-            /*
-            item.powerList.split(',').forEach(sub => {
-              switch (sub) {
-                case '0':
-                  item.look = '√'
-                  break
-                case '1':
-                  item.download = '√'
-                  break
-                case '2':
-                  item.upload = '√'
-                  break
-                case '3':
-                  item.edit = '√'
-                  break
-                case '4':
-                  item.del = '√'
-                  break
-                default:
-                  item.look = '×'
-                  item.download = '×'
-                  item.upload = '×'
-                  item.edit = '×'
-                  item.del = '×'
-                  break
-              }
-            })
-            */
           })
           if (searchFlag) {
             this.searchResult.total = data.data.totalCount

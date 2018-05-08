@@ -38,6 +38,18 @@ const module = {
     method: 'post',
     name: 'updateRole',
     url: '/updateRole'
+  }, {
+    method: 'get',
+    name: 'getUserRoleList',
+    url: '/getUserRoleList'
+  }, {
+    method: 'post',
+    name: 'saveRole',
+    url: '/saveRole'
+  }, {
+    method: 'post',
+    name: 'deleteRole',
+    url: '/deleteRole'
   }]
 }
 

@@ -6,6 +6,9 @@
   color: white;
   box-shadow:0 0 0 0 #fff !important;
 }
+.myboxshadow{
+  box-shadow: 0px 1px 0px 2px #d9d9d9;
+}
 .breadCrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner{
   color:#ddd !important;
 }
@@ -23,17 +26,7 @@
   float: right;
   margin-top: 20px;
 }
-
-body{
-  scrollbar-3dlight-color:#D4D0C8; /*- 最外左 -*/
-  scrollbar-highlight-color:#fff; /*- 左二 -*/
-  scrollbar-face-color:#E4E4E4; /*- 面子 -*/
-  scrollbar-arrow-color:#666; /*- 箭头 -*/
-  scrollbar-shadow-color:#808080; /*- 右二 -*/
-  scrollbar-darkshadow-color:#D7DCE0; /*- 右一 -*/
-  scrollbar-base-color:#D7DCE0; /*- 基色 -*/
-  scrollbar-track-color:red;/*- 滑道 -*/
-}
+/* 以下代码是滚动条代码 */
 .is-scrolling-none::-webkit-scrollbar {
   width: 0px;
 }

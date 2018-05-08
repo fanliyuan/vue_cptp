@@ -18,7 +18,7 @@
         <div class="label">手机号</div>
         <div class="silver username" v-if="userInfo.userPhone">{{userInfo.userPhone}}</div>
         <!-- 这里需要验证码接口 -->
-        <!-- <router-link to="/me/changeMobile" class="button">修改手机号</router-link> -->
+        <router-link to="/me/changeMobile" class="button">修改手机号</router-link>
       </div>
     </div>
   </div>

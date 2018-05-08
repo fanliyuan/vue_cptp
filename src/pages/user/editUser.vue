@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-07 18:11:22
+ * @Last Modified time: 2018-05-08 15:46:06
 */
 <template>
   <div>
@@ -249,12 +249,13 @@ export default {
     width: 560px;
     height: 630px;
     background: white;
-    box-shadow: 1px 0px 1px 1px #999;
+    box-shadow: 0px 1px 0px 2px #d9d9d9;
     border-radius: 5px;
-    margin-left: 50%;
+    // margin-left: 50%;//注释的内容为块元素居中方法
     position: relative;
-    left: -200px;
-    margin-top: 50px;
+    // left: -280px;//注释的内容为块元素居中方法
+    // transform: translateX(-50%);//注释的内容为块元素居中方法
+    margin: 50px auto 0px;
     font-size: 16px;
     box-sizing: border-box;
     padding: 80px 0px;

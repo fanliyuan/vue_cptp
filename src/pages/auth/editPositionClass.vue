@@ -105,11 +105,19 @@ export default {
       positionDictDesc: '',
       positionInfo: {},
       positionClassLength: 0,
-      positionParent: 0
+      positionParent: 0,
+      addFlag: false
     }
   },
   methods: {
     async addHandler () {
+      if (!this.addFlag) {
+        this.$message({
+          type: 'error',
+          message: '职位选择不能为空'
+        })
+        return false
+      }
       let param = {
         dictType: 'ZHIWEILEIXING',
         dictDesc: this.positionClassValue,
@@ -117,13 +125,8 @@ export default {
         dictValue: '',
         dictParent: 0
       }
-      // 新增职位类型的时候,没有id,所有没法添加产品
-      // this.positionInfo.dictParent = this.editPositionClassInfo.dictParent
       try {
-        // let flag1
-        // let flag2
         var { data } = await dicAPIs.saveDictValue(param)
-        // let parentId
         if (data.code === 200) {
           this.positionInfo.dictParent = data.data.id
         }
@@ -131,10 +134,12 @@ export default {
         if (data.code === 200) {
           this.$message({
             type: 'success',
-            message: '修改成功'
+            message: '添加成功'
           })
           this.positionInfo = {}
-          this.getDataList()
+          this.getPositionList()
+          this.getPositionClassList()
+          this.addFlag = false
         }
       } catch (error) {}
       this.addPositionClass = false
@@ -279,6 +284,7 @@ export default {
         let { data } = await dicAPIs.selectSystemDictValueInfo({ id: val })
         if (data.code === 200) {
           this.positionInfo = data.data
+          this.addFlag = true
         }
       } catch (error) {}
     },
@@ -296,6 +302,7 @@ export default {
         let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
         if (data.code === 200) {
           this.positionClassList = data.data
+          this.positionClassLength = data.data.length
         }
       } catch (error) {}
     },
@@ -314,6 +321,10 @@ export default {
           let { data } = await dicAPIs.selectSystemDictValueInfo({ id: item.dictParent })
           if (data.code === 200) {
             item.parentDesc = data.data.dictDesc
+            item.operation = operation
+            arr.push(item)
+          } else {
+            item.parentDesc = '暂无'
             item.operation = operation
             arr.push(item)
           }
@@ -335,17 +346,22 @@ export default {
         // } catch (error) {}
       }
       let delFun = async (row) => {
-        this.$confirm(`是否删除 ${row.parentDesc} 职位类型`).then(async (data) => {
-          if (data) {
+        this.$confirm(`是否删除 ${row.parentDesc} 职位类型`).then(async (flag) => {
+          if (flag) {
             // 这里调用删除接口
-            // alert('这里暂时不知道删除职位类型还是职位,如果是职位类型,那么删除的有点多吧')
-            let { data } = await dicAPIs.deleteDictValue({ id: row.id })
+            let { data } = await dicAPIs.deleteDictValue({ id: row.dictParent })
             if (data.code === 200) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
               })
-              this.getDataList()
+              this.getPositionList()
+              this.getPositionClassList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '操作失败'
+              })
             }
           } else {
             this.$message('取消删除')
