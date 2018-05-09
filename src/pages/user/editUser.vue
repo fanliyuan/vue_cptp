@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-08 15:46:06
+ * @Last Modified time: 2018-05-09 16:29:33
 */
 <template>
   <div>
@@ -33,13 +33,24 @@
         </el-select>
       </div>
       <div class="box">
+        <div class="label">角色</div>
+        <el-select class="input"  v-model="userInfo.roleId" placeholder="请选择" @change="roleSelectHandler">
+            <el-option
+              v-for="roleInfo in roleList"
+              :key="roleInfo.id"
+              :label="roleInfo.dictDesc"
+              :value="roleInfo.dictIndex">
+            </el-option>
+          </el-select>
+      </div>
+      <div class="box">
         <div class="label">职位类型</div>
           <el-select class="input" v-model="userInfo.positionTypeId" placeholder="请选择" >
             <el-option
               v-for="positionTypeInfo in positionTypeList"
               :key="positionTypeInfo.id"
-              :label="positionTypeInfo.dictDesc"
-              :value="positionTypeInfo.dictIndex">
+              :label="positionTypeInfo.positionTypeName"
+              :value="positionTypeInfo.id">
             </el-option>
           </el-select>
       </div>
@@ -54,17 +65,6 @@
             </el-option>
           </el-select>
       </div>
-      <div class="box">
-        <div class="label">角色</div>
-        <el-select class="input"  v-model="userInfo.roleId" placeholder="请选择" >
-            <el-option
-              v-for="roleInfo in roleList"
-              :key="roleInfo.id"
-              :label="roleInfo.dictDesc"
-              :value="roleInfo.dictIndex">
-            </el-option>
-          </el-select>
-      </div>
       <div>
         <el-button type="primary" class="submit" @click="submitHandler">提交</el-button>
       </div>
@@ -75,6 +75,7 @@
 import editUser from './service/editUserService'
 import userAPIs from '../../api/user/userAPIs'
 import dicAPIs from '../../api/dic/dicAPIs'
+import authAPIs from '../../api/auth/authAPIs'
 export default {
   data () {
     return {
@@ -120,14 +121,18 @@ export default {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户修改'}]}
       this.userInfo.oldName = JSON.parse(sessionStorage.getItem('userInfo')).userName
       this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      this.getDefault()
     } else {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
     }
     this.resetOption()
-    this.initData()
+    this.getRoleList()
+    this.getDepartmentList()
+    this.getPositionTypeList()
+    this.getPositionList()
   },
   methods: {
-    initData () {
+    /* initData () {
       let params1 = { type: 'BUMENLEIXING' }
       let params2 = { type: 'ZHIWEILEIXING' }
       let params3 = { type: 'ZHIWEIXINXI' }
@@ -140,7 +145,7 @@ export default {
           console.log('错误')
         }
       })
-
+      // 职位类型,通过  getRoleByRoleId
       dicAPIs.selectInfoByValues(params2).then(response => {
         if (response.data.code === 200) {
           this.positionTypeList = response.data.data
@@ -164,6 +169,43 @@ export default {
           console.log('错误')
         }
       })
+    }, */
+    // 重新写,分开获取
+    async getRoleList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'JIAOSELEIXING' })
+        if (data.code === 200) {
+          this.roleList = data.data
+        }
+      } catch (error) {}
+    },
+    async getDepartmentList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'BUMENLEIXING' })
+        if (data.code === 200) {
+          this.deptList = data.data
+        }
+      } catch (error) {}
+    },
+    async getPositionTypeList (val = 0) {
+      try {
+        let { data } = await authAPIs.getRoleByRoleId({ id: val })
+        if (data.code === 200) {
+          this.positionTypeList = data.data
+        }
+      } catch (error) {}
+    },
+    async getPositionList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEIXINXI' })
+        if (data.code === 200) {
+          this.positionList = data.data
+        }
+      } catch (error) {}
+    },
+    roleSelectHandler (val) {
+      this.getPositionTypeList(val)
+      this.userInfo.positionTypeId = null
     },
     getDictDesc (dictList, selIndex) {
       for (var index in dictList) {
@@ -172,7 +214,14 @@ export default {
         }
       }
     },
-
+    async getDefault () {
+      await this.getPositionTypeList(this.userInfo.roleId)
+      this.positionTypeList.forEach(item => {
+        if (item.positionTypeName === this.userInfo.positionTypeName) {
+          this.userInfo.positionTypeId = item.id
+        }
+      })
+    },
     async submitHandler () {
       this.userInfo.deptName = this.getDictDesc(this.deptList, this.userInfo.deptId)
 

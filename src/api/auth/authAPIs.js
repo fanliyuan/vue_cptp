@@ -50,6 +50,10 @@ const module = {
     method: 'post',
     name: 'deleteRole',
     url: '/deleteRole'
+  }, {
+    method: 'post',
+    name: 'getRoleByRoleId',
+    url: '/getRoleByRoleId'
   }]
 }
 

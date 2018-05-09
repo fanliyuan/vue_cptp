@@ -13,6 +13,7 @@ import user from './user/user'
 import me from './me/index'
 import auth from './auth/auth'
 import project from './project/project'
+import dict from './dict'
 
 import Login from '../pages/login/login.vue'
 import Forget from '../pages/login/forget.vue'
@@ -88,6 +89,14 @@ const router = new Router({
       path: '/Forget',
       name: 'foget',
       component: Forget
+    },
+    {
+      path: '/dict',
+      redirect: '/dict/key',
+      component: LayoutWithBreadCrumb,
+      children: [
+        ...dict
+      ]
     }
   ]
 })

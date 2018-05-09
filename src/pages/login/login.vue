@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-08 15:55:40
+ * @Last Modified time: 2018-05-09 10:32:07
  */
 <template>
   <el-container>
@@ -13,7 +13,7 @@
           </div>
         </el-col>
         <el-col :span="10" class="head">
-          产品资源全景浏览器
+          产品图谱
         </el-col>
       </el-row>
     </el-header>

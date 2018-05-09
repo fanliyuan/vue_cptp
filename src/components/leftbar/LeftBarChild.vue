@@ -10,7 +10,7 @@
                 :index="indexp + '-' + item.value.toString()"
                 style="padding-left:80px">
     <router-link :to="{ path:item.frontUrl }">
-      <b v-if="item.iconfont" :class="item.iconfont" class="iconfont"></b>&nbsp;
+      <b v-if="item.iconfont" :class="item.iconfont"></b>&nbsp;
       {{item.label}}
       </router-link>
   </el-menu-item>
@@ -19,7 +19,7 @@
     <template slot="title">
       <router-link :to="{ path:item.frontUrl}"
                 style="padding-left:60px;display: block;">
-        <b v-if="item.iconfont" :class="item.iconfont" class="iconfont"></b>&nbsp;
+        <b v-if="item.iconfont" :class="item.iconfont"></b>&nbsp;
         {{item.label}}
       </router-link>
     </template>
@@ -41,6 +41,10 @@ export default {
     }
   }
   .iconfont{
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .iconfont2{
     font-size: 18px;
     font-weight: 400;
   }

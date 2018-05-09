@@ -3,10 +3,10 @@
     <el-dialog :visible.sync="addRole" class="mydialog" :width="'30%'">
       <div class="dialogbox">
         <span class="label">角色名称</span>
-        <el-input v-model="roleInfo.roleName" class="input"></el-input>
-        <!-- <el-select v-model="roleInfo.roleName">
-          <el-option v-for=""></el-option>
-        </el-select> -->
+        <!-- <el-input v-model="roleInfo.roleName" class="input"></el-input> -->
+        <el-select v-model="roleInfo.roleId" class="input">
+          <el-option v-for="item in roleList" :label="item.dictDesc" :value="item.dictIndex" :key="item.id"></el-option>
+        </el-select>
       </div>
       <div class="dialogbox">
         <span class="label">职位类型</span>
@@ -157,6 +157,7 @@ export default {
         total: 0
       },
       authList: [],
+      roleList: [],
       positionTypeList: [],
       authCheckList: [],
       userAccount: '',
@@ -176,9 +177,12 @@ export default {
         })
         return false
       }
-      // this.roleInfo.positionTypeName 不能选择
+      this.roleList.some(item => {
+        if (item.dictIndex === this.roleInfo.roleId) {
+          this.roleInfo.roleName = item.dictDesc
+        }
+      })
       delete this.roleInfo.positionClass
-      delete this.roleInfo.id
       this.positionTypeList.some(item => {
         if (item.dictDesc === this.roleInfo.positionTypeName) {
           this.roleInfo.positionType = item.dictIndex
@@ -253,15 +257,20 @@ export default {
           }
         ]
         let authList = [{
-          label: 'look'
+          label: 'look',
+          dictIndex: 0
         }, {
-          label: 'download'
+          label: 'download',
+          dictIndex: 1
         }, {
-          label: 'upload'
+          label: 'upload',
+          dictIndex: 2
         }, {
-          label: 'edit'
+          label: 'edit',
+          dictIndex: 3
         }, {
-          label: 'del'
+          label: 'del',
+          dictIndex: 4
         }]
         if (data.code === 200) {
           // 换了接口
@@ -275,12 +284,25 @@ export default {
           // this.tableData = data.data.pageList
           data.data.forEach(item => {
             item.operate = operate
-            authList.forEach((sub, index) => {
-              item[sub.label] = item.powerList.split(',').indexOf(index + '') === '-1' ? '×' : '√'
+            item.powerList = item.powerList.split(',')
+            authList.forEach(sub => {
+              item[sub.label] = item.powerList.indexOf(sub.dictIndex + '') === -1 ? '×' : '√'
             })
+            item.powerList = item.powerList.join(',')
+          })
+          data.data.sort((pre, next) => {
+            return pre.roleId > next.roleId
           })
           this.pageInfo.total = data.data.totalCount
           this.tableData = data.data
+        }
+      } catch (error) {}
+    },
+    async getRoleList () {
+      try {
+        let { data } = await dicAPIs.selectInfoByValues({ type: 'JIAOSELEIXING' })
+        if (data.code === 200) {
+          this.roleList = data.data
         }
       } catch (error) {}
     },
@@ -322,6 +344,7 @@ export default {
   },
   mounted () {
     this.resetOption()
+    this.getRoleList()
     this.getDataList()
     this.getDefault()
   }

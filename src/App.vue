@@ -17,6 +17,7 @@ export default {
   @import "./assets/less/globalcss.css";
   /* 字体图标 */
   @import "/staticm/css/iconfont.css";
+  @import "/staticm/css/iconfont2.css";
   .containerMain {
     min-width: 1190px;
   }

@@ -7,7 +7,7 @@
           </div>
         </el-col>
         <el-col :span="10" class="head">
-          产品资源全景浏览器
+          产品图谱
         </el-col>
       </el-row>
     </el-header>
