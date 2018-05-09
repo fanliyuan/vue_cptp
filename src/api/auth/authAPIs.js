@@ -54,6 +54,10 @@ const module = {
     method: 'post',
     name: 'getRoleByRoleId',
     url: '/getRoleByRoleId'
+  }, {
+    method: 'post',
+    name: 'updateRoleInfo',
+    url: '/updateRoleInfo'
   }]
 }
 

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-03 09:45:40
+ * @Last Modified time: 2018-05-09 17:02:04
 */
 
 <template>
@@ -195,9 +195,6 @@ export default {
     async loadStateList (cb) {
       try {
         let { data } = await dicAPIs.selectInfoByValues({type: 'CHANPINZHUANGTAI'})
-        data.data = data.data.filter(item => {
-          return item.dictIndex !== 0
-        })
         this.stateList = data.data
         cb && cb()
       } catch (error) {

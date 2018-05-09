@@ -17,20 +17,20 @@
         <!-- <el-input class="input" v-model="authInfo.positionClass"></el-input>
          -->
         <el-select v-model="authInfo.postionType" placeholder="请选择职位类型" class="input" @change="positionTypeSelectHandler">
-          <el-option v-for="item in positionTypeList" :value="item.dictIndex" :label="item.dictDesc" :key="item.id"></el-option>
+          <el-option v-for="item in positionTypeList" :value="item.id" :label="item.positionTypeName" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
         <div class="label">职位</div>
         <!-- <el-input class="input" v-model="authInfo.position"></el-input> -->
-        <el-select v-model="authInfo.postionInfoType" placeholder="请选择职位" class="input" @change="positionSelectHandler">
+        <el-select v-model="authInfo.postionName" placeholder="请选择职位" class="input" @change="positionSelectHandler">
           <el-option v-for="item in positionList" :value="item.dictIndex" :label="item.dictDesc" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
         <div class="label" style="vertical-align: top;">权限</div>
         <el-checkbox-group v-model="authCheckList" class="input" style="display: inline-block" @change="authSelectHandler">
-          <el-checkbox v-for="item in authList" :label="item.dictDesc"  :key="item.dictDesc"></el-checkbox>
+          <el-checkbox v-for="item in powerList" :label="item.label"  :key="item.id" disabled></el-checkbox>
         </el-checkbox-group>
       </div>
       <div>
@@ -52,7 +52,8 @@ export default {
       positionTypeList: [],
       positionList: [],
       authList: [],
-      authCheckList: []
+      authCheckList: [],
+      powerList: []
     }
   },
   methods: {
@@ -70,9 +71,9 @@ export default {
         }
       } catch (error) {}
     },
-    async getPositionTypeList () {
+    async getPositionTypeList (val = 0) {
       try {
-        let { data } = await dicAPIs.selectInfoByValues({ type: 'ZHIWEILEIXING' })
+        let { data } = await authAPIs.getRoleByRoleId({ id: val })
         if (data.code === 200) {
           this.positionTypeList = data.data
         }
@@ -90,23 +91,31 @@ export default {
       try {
         let { data } = await dicAPIs.selectInfoByValues({ type: 'QUANXIANLEIXING' })
         if (data.code === 200) {
-          this.authList = data.data
+          this.userInfo.authList = data.data
         }
       } catch (error) {}
     },
     async updateRole () {
       let params = {
-        deptName: this.authInfo.deptName,
-        deptType: this.authInfo.deptType,
+        // deptName: this.authInfo.deptName,
+        // deptType: this.authInfo.deptType,
         id: this.authInfo.id,
-        positionInfoName: this.authInfo.postionInfoName,
-        positionInfoType: this.authInfo.postionInfoType,
+        userId: this.authInfo.userId,
+        positionId: this.authInfo.postionId,
+        positionName: this.authInfo.postionName,
         positionType: this.authInfo.postionType,
         positionTypeName: this.authInfo.postionTypeName,
         powerList: this.authInfo.powerList,
         roleId: this.authInfo.roleId,
-        roleName: this.authInfo.roleName,
-        userId: this.authInfo.userId
+        roleName: this.authInfo.roleName
+        // userId: this.authInfo.userId
+      }
+      if (Object.values(params).indexOf(null) !== -1) {
+        this.$message({
+          type: 'error',
+          message: '操作错误,请确认是否选择为空'
+        })
+        return false
       }
       try {
         let { data } = await authAPIs.updateRole(params)
@@ -126,36 +135,63 @@ export default {
     submitHandler () {
       this.updateRole()
     },
-    roleSelectHandler (val) {
+    async roleSelectHandler (val) {
       this.authInfo.roleId = val
       this.roleList.some(item => {
         if (item.dictIndex === val) {
           this.authInfo.roleName = item.dictDesc
         }
       })
-      console.log(val)
-      console.log(this.authInfo.roleName)
+      this.authInfo.postionType = null
+      this.powerList = []
+      this.authCheckList = []
+      this.getPositionTypeList(val)
     },
-    positionTypeSelectHandler (val) {
+    async positionTypeSelectHandler (val) {
+      let authList = [{
+        id: 0,
+        label: '查看'
+      }, {
+        id: 1,
+        label: '下载'
+      }, {
+        id: 2,
+        label: '上传'
+      }, {
+        id: 3,
+        label: '编辑'
+      }, {
+        id: 4,
+        label: '编辑'
+      }]
+      let authCheckList = []
+      let list = []
       this.authInfo.positionType = val
       this.positionTypeList.some(item => {
-        if (item.dictIndex === val) {
-          this.authInfo.postionTypeName = item.dictDesc
+        if (item.id === val) {
+          this.authInfo.postionTypeName = item.positionTypeName
+          this.authInfo.powerList = item.powerList
+          return true
         }
       })
-      console.log(val)
-      console.log(this.authInfo.roleName)
+      authList.forEach(item => {
+        if (this.authInfo.powerList.split(',').indexOf(item.id + '') !== -1) {
+          list.push(item)
+          authCheckList.push(item.label)
+        }
+      })
+      this.powerList = list
+      this.authCheckList = authCheckList
     },
     positionSelectHandler (val) {
       this.authInfo.positionInfoType = val
       this.positionList.some(item => {
         if (item.dictIndex === val) {
-          this.authInfo.postionInfoName = item.dictDesc
+          this.authInfo.postionName = item.dictDesc
         }
       })
     },
     authSelectHandler (val) {
-      this.authInfo.powerList = []
       val.forEach(item => {
         this.authList.forEach(sub => {
           if (item === sub.dictDesc) {
@@ -166,23 +202,41 @@ export default {
       this.authInfo.powerList = this.authInfo.powerList.join(',')
     },
     async getDefault () {
+      let authList = [
+        {
+          id: 0,
+          label: '查看'
+        }, {
+          id: 1,
+          label: '下载'
+        }, {
+          id: 2,
+          label: '上传'
+        }, {
+          id: 3,
+          label: '编辑'
+        }, {
+          id: 4,
+          label: '编辑'
+        }
+      ]
       try {
+        this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
         await this.getRolelist()
         await this.getPositionList()
-        await this.getPositionTypeList()
+        await this.getPositionTypeList(this.authInfo.roleId)
         await this.getAuthList()
-        this.authInfo = JSON.parse(sessionStorage.getItem('authInfo'))
-        this.authInfo.positionType = this.authInfo.positionType
-        this.authInfo.roleId = this.authInfo.roleId
-        this.authInfo.positionInfoType = this.authInfo.positionInfoType
-        this.authInfo.powerList = this.authInfo.powerList.split(',')
-        this.authInfo.powerList.forEach(item => {
-          this.authList.forEach(sub => {
-            if (+item === sub.dictIndex) {
-              this.authCheckList.push(sub.dictDesc)
-            }
-          })
+        this.authInfo.postionType = this.authInfo.id
+        let authCheckList = []
+        let list = []
+        authList.forEach(item => {
+          if (this.authInfo.powerList.split(',').indexOf(item.id + '') !== -1) {
+            list.push(item)
+            authCheckList.push(item.label)
+          }
         })
+        this.powerList = list
+        this.authCheckList = authCheckList
       } catch (error) {}
     }
   },

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:54:53
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-07 18:21:49
+ * @Last Modified time: 2018-05-09 17:44:21
 */
 <template>
   <div>
@@ -205,6 +205,22 @@ export default {
           userEmail: this.searchResult && this.searchResult.keyword.indexOf('@') >= 0 ? this.searchResult.keyword : '',
           userName: this.searchResult && this.searchResult.keyword.indexOf('@') === -1 ? this.searchResult.keyword : ''
         })
+        let powerList = [{
+          id: 0,
+          label: '查看'
+        }, {
+          id: 1,
+          label: '下载'
+        }, {
+          id: 2,
+          label: '上传'
+        }, {
+          id: 3,
+          label: '编辑'
+        }, {
+          id: 4,
+          label: '删除'
+        }]
         let disableUser = async (row) => {
           try {
             let {data} = await userAPIs.updataUserIsDisable({
@@ -249,6 +265,21 @@ export default {
                 textProp: item.isDisable === 0 ? '停用' : '启用'
               }
             ]
+            let powerArr = item.powerList.split(',').sort((a, b) => a > b)
+            let privilegeName = []
+            // powerList.forEach(sub => {
+            //   if (powerArr.indexOf(sub.id) >= -1) {
+            //     privilegeName.push(sub.label)
+            //   }
+            // })
+            powerArr.forEach(sub => {
+              powerList.forEach(child => {
+                if (child.id === +sub) {
+                  privilegeName.push(child.label)
+                }
+              })
+            })
+            item.privilegeName = privilegeName.join(',')
           })
         }
         this.tableOptions = userListService(data.data.pageList).getOptions({that: this, disableUser, enableUser}).tableOptions

@@ -22,7 +22,7 @@ class TabelOptions {
       },
       {
         label: '职位',
-        prop: 'postionInfoName'
+        prop: 'postionName'
       },
       {
         label: '查看',
@@ -51,7 +51,7 @@ class TabelOptions {
         textProp: 'textProp',
         OnClick (item, row) {
           sessionStorage.setItem('authInfo', JSON.stringify(row))
-          that.$router.push(`/auth/editUserAuth/${row.userId}`)
+          that.$router.push(`/auth/editUserAuth/${row.id}`)
         },
         width: '200px',
         linkStyle: 'padding-left: 20px;'

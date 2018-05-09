@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:40
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-04-28 15:53:52
+ * @Last Modified time: 2018-05-09 16:52:43
 */
 
 <template>
@@ -185,15 +185,15 @@ export default {
       try {
         let { data } = await dicAPIs.selectInfoByValues({ type: 'CHANPINZHUANGTAI' })
         let option = []
-        let temp = []
-        data.data.forEach((item, index) => {
-          temp[item.dictIndex] = item
-        })
-        temp.forEach(item => {
+        data.data.forEach(item => {
           option.push({
             label: item.dictDesc,
             value: item.dictIndex
           })
+        })
+        option.unshift({
+          label: '所有状态',
+          value: -1
         })
         let vm = this
         this.selectSearchOption = {

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-09 16:29:33
+ * @Last Modified time: 2018-05-09 17:46:43
 */
 <template>
   <div>
@@ -50,7 +50,7 @@
               v-for="positionTypeInfo in positionTypeList"
               :key="positionTypeInfo.id"
               :label="positionTypeInfo.positionTypeName"
-              :value="positionTypeInfo.id">
+              :value="positionTypeInfo.positionType">
             </el-option>
           </el-select>
       </div>
@@ -208,24 +208,42 @@ export default {
       this.userInfo.positionTypeId = null
     },
     getDictDesc (dictList, selIndex) {
-      for (var index in dictList) {
-        if (dictList[index].dictIndex === selIndex) {
-          return dictList[index].dictDesc
+      // for (var index in dictList) {
+      //   if (dictList[index].dictIndex === selIndex) {
+      //     return dictList[index].dictDesc
+      //   }
+      // }
+      let temp
+      dictList.some(item => {
+        if (item.dictIndex === selIndex) {
+          temp = item.dictDesc
+          return true
         }
-      }
+      })
+      return temp
+    },
+    getPositionTypeName (val) {
+      let temp
+      this.positionTypeList.some(item => {
+        if (item.positionType === val) {
+          temp = item.positionTypeName
+          return true
+        }
+      })
+      return temp
     },
     async getDefault () {
       await this.getPositionTypeList(this.userInfo.roleId)
       this.positionTypeList.forEach(item => {
         if (item.positionTypeName === this.userInfo.positionTypeName) {
-          this.userInfo.positionTypeId = item.id
+          this.userInfo.positionTypeId = item.positionType
         }
       })
     },
     async submitHandler () {
       this.userInfo.deptName = this.getDictDesc(this.deptList, this.userInfo.deptId)
 
-      this.userInfo.positionTypeName = this.getDictDesc(this.positionTypeList, this.userInfo.positionTypeId)
+      this.userInfo.positionTypeName = this.getPositionTypeName(this.userInfo.positionTypeId)
 
       this.userInfo.positionName = this.getDictDesc(this.positionList, this.userInfo.positionId)
 

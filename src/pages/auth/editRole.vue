@@ -106,6 +106,7 @@ export default {
             // 编辑
             vm.editRole = true
             vm.roleInfo.roleName = row.roleName
+            vm.roleInfo.roleId = row.roleId
             vm.roleInfo.positionTypeName = row.positionTypeName
             vm.roleInfo.powerList = row.powerList
             vm.roleInfo.id = row.id
@@ -222,14 +223,16 @@ export default {
       })
       this.roleInfo.powerList = this.roleInfo.powerList.join(',')
       try {
-        let {data} = await authAPIs.updateRole(this.roleInfo)
+        let {data} = await authAPIs.updateRoleInfo(this.roleInfo)
         if (data.code === 200) {
           this.$message({
             type: 'success',
             message: '修改成功'
           })
-          this.getDataList()
+        } else {
+          this.$message(data.data)
         }
+        this.getDataList()
         this.roleInfo = {}
       } catch (error) {}
       this.editRole = false
