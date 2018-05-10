@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-09 17:46:43
+ * @Last Modified time: 2018-05-10 17:33:02
 */
 <template>
   <div>
@@ -192,6 +192,8 @@ export default {
         let { data } = await authAPIs.getRoleByRoleId({ id: val })
         if (data.code === 200) {
           this.positionTypeList = data.data
+        } else {
+          this.positionTypeList = []
         }
       } catch (error) {}
     },
@@ -265,6 +267,13 @@ export default {
       }
       try {
         if (this.$route.params && this.$route.params.userId) {
+          if (Object.values(params).indexOf(null) !== -1) {
+            this.$message({
+              type: 'error',
+              message: '选择不能为空'
+            })
+            return false
+          }
           let { data } = await userAPIs.updateUser(params)
           if (data.code === 200) {
             this.$message({
@@ -278,8 +287,15 @@ export default {
             })
           }
         } else {
-          delete params.userId
           params.userName = this.userInfo.newName
+          delete params.userId
+          if (Object.values(params).indexOf(null) !== -1) {
+            this.$message({
+              type: 'error',
+              message: '选择不能为空'
+            })
+            return false
+          }
           let { data } = await userAPIs.addUser(params)
           if (data.code === 200) {
             this.$message({
@@ -289,7 +305,7 @@ export default {
           } else {
             this.$message({
               type: 'error',
-              message: '新增失败'
+              message: data.message || '操作失败'
             })
           }
         }

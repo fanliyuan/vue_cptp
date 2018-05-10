@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:40
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-09 16:52:43
+ * @Last Modified time: 2018-05-10 15:12:11
 */
 
 <template>
@@ -95,7 +95,7 @@ export default {
         pageSize: 10,
         pageNum: 1
       },
-      status: 0
+      status: -1
     }
   },
   watch: {
@@ -110,7 +110,7 @@ export default {
             pm: this.$route.params.keyword,
             pageSize: this.pageInfo.pageSize,
             pageNum: this.pageInfo.pageNum,
-            status: 0
+            status: -1
           })
           try {
             let operation = [
@@ -205,7 +205,7 @@ export default {
                 vm.status = val
                 vm.getProductList()
               },
-              value: '全部状态',
+              value: -1,
               className: 'my-select',
               option
             }

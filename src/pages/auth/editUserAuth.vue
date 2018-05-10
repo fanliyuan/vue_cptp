@@ -17,7 +17,7 @@
         <!-- <el-input class="input" v-model="authInfo.positionClass"></el-input>
          -->
         <el-select v-model="authInfo.postionType" placeholder="请选择职位类型" class="input" @change="positionTypeSelectHandler">
-          <el-option v-for="item in positionTypeList" :value="item.id" :label="item.positionTypeName" :key="item.id"></el-option>
+          <el-option v-for="item in positionTypeList" :value="item.positionType" :label="item.positionTypeName" :key="item.id"></el-option>
         </el-select>
       </div>
       <div class="box">
@@ -76,6 +76,8 @@ export default {
         let { data } = await authAPIs.getRoleByRoleId({ id: val })
         if (data.code === 200) {
           this.positionTypeList = data.data
+        } else {
+          this.positionTypeList = []
         }
       } catch (error) {}
     },
@@ -110,13 +112,21 @@ export default {
         roleName: this.authInfo.roleName
         // userId: this.authInfo.userId
       }
+      this.positionTypeList.some(item => {
+        if (item.positionType === this.authInfo.postionType) {
+          params.positionTypeName = item.positionTypeName
+          return true
+        }
+      })
       if (Object.values(params).indexOf(null) !== -1) {
         this.$message({
           type: 'error',
-          message: '操作错误,请确认是否选择为空'
+          message: '选择不能为空'
         })
         return false
       }
+      // console.log(params)
+      // return false
       try {
         let { data } = await authAPIs.updateRole(params)
         if (data.code) {
@@ -162,13 +172,13 @@ export default {
         label: '编辑'
       }, {
         id: 4,
-        label: '编辑'
+        label: '删除'
       }]
       let authCheckList = []
       let list = []
       this.authInfo.positionType = val
       this.positionTypeList.some(item => {
-        if (item.id === val) {
+        if (item.positionType === val) {
           this.authInfo.postionTypeName = item.positionTypeName
           this.authInfo.powerList = item.powerList
           return true
@@ -217,7 +227,7 @@ export default {
           label: '编辑'
         }, {
           id: 4,
-          label: '编辑'
+          label: '删除'
         }
       ]
       try {
@@ -226,7 +236,7 @@ export default {
         await this.getPositionList()
         await this.getPositionTypeList(this.authInfo.roleId)
         await this.getAuthList()
-        this.authInfo.postionType = this.authInfo.id
+        this.authInfo.postionType = this.authInfo.postionType
         let authCheckList = []
         let list = []
         authList.forEach(item => {

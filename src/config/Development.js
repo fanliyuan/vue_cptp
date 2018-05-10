@@ -4,7 +4,15 @@
  * 日期 ：2017/12/02
  *
  * 描述 ：业务配置文件 - 开发环境
+ *
+ * 修改 : ChouEric
+ *
+ * 修改内容: 加入webpack全局变量的后台接口,分为开发接口和生产接口,当前页面会自动适应
+ *          同时当前页面也可以更改scopeURL来修改接口
  */
+
+let scopeURL = ''// 这里替换默认设置的后台接口地址
+
 export default {
   env: 'development',
   apiParams: {
@@ -96,7 +104,7 @@ export default {
         url: '/portalInterface'
       }
     },
-    defaultHost: 'http://192.168.108.5:8769/api/back', // 'http://192.168.0.151:8769/api/back',//'http://192.168.108.5:8769/api/back',//'http://210.13.50.98:10133', //http://www.youedata.com/portalInterface/goods/category
+    defaultHost: scopeURL || process.env.API_URL, // 'http://192.168.0.151:8769/api/back',//'http://192.168.108.5:8769/api/back',//'http://210.13.50.98:10133', //http://www.youedata.com/portalInterface/goods/category
     defaultUrl: ''
   },
   siteInfo: {

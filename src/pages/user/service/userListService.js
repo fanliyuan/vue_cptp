@@ -43,7 +43,7 @@ class TabelOptions {
           if (val.textProp === '修改') {
             sessionStorage.setItem('userInfo', JSON.stringify(row))
             that.$router.push(`/user/editUser/${row.userId}`)
-          } else if (val.textProp === '启用') {
+          } else if (val.textProp === '已停用') {
             // console.log(row, '启用')
             enableUser && enableUser(row)
           } else {

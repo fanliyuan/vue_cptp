@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:54:53
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-09 17:44:21
+ * @Last Modified time: 2018-05-10 10:50:05
 */
 <template>
   <div>
@@ -233,6 +233,11 @@ export default {
                 message: '用户已停用'
               })
               this.getDataList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '操作失败'
+              })
             }
           } catch (error) {}
         }
@@ -248,6 +253,11 @@ export default {
                 message: '用户已启用'
               })
               this.getDataList()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '操作失败'
+              })
             }
           } catch (error) {}
         }
@@ -256,15 +266,18 @@ export default {
           this.searchResult.total = data.data.totalCount ? data.data.totalCount : 0
         }
         if (data.code === 200) {
+          data.data.pageList = data.data.pageList instanceof Array ? data.data.pageList : []
           data.data.pageList.forEach(item => {
             item.operate = [
               {
                 textProp: '修改'
               },
               {
-                textProp: item.isDisable === 0 ? '停用' : '启用'
+                textProp: item.isDisable === 0 ? '已启用' : '已停用',
+                title: item.isDisable === 0 ? '点击停用账户' : '点击启用账户'
               }
             ]
+            item.powerList = item.powerList === null ? '' : item.powerList
             let powerArr = item.powerList.split(',').sort((a, b) => a > b)
             let privilegeName = []
             // powerList.forEach(sub => {
@@ -281,8 +294,8 @@ export default {
             })
             item.privilegeName = privilegeName.join(',')
           })
+          this.tableOptions = userListService(data.data.pageList).getOptions({that: this, disableUser, enableUser}).tableOptions
         }
-        this.tableOptions = userListService(data.data.pageList).getOptions({that: this, disableUser, enableUser}).tableOptions
       } catch (error) {}
     },
     async getSearchUserList () {

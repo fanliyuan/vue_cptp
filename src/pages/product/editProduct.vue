@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-09 17:02:04
+ * @Last Modified time: 2018-05-10 10:27:03
 */
 
 <template>
@@ -331,19 +331,23 @@ export default {
     levelDisplay () {
       switch (this.productInfo.oneLevel) {
         case '0':
+        // DAAS类型级联
           this.twoFlag = false
           this.threeFlag = false
           this.productInfo.twoLevel = '0'
           this.productInfo.threeLevel = '0'
           break
         case '1':
-          this.twoFlag = true
+        // PAAS类型级联
+          this.twoFlag = false
           this.threeFlag = false
+          this.productInfo.twoLevel = '0'
           this.productInfo.threeLevel = '0'
           break
         case '2':
+        // SAAS类型级联
           this.twoFlag = true
-          this.threeFlag = true
+          // this.threeFlag = true
           break
       }
     },
@@ -352,14 +356,13 @@ export default {
       this.levelDisplay()
       if (val === '2') {
         this.getTwoList({}, this.getThreeList)
-      } else {
-        this.getTwoList()
       }
-      this.productInfo.twoLevel = '0'
+      this.productInfo.twoLevel = null
     },
     twoLevelChange (val) {
       this.productInfo.twoLevel = val
-      this.getThreeList()
+      // 二级改变获取三级级联
+      // this.getThreeList()
       this.productInfo.threeLevel = '0'
     },
     threeLevelChange (val) {
@@ -370,14 +373,16 @@ export default {
           let { data } = await projectAPIs.getProdutLevelList({parentId: productInfo.oneLevel - 0})
           try {
             this.twoList = data.data
-            cb && cb(productInfo)
+            // 二级类型选择之后调用获取三级类型的列表
+            // cb && cb(productInfo)
           } catch (error) {
           }
         } else {
           let { data } = await projectAPIs.getProdutLevelList({parentId: this.productInfo.oneLevel - 0})
           try {
             this.twoList = data.data
-            cb && cb(productInfo)
+            // 二级类型选择之后调用获取三级类型的列表
+            // cb && cb(productInfo)
           } catch (error) {
           }
         }

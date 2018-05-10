@@ -174,7 +174,7 @@
           :prop="item.prop"
           :render-header="item.renderHeader">
           <template slot-scope="scope">
-            <a v-for="link in scope.row[item.prop]" :key="link.index" :class="item.linkClassName" :style="item.linkStyle" @click="item.OnClick(link, scope.row)">
+            <a v-for="link in scope.row[item.prop]" :key="link.index" :class="item.linkClassName" :style="item.linkStyle" @click="item.OnClick(link, scope.row)" :title="link.title">
               {{link[item.textProp]}}
             </a>
           </template>
