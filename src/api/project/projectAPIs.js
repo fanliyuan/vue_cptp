@@ -55,6 +55,11 @@ const module = {
       method: 'post',
       name: 'getProductList',
       url: '/getProductList'
+    },
+    {
+      method: 'post',
+      name: 'queryProjectList',
+      url: '/queryProjectList'
     }
   ]
 }

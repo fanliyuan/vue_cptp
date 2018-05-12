@@ -39,19 +39,19 @@ class Option {
     return {
       select: [
         {
-          value: '0',
+          value: '-1',
           option: departmentList,
           selectHandler (val) {
             val = +val
-            selectFun1 && selectFun1(val, 0)
+            selectFun1 && selectFun1(val)
           }
         },
         {
-          value: null,
+          value: '-1',
           option: managerList,
           selectHandler (val) {
             val = +val
-            selectFun2 && selectFun2(0, val)
+            selectFun2 && selectFun2(val)
           }
         }
       ],
@@ -72,17 +72,17 @@ class Option {
       },
       {
         label: '立项部门',
-        prop: 'department'
+        prop: 'deptName'
       },
       {
         label: '负责人',
-        prop: 'manager'
+        prop: 'projectLeader'
       },
       {
         xtype: 'links',
         label: '涉及产品',
-        prop: 'product',
-        textProp: 'textProp',
+        prop: 'products',
+        textProp: 'productName',
         OnClick (item, row) {
           that.$router.push(`/product/detail/${item.productId}`)
         },
@@ -97,8 +97,15 @@ class Option {
           if (item.textProp === '修改') {
             sessionStorage.setItem('projectInfo', JSON.stringify(row))
             that.$router.push(`/project/editProject/${row.projectId}`)
-          } else {
-            delFun && delFun(row)
+          } else if(item.textProp === '删除'){
+           // console.log(row.projectName[0].textProp)
+           that.$confirm(`是否删除${row.projectName} ?`).then(data=>{
+             if(!data) throw new Error('取消删除')
+             console.log("bbbbb")
+             delFun && delFun(row)
+           }).catch(err => {
+             if(err) that.$message('取消删除')
+           })
           }
         },
         linkStyle: 'display: inline-block;width: 50%'
@@ -302,7 +309,7 @@ class Option {
         ]
       },
       {
-        projectName: '项目1',
+        projectName: '项目3',
         projectId: 1,
         department: '部门1',
         manager: '负责人1',
@@ -332,7 +339,7 @@ class Option {
     ]
     return {
       thead,
-      data,
+      data:this.data,
       stripe: true,
       border: true
     }
