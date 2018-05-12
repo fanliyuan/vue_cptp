@@ -95,15 +95,15 @@ export default {
   data () {
     return {
       breadCrumbOption: {},
-      deptList:[],
-      ids:'',
-      leaderList:[],
+      deptList: [],
+      ids: '',
+      leaderList: [],
       projectInfo: {
         newName: '',
         projectName: '',
-        deptId:null,
-        deptName:'',
-        productIds:'',
+        deptId: null,
+        deptName: '',
+        productIds: '',
         products: [
         ]
       },
@@ -137,20 +137,18 @@ export default {
     if (this.$route.params && this.$route.params.projectId) {
       this.breadCrumbOption = editProjectService().getBreadCrumbOption({projectId: this.$route.params.projectId})
       this.projectInfo = JSON.parse(sessionStorage.getItem('projectInfo'))
-      let zancun=[]
-      if(this.projectInfo.products){
-        this.projectInfo.products.forEach(item =>{
+      let zancun = []
+      if (this.projectInfo.products) {
+        this.projectInfo.products.forEach(item => {
           zancun.push(item.productId)
         })
-        //this.ids=''+this.projectInfo.productIds
-        this.ids=zancun.join(',')
-      }
-      else
-      {
-        this.ids=''
+        // this.ids=''+this.projectInfo.productIds
+        this.ids = zancun.join(',')
+      } else {
+        this.ids = ''
       }
       console.log(this.ids)
-      //console.log("aaabbb",this.projectInfo)
+      // console.log("aaabbb",this.projectInfo)
     } else {
       this.breadCrumbOption = editProjectService().getBreadCrumbOption()
     }
@@ -168,96 +166,94 @@ export default {
     }
   },
   methods: {
-     getDictDesc (dictList, selIndex) {
+    getDictDesc (dictList, selIndex) {
       for (var index in dictList) {
         if (dictList[index].dictIndex === selIndex) {
           return dictList[index].dictDesc
         }
       }
     },
-    sureSubmit (){
-        this.showInfo.oneShow=false
-        this.twoList=[]
-        this.threeList=[]
-        this.fourList=[]
+    sureSubmit () {
+      this.showInfo.oneShow = false
+      this.twoList = []
+      this.threeList = []
+      this.fourList = []
     },
-    cancelSubmit (){
-      if(this.projectInfo.products instanceof Array && this.projectInfo.products.length>0)
-        this.projectInfo.products.splice(this.projectInfo.products-1,1)
-        this.showInfo.oneShow=false
-        this.twoList=[]
-        this.threeList=[]
-        this.fourList=[]
-        
+    cancelSubmit () {
+      if (this.projectInfo.products instanceof Array && this.projectInfo.products.length > 0) { this.projectInfo.products.splice(this.projectInfo.products - 1, 1) }
+      this.showInfo.oneShow = false
+      this.twoList = []
+      this.threeList = []
+      this.fourList = []
     },
     async submitHandler () {
       // 这里调用提交接口
       console.log('修改提交')
-    //  console.log(this.$route.params)
+      //  console.log(this.$route.params)
       try {
-      if (this.$route.params && this.$route.params.projectId) {
-        let params={
-          deptId:this.projectInfo.deptId,
-          deptName:this.getDictDesc(this.deptList,this.projectInfo.deptId),
-          productIds:this.ids,
-          projectId:this.projectInfo.projectId,
-          projectLeader:this.getDictDesc(this.leaderList,this.projectInfo.leaderId),
-          projectName:this.projectInfo.projectName,
-          leaderId:this.projectInfo.leaderId
-        }
-        let { data } = await projectAPIs.updateProject(params)
-        if (data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: data.message
-          })
+        if (this.$route.params && this.$route.params.projectId) {
+          let params = {
+            deptId: this.projectInfo.deptId,
+            deptName: this.getDictDesc(this.deptList, this.projectInfo.deptId),
+            productIds: this.ids,
+            projectId: this.projectInfo.projectId,
+            projectLeader: this.getDictDesc(this.leaderList, this.projectInfo.leaderId),
+            projectName: this.projectInfo.projectName,
+            leaderId: this.projectInfo.leaderId
+          }
+          let { data } = await projectAPIs.updateProject(params)
+          if (data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: data.message
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '修改失败'
+            })
+          }
         } else {
-          this.$message({
-            type: 'error',
-            message: '修改失败'
-          })
+          //  console.log(this.projectInfo.productIds)
+          let paramss = {
+            deptId: this.projectInfo.deptId,
+            deptName: this.getDictDesc(this.deptList, this.projectInfo.deptId),
+            productIds: this.ids,
+            projectLeader: this.getDictDesc(this.leaderList, this.projectInfo.leaderId),
+            projectName: this.projectInfo.newName,
+            leaderId: this.projectInfo.leaderId
+          }
+          //    delete params.projectId
+          //   params.projectName = this.projectInfo.newName
+          let { data } = await projectAPIs.addProject(paramss)
+          if (data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: data.message
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '新增失败'
+            })
+          }
         }
-      } else {
-      //  console.log(this.projectInfo.productIds)
-        let paramss={
-          deptId:this.projectInfo.deptId,
-          deptName:this.getDictDesc(this.deptList,this.projectInfo.deptId),
-          productIds:this.ids,
-          projectLeader:this.getDictDesc(this.leaderList,this.projectInfo.leaderId),
-          projectName:this.projectInfo.newName,
-          leaderId:this.projectInfo.leaderId
-        }
-    //    delete params.projectId
-     //   params.projectName = this.projectInfo.newName
-        let { data } = await projectAPIs.addProject(paramss)
-        if (data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: data.message
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '新增失败'
-          })
+        this.$router.push('/project')
+      } catch (error) {
+        if (error) {
+          this.$confirm('操作失败,点击确认将返回列表页').then(_ => {
+            this.$router.push('/project')
+          }).catch(_ => {})
         }
       }
-      this.$router.push('/project')
-    } catch (error) {
-      if (error) {
-        this.$confirm('操作失败,点击确认将返回列表页').then(_ => {
-          this.$router.push('/project')
-        }).catch(_ => {})
-      }
-    }
     },
     delHandler (item, index) {
       // console.log(item)
-      let zancun=this.ids.split(',')
-      zancun.splice(index,1)
+      let zancun = this.ids.split(',')
+      zancun.splice(index, 1)
       // console.log(this.ids)
       // console.log(zancun)
-      this.ids=zancun.join(',')
+      this.ids = zancun.join(',')
       // console.log(this.ids)
       this.projectInfo.products.splice(index, 1)
       if (this.projectInfo.products.length === 0) {
@@ -266,9 +262,9 @@ export default {
     },
     addHandler () {
       this.showInfo.oneShow = true
-    //  console.log(dicAPIs)
+      //  console.log(dicAPIs)
       // 接下来需要获取类别
-      this.classInfo={oneClass: '', twoClass: '',fourClass: ''}
+      this.classInfo = {oneClass: '', twoClass: '', fourClass: ''}
     },
     resetOption () {
       this.$emit('data', {
@@ -280,22 +276,21 @@ export default {
       switch (flag) {
         case 'one':
           // 执行第一类
-       //   console.log("111"+val)
-       console.log("ceshi"+val.split('-')[1])
+          //   console.log("111"+val)
+          console.log('ceshi' + val.split('-')[1])
           if (val.split('-')[1] === '0') {
             this.twoList = []
             this.threeList = []
             this.params.oneLevel = 0
-           // this.params.twoLevel = -1
+            // this.params.twoLevel = -1
             this.getProductList()
-          }else if(val.split('-')[1] === '1'){
+          } else if (val.split('-')[1] === 1) {
             this.twoList = []
             this.threeList = []
             this.params.oneLevel = 1
-         //   this.params.twoLevel = 0
+            //   this.params.twoLevel = 0
             this.getProductList()
-          }
-           else {
+          } else {
             this.fourList = []
             this.params.oneLevel = +val.split('-')[0]
             this.getProdutLevelList(val.split('-')[1])
@@ -303,45 +298,41 @@ export default {
           break
         case 'two':
           // 执行函数二
-         // this.params.twoLevel = +val.split('-')[0]
-          if (this.params.oneLevel == '2') {
-            this.params.twoLevel=val.split('-')[0]
+          // this.params.twoLevel = +val.split('-')[0]
+          if (this.params.oneLevel === 2) {
+            this.params.twoLevel = val.split('-')[0]
             this.getProductList()
-            this.params.twoLevel=this.twoList[val.split('-')[0]].levelId
+            this.params.twoLevel = this.twoList[val.split('-')[0]].levelId
           } else {
-            //this.getProdutLevelList(val.split('-')[1])
+            // this.getProdutLevelList(val.split('-')[1])
           }
           break
         case 'three':
           // 执行函数三
-          //this.params.threeLevel = +val.split('-')[1]
+          // this.params.threeLevel = +val.split('-')[1]
           this.getProductList()
           break
         case 'four':
           // 这里是选择产品
           this.params.threeLevel = +val.split('-')[0]
           console.log(this.params.threeLevel)
-          if(this.projectInfo.products instanceof Array)
-          {
-            
+          if (this.projectInfo.products instanceof Array) {
+
+          } else {
+            this.projectInfo.products = []
           }
-          else {
-              this.projectInfo.products=[]
-          }
-          //console.log(this.projectInfo.products)
-        //  this.projectInfo.products.push(this.fourList[this.params.threeLevel])
-          let arrs={}
-          arrs.productId=this.fourList[this.params.threeLevel].productId
-          arrs.productName=this.fourList[this.params.threeLevel].productName
+          // console.log(this.projectInfo.products)
+          //  this.projectInfo.products.push(this.fourList[this.params.threeLevel])
+          let arrs = {}
+          arrs.productId = this.fourList[this.params.threeLevel].productId
+          arrs.productName = this.fourList[this.params.threeLevel].productName
           console.log(this.fourList[this.params.threeLevel])
           this.projectInfo.products.push(arrs)
-          if(this.ids==''){
-              this.ids=this.ids+arrs.productId
+          if (this.ids === '') {
+            this.ids = this.ids + arrs.productId
+          } else {
+            this.ids = this.ids + ',' + arrs.productId
           }
-          else{
-
-            this.ids=this.ids+','+arrs.productId
-            }
           break
         default:
           // 执行默认函数
@@ -373,18 +364,18 @@ export default {
         let {data} = await projectAPIs.getProductList({oneLevel, twoLevel})
         // console.log(data.data)
         this.fourList = data.data
-       //this.projectInfo.products.concat(data.data)
+        // this.projectInfo.products.concat(data.data)
       } catch (error) {}
     },
-     async getDeptList () {
+    async getDeptList () {
       try {
         let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMEN'})
         let managerList = await dicAPIs.selectInfoByValues({type: 'FUZEREN'})
-       // console.log(departmentList.data.data)
-        this.deptList=departmentList.data.data
-        this.leaderList=managerList.data.data
+        // console.log(departmentList.data.data)
+        this.deptList = departmentList.data.data
+        this.leaderList = managerList.data.data
       } catch (error) {}
-    } 
+    }
   }
 }
 </script>

@@ -97,249 +97,249 @@ class Option {
           if (item.textProp === '修改') {
             sessionStorage.setItem('projectInfo', JSON.stringify(row))
             that.$router.push(`/project/editProject/${row.projectId}`)
-          } else if(item.textProp === '删除'){
-           // console.log(row.projectName[0].textProp)
-           that.$confirm(`是否删除${row.projectName} ?`).then(data=>{
-             if(!data) throw new Error('取消删除')
-             console.log("bbbbb")
-             delFun && delFun(row)
-           }).catch(err => {
-             if(err) that.$message('取消删除')
-           })
+          } else if (item.textProp === '删除') {
+            // console.log(row.projectName[0].textProp)
+            that.$confirm(`是否删除${row.projectName} ?`).then(data => {
+              if (!data) throw new Error('取消删除')
+              console.log('bbbbb')
+              delFun && delFun(row)
+            }).catch(err => {
+              if (err) that.$message('取消删除')
+            })
           }
         },
         linkStyle: 'display: inline-block;width: 50%'
       }
     ]
-    let data = [
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目1',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      },
-      {
-        projectName: '项目3',
-        projectId: 1,
-        department: '部门1',
-        manager: '负责人1',
-        product: [
-          {
-            textProp: '产品1',
-            productId: 1
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          },
-          {
-            textProp: '产品2',
-            productId: 2
-          }
-        ],
-        operation: [
-          {
-            textProp: '修改'
-          },
-          {
-            textProp: '删除'
-          }
-        ]
-      }
-    ]
+    // let data = [
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目1',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     projectName: '项目3',
+    //     projectId: 1,
+    //     department: '部门1',
+    //     manager: '负责人1',
+    //     product: [
+    //       {
+    //         textProp: '产品1',
+    //         productId: 1
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       },
+    //       {
+    //         textProp: '产品2',
+    //         productId: 2
+    //       }
+    //     ],
+    //     operation: [
+    //       {
+    //         textProp: '修改'
+    //       },
+    //       {
+    //         textProp: '删除'
+    //       }
+    //     ]
+    //   }
+    // ]
     return {
       thead,
-      data:this.data,
+      data: this.data,
       stripe: true,
       border: true
     }

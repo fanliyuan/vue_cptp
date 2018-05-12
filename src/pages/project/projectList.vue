@@ -19,7 +19,7 @@ export default {
   },
   data () {
     let delFun = (row) => {
-      console.log("aaaaa"+row.projectId)
+      console.log('aaaaa' + row.projectId)
     }
     return {
       breadCrumbOption: projectListService().getBreadCrumbOption(),
@@ -39,10 +39,10 @@ export default {
       deptId: -1,
       leaderId: -1,
       selectValue: {
-        deptId:-1,
-        leaderId:-1,
-        projectName:'',
-        projectLeader:''
+        deptId: -1,
+        leaderId: -1,
+        projectName: '',
+        projectLeader: ''
       }
     }
   },
@@ -59,8 +59,8 @@ export default {
             label: '项目搜索页'
           }
         ]
-        console.log("keyword"+this.searchResult.keyword)
-        this.getDataList ()
+        console.log('keyword' + this.searchResult.keyword)
+        this.getDataList()
         //  let delFun = async (row) =>{
         //   let { data } = await projectAPIs.deleteProject({id: row.projectId})
         //   console.log("shsk"+data)
@@ -89,9 +89,9 @@ export default {
   methods: {
     pageHandler (val) {
       this.pageInfo.pageNum = val
-   //   console.log(this.pageInfo)
+      //   console.log(this.pageInfo)
       // 接口
-      this.getDataList ()
+      this.getDataList()
     },
     resetOption () {
       this.$emit('data', {
@@ -125,18 +125,18 @@ export default {
         //  this.pageInfo.total = data.data.pageInfo.totalNum
         //  this.searchResult.total = data.data.pageInfo.totalNum
         let selectFun1 = (val) => {
-         // console.log(val+"aaaaaabbbbb")
+          // console.log(val+"aaaaaabbbbb")
         //  this.departmentId = +val
           this.selectValue.deptId = +val
           this.selectValue.leaderId = -1
           this.pageInfo.pageNum = 1
           this.getDataList()
-       //   this.getManagerList(+val)
+          //   this.getManagerList(+val)
           this.selectSearchOption.select[1].value = '-1'
         }
         let selectFun2 = (val) => {
           // 这里调用数据更新接口
-         // console.log(val, '更新数据')
+          // console.log(val, '更新数据')
           this.selectValue.deptId = -1
           this.selectValue.leaderId = +val
           this.pageInfo.pageNum = 1
@@ -157,14 +157,14 @@ export default {
         //     // 这里项目列表数据
         //   } catch (error) {}
         // }
-        this.selectSearchOption = projectListService().getSelectSearchOption({that: this, departmentList: departmentList.data.data, managerList: managerList.data.data, selectFun1,selectFun2})
+        this.selectSearchOption = projectListService().getSelectSearchOption({that: this, departmentList: departmentList.data.data, managerList: managerList.data.data, selectFun1, selectFun2})
       } catch (error) {}
     },
     async getDepartmenttList () {
       try {
         let { data } = await dicAPIs.selectInfoByValues({ type: 'BUMEN' })
         if (data.code === 200) {
-         // console.dir(data.data)
+          // console.dir(data.data)
           data.data.forEach(item => {
             item.value = item.dictIndex + ''
             item.label = item.dictDesc
@@ -178,51 +178,51 @@ export default {
           this.leaderId = -1
           this.pageInfo.pageNum = 1
           this.getDataList()
-       //   this.getManagerList(+val)
-           this.selectSearchOption.select[1].value = null
+          //   this.getManagerList(+val)
+          this.selectSearchOption.select[1].value = null
         }
         this.selectFun1 = selectFun1
         this.selectSearchOption = projectListService().getSelectSearchOption({
           that: this,
           departmentList: this.departmentList,
-          managerList:this.managerList,
+          managerList: this.managerList,
           selectFun1
         })
       } catch (error) {}
     },
     async getDataList () {
-      if(this.searchResult && this.searchResult.keyword=='all'){
-          this.searchResult.keyword=null
+      if (this.searchResult && this.searchResult.keyword === 'all') {
+        this.searchResult.keyword = null
       }
       try {
         let {data} = await projectAPIs.filterProductList(
           {
           //  deptId: this.deptId,
-           // leaderId: this.leaderId,
-            deptId:this.selectValue.deptId,
-            leaderId:this.selectValue.leaderId,
-            projectName:this.searchResult ? this.searchResult.keyword : '',
-            projectLeader:this.searchResult ? this.searchResult.keyword : '',
+            // leaderId: this.leaderId,
+            deptId: this.selectValue.deptId,
+            leaderId: this.selectValue.leaderId,
+            projectName: this.searchResult ? this.searchResult.keyword : '',
+            projectLeader: this.searchResult ? this.searchResult.keyword : '',
             pageNum: this.pageInfo.pageNum,
             pageSize: this.pageInfo.pageSize
           }
         )
-           let delFun = async (row) =>{
-            let { data } = await projectAPIs.deleteProject({projectId: row.projectId})
-            console.log(data.data)
-            try {
-                if(data && data.code === 200){
-                  this.$message({
-                    type:'success',
-                    message:'项目删除成功'
-                  })
-                  this.getDataList()
-                }
-            } catch (err){
-
+        let delFun = async (row) => {
+          let { data } = await projectAPIs.deleteProject({projectId: row.projectId})
+          console.log(data.data)
+          try {
+            if (data && data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '项目删除成功'
+              })
+              this.getDataList()
             }
-         }
-        //console.log(data.data)
+          } catch (err) {
+
+          }
+        }
+        // console.log(data.data)
         let opetate = [
           {
             textProp: '修改'
@@ -241,92 +241,88 @@ export default {
         //     productId: 2
         //   }
         // ]
-        let zancun=[],products=[]
+        let zancun = []
+        let products = []
         this.pageInfo.total = data.data.totalCount
         if (this.$route.params && this.$route.params.keyword) {
           this.searchResult.total = data.data.totalCount ? data.data.totalCount : 0
         }
-        if(data.code == 200){
-            data.data.pageList.forEach( item => {
-               
-              //  item.projectInfo.products=item.productList
-                products=item.productList
-                item.projectInfo.products=products
-                 item.projectInfo.operation=opetate
-                zancun.push(item.projectInfo)
-
-            })
-           // console.log(zancun)
-            this.tableOption=projectListService(zancun).getTableOption({ that: this ,delFun})
+        if (data.code === 200) {
+          data.data.pageList.forEach(item => {
+            //  item.projectInfo.products=item.productList
+            products = item.productList
+            item.projectInfo.products = products
+            item.projectInfo.operation = opetate
+            zancun.push(item.projectInfo)
+          })
+          // console.log(zancun)
+          this.tableOption = projectListService(zancun).getTableOption({ that: this, delFun })
         }
         // 这里项目列表数据
       } catch (error) {
         console.log(error)
       }
     },
-       async getSearchList () {
-        try {
-          let {data} = await projectAPIs.searchProjectList({
-            pageNum: this.pageInfo.pageNum,
-            pageSize: this.pageInfo.pageSize,
-            keyword:this.searchResult && this.searchResult.keyword.indexOf('@') === -1 ? this.searchResult.keyword : ''
-          })
-          this.pageHandler = val => {
-            this.pageInfo.pageNum = val
-            console.log(this.pageInfo)
-            // 接口
-            this.getSearchList ()
+    async getSearchList () {
+      try {
+        let {data} = await projectAPIs.searchProjectList({
+          pageNum: this.pageInfo.pageNum,
+          pageSize: this.pageInfo.pageSize,
+          keyword: this.searchResult && this.searchResult.keyword.indexOf('@') === -1 ? this.searchResult.keyword : ''
+        })
+        this.pageHandler = val => {
+          this.pageInfo.pageNum = val
+          console.log(this.pageInfo)
+          // 接口
+          this.getSearchList()
         }
-          if(data.code === 200){
-            this.pageInfo.total = data.data.pageInfo.totalNum
-            this.searchResult.total = data.data.pageInfo.totalNum
-            console.log(data.data)
-             let opetate = [
-              {
-                textProp: '修改'
-              },
-              {
-                textProp: '删除'
+        if (data.code === 200) {
+          this.pageInfo.total = data.data.pageInfo.totalNum
+          this.searchResult.total = data.data.pageInfo.totalNum
+          console.log(data.data)
+          let opetate = [
+            {
+              textProp: '修改'
+            },
+            {
+              textProp: '删除'
+            }
+          ]
+          let delFun = async (row) => {
+            let { data } = await projectAPIs.deleteProject({projectId: row.projectId})
+            console.log(data)
+            try {
+              if (data && data.code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '项目删除成功'
+                })
+                this.getDataList()
               }
-            ]
-             let delFun = async (row) =>{
-              let { data } = await projectAPIs.deleteProject({projectId: row.projectId})
-              console.log(data)
-              try {
-                  if(data && data.code === 200){
-                    this.$message({
-                      type:'success',
-                      message:'项目删除成功'
-                    })
-                    this.getDataList()
-                  }
-              } catch (err){}
+            } catch (err) {}
           }
-             let zancun=[],products=[]
-      
-            data.data.listInfo.forEach( item => {
-               
-              //  item.projectInfo.products=item.productList
-                products=item.productList
-                item.projectInfo.products=products
-                 item.projectInfo.operation=opetate
-                zancun.push(item.projectInfo)
+          let zancun = []
+          let products = []
 
-            })
+          data.data.listInfo.forEach(item => {
+            //  item.projectInfo.products=item.productList
+            products = item.productList
+            item.projectInfo.products = products
+            item.projectInfo.operation = opetate
+            zancun.push(item.projectInfo)
+          })
           //  console.log(zancun)
-            this.tableOption=projectListService(zancun).getTableOption({ that: this ,delFun})
-       
-          }
-        console.log(data) 
-         
-        } catch (err){
+          this.tableOption = projectListService(zancun).getTableOption({ that: this, delFun })
         }
-    } 
+        console.log(data)
+      } catch (err) {
+      }
+    }
   },
   mounted () {
     this.resetOption()
-  //  this.getDepartmenttList()
-  //  this.getManagerList()
+    //  this.getDepartmenttList()
+    //  this.getManagerList()
     this.getSelectList()
     this.getDataList()
   },
