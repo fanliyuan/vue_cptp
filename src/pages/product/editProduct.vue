@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-12 14:39:14
+ * @Last Modified time: 2018-05-12 20:09:53
 */
 
 <template>
@@ -114,7 +114,7 @@ import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '0', productMarketTarget: null, productTag: null },
+      productInfo: { productName: '', pm: '', state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
       productManagerList: [],
       stateList: [],
       productLevelList: [],
@@ -251,6 +251,7 @@ export default {
           return true
         }
       })
+      this.productInfo.productName = this.productInfo.productName.replace(/,/g, '')
       if (this.$route.params && this.$route.params.productId) {
         // 这里调用编辑接口
         let params = {
@@ -270,6 +271,11 @@ export default {
           threeLevel: +this.productInfo.threeLevel,
           twoLevel: +this.productInfo.twoLevel
         }
+        this.productManagerList.some(item => {
+          if (item.userName === params.pm) {
+            params.userId = item.userId
+          }
+        })
         productAPIs.updateProductInfo(params).then(data => {
           if (data && data.data && data.data.code === 200) {
             this.$message({
@@ -301,6 +307,11 @@ export default {
           status: this.productInfo.state - 0,
           statusName: this.productInfo.stateName
         }
+        this.productManagerList.some(item => {
+          if (item.userName === params.pm) {
+            params.userId = item.userId
+          }
+        })
         productAPIs.addProduct(params).then(data => {
           if (data && data.data && data.data.code === 200) {
             this.$message({
@@ -334,15 +345,15 @@ export default {
         // DAAS类型级联
           this.twoFlag = false
           this.threeFlag = false
-          this.productInfo.twoLevel = '0'
-          this.productInfo.threeLevel = '0'
+          this.productInfo.twoLevel = '-1'
+          this.productInfo.threeLevel = '-1'
           break
         case '1':
         // PAAS类型级联
           this.twoFlag = false
           this.threeFlag = false
-          this.productInfo.twoLevel = '0'
-          this.productInfo.threeLevel = '0'
+          this.productInfo.twoLevel = '-1'
+          this.productInfo.threeLevel = '-1'
           break
         case '2':
         // SAAS类型级联
@@ -363,7 +374,7 @@ export default {
       this.productInfo.twoLevel = val
       // 二级改变获取三级级联
       // this.getThreeList()
-      this.productInfo.threeLevel = '0'
+      this.productInfo.threeLevel = '-1'
     },
     threeLevelChange (val) {
     },
@@ -403,7 +414,7 @@ export default {
           let { data } = await projectAPIs.getProdutLevelList({parentId})
           this.threeList = data.data
           if (data.data.length === 0) {
-            this.productInfo.threeLevel = '0'
+            this.productInfo.threeLevel = '-1'
             this.threeList = [
               {
                 levelName: '暂无',
@@ -422,7 +433,7 @@ export default {
           let { data } = await projectAPIs.getProdutLevelList({parentId})
           this.threeList = data.data
           if (data.data.length === 0) {
-            this.productInfo.threeLevel = '0'
+            this.productInfo.threeLevel = '-1'
             this.threeList = [
               {
                 levelName: '暂无',

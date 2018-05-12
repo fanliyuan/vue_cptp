@@ -356,16 +356,16 @@ export default {
 <style lang="less" scoped>
 .mydialog{
   .label{
-    margin-left: 80px;
+    margin-left: 10%;
     vertical-align: top;
   }
   .input{
     display: inline-block;
     margin-left: 20px;
-    width: 250px;
+    width: 60%;
   }
   .dialogbox{
-    width: 500px;
+    // width: 500px;
     margin: 0 auto 30px;
     display: block;
   }

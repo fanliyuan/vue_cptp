@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-02 16:54:35
+ * @Last Modified time: 2018-05-12 20:28:46
 */
 
 <template>
@@ -34,7 +34,7 @@
           <span style="line-height:5;font-size:20px;">市场定位</span>
         </el-col>
         <el-col :span="6">
-          <span style="line-height:5;font-size:20px;">{{productInfo.marketTarget}}</span>
+          <span style="line-height:5;font-size:20px;">{{productInfo.productMarketTarget}}</span>
         </el-col>
         <el-col :span="2">
           <span style="line-height:5;font-size:20px;">销售金额</span>
@@ -61,7 +61,7 @@
           <!-- <el-radio v-model="productStatus" label="1">预立项</el-radio>
           <el-radio v-model="productStatus" label="2">开发阶段</el-radio>
           <el-radio v-model="productStatus" label="3">可销售</el-radio> -->
-          <span>{{productInfo.stateName}}</span>
+          <span style="font-size: 16px;">{{productInfo.stateName}}</span>
         </el-col>
       </el-row>
       <el-row>
@@ -291,9 +291,8 @@ export default {
       try {
         if (data && data.code === 200) {
           this.productInfo = data.data
-          this.productInfo.marketTarget = '暂无'
-          this.productInfo.salesAmt = '1100.00万元'
-          this.productInfo.productTag = 'SAAS 政府'
+          this.productInfo.salesAmt = this.productInfo.salesAmt ? this.productInfo.salesAmt : 0
+          this.productInfo.salesAmt += '元'
           this.productInfo.finishPercent = 50
           this.productInfo.startTime = this.timeFormat(this.productInfo.startTime)
           this.productInfo.endTime = this.timeFormat(this.productInfo.endTime)

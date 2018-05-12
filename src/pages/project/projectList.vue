@@ -30,7 +30,7 @@ export default {
       pageInfo: {
         pageSize: 10,
         pageNum: 1,
-        total: 11
+        total: 0
       },
       departmentList: [],
       departmentId: -1,
@@ -102,7 +102,7 @@ export default {
     // 级联不能混写
     async getSelectList () {
       try {
-        let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMEN'})
+        let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMENLEIXING'})
         let managerList = await dicAPIs.selectInfoByValues({type: 'FUZEREN'})
         // console.dir(departmentList.data.data)
         // console.dir(managerList.data.data)
@@ -243,11 +243,11 @@ export default {
         // ]
         let zancun = []
         let products = []
-        this.pageInfo.total = data.data.totalCount
         if (this.$route.params && this.$route.params.keyword) {
           this.searchResult.total = data.data.totalCount ? data.data.totalCount : 0
         }
         if (data.code === 200) {
+          this.pageInfo.total = data.data.totalCount
           data.data.pageList.forEach(item => {
             //  item.projectInfo.products=item.productList
             products = item.productList
@@ -290,7 +290,6 @@ export default {
           ]
           let delFun = async (row) => {
             let { data } = await projectAPIs.deleteProject({projectId: row.projectId})
-            console.log(data)
             try {
               if (data && data.code === 200) {
                 this.$message({

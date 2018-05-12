@@ -78,7 +78,9 @@
               <el-select class="input" v-model="classInfo.fourClass" @change="productSelcet('four', classInfo.fourClass)">
                 <el-option v-for="(item, index) in fourList" :key="item.productId" :label="item.productName" :value="index + '-' + item.productId"></el-option>
               </el-select>
-              <el-button @click="sureSubmit">确定</el-button><el-button @click="cancelSubmit">取消</el-button>
+              <div style="margin-top:10px;margin-left:20px;">
+                <el-button @click="sureSubmit" size="medium" type="warning">确定</el-button><el-button @click="cancelSubmit" size="medium" type="text">取消</el-button>
+              </div>
             </div>
       </div>
       <div>
@@ -282,13 +284,13 @@ export default {
             this.twoList = []
             this.threeList = []
             this.params.oneLevel = 0
-            // this.params.twoLevel = -1
+            this.params.twoLevel = 0
             this.getProductList()
           } else if (val.split('-')[1] === 1) {
             this.twoList = []
             this.threeList = []
             this.params.oneLevel = 1
-            //   this.params.twoLevel = 0
+            this.params.twoLevel = 0
             this.getProductList()
           } else {
             this.fourList = []
@@ -326,8 +328,17 @@ export default {
           let arrs = {}
           arrs.productId = this.fourList[this.params.threeLevel].productId
           arrs.productName = this.fourList[this.params.threeLevel].productName
-          console.log(this.fourList[this.params.threeLevel])
-          this.projectInfo.products.push(arrs)
+          if (this.projectInfo.products.length === 0) {
+            this.projectInfo.products.push(arrs)
+          } else {
+            this.projectInfo.products.some(item => {
+              if (item.productId === arrs.productId) {
+              } else {
+                this.projectInfo.products.push(arrs)
+                return true
+              }
+            })
+          }
           if (this.ids === '') {
             this.ids = this.ids + arrs.productId
           } else {
@@ -369,7 +380,7 @@ export default {
     },
     async getDeptList () {
       try {
-        let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMEN'})
+        let departmentList = await dicAPIs.selectInfoByValues({type: 'BUMENLEIXING'})
         let managerList = await dicAPIs.selectInfoByValues({type: 'FUZEREN'})
         // console.log(departmentList.data.data)
         this.deptList = departmentList.data.data

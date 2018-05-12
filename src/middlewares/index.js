@@ -8,7 +8,7 @@
 import checkToken from './checkToken'
 export default (to, from, next) => {
   let allow = false
-  let partten = ['^/login']
+  let partten = ['^/login', '^/forget']
   partten.forEach(item => {
     // item里都是非受限模块
     var reg = new RegExp(item)
