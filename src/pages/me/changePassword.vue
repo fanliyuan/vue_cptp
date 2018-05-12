@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:12:58
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-03 18:55:24
+ * @Last Modified time: 2018-05-10 19:27:06
  */
 
 <template>
@@ -103,6 +103,7 @@ export default {
                 type: 'success',
                 message: '修改密码成功'
               })
+              this.$router.push('/me')
             } else {
               throw new Error(data.message)
             }

@@ -156,7 +156,7 @@ export default {
       switch (flag) {
         case 'one':
           // 执行第一类
-          if (val.split('-')[1] === '0') {
+          if (val.split('-')[1] === '0' || val.split('-')[1] === '1') {
             this.twoList = []
             this.threeList = []
             this.params.oneLevel = 0

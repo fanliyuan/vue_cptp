@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-10 10:27:03
+ * @Last Modified time: 2018-05-12 14:39:14
 */
 
 <template>
@@ -183,7 +183,7 @@ export default {
     async loadProductManagerList () {
       // 所有产品经理
       try {
-        let { data } = await userAPIs.getUserByPostionId({positionId: 0})
+        let { data } = await userAPIs.getUserByPositionName({positionName: '产品经理'})
         data.data.forEach(item => {
           item.value = item.userName
         })
@@ -254,21 +254,21 @@ export default {
       if (this.$route.params && this.$route.params.productId) {
         // 这里调用编辑接口
         let params = {
-          deptId: this.productInfo.deptId,
-          finishiPercent: this.productInfo.finishiPercent,
+          deptId: +this.productInfo.deptId,
+          // finishiPercent: this.productInfo.finishiPercent,
           frozenStatus: this.productInfo.frozenStatus,
           marketTarget: this.productMarketTarget,
-          oneLevel: this.productInfo.oneLevel,
+          oneLevel: +this.productInfo.oneLevel,
           pm: this.productInfo.pm,
-          productId: this.productInfo.productId,
+          productId: +this.productInfo.productId,
           productName: this.productInfo.productName,
           productTag: this.productTag,
-          projectId: this.productInfo.projectId,
+          projectId: +this.productInfo.projectId,
           rdm: this.productInfo.rdm,
-          state: this.productInfo.state,
+          state: +this.productInfo.state,
           stateName: this.productInfo.stateName,
-          threeLevel: this.productInfo.threeLevel,
-          twoLevel: this.productInfo.twoLevel
+          threeLevel: +this.productInfo.threeLevel,
+          twoLevel: +this.productInfo.twoLevel
         }
         productAPIs.updateProductInfo(params).then(data => {
           if (data && data.data && data.data.code === 200) {

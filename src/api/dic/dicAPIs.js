@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 13:27:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-03 15:36:08
+ * @Last Modified time: 2018-05-11 15:47:02
 */
 
 import apiBase from '../apiBase'
@@ -45,6 +45,11 @@ const module = {
       method: 'post',
       name: 'selectSystemDictValueInfo',
       url: '/selectSystemDictValueInfo'
+    },
+    {
+      method: 'post',
+      name: 'saveDictPostionInfo',
+      url: '/saveDictPostionInfo'
     }
   ]
 }

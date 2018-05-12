@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:40
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-10 15:12:11
+ * @Last Modified time: 2018-05-11 09:40:12
 */
 
 <template>
@@ -203,6 +203,7 @@ export default {
                 vm.$router.push('/product')
                 vm.searchResult = null
                 vm.status = val
+                vm.pageInfo.pageNum = 1
                 vm.getProductList()
               },
               value: -1,

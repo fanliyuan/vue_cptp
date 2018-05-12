@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 11:26:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-07 17:45:17
+ * @Last Modified time: 2018-05-10 20:28:47
 */
 
 import apiBase from '../apiBase'
@@ -70,8 +70,8 @@ const module = {
     },
     {
       method: 'post',
-      name: 'getUserByPostionId',
-      url: '/getUserByPostionId'
+      name: 'getUserByPositionName',
+      url: '/getUserByPositionName'
     },
     {
       method: 'get',

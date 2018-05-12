@@ -9,7 +9,7 @@
         <span class="label">对应职位</span>
         <!-- <el-input v-model="editPositionClassInfo.newPosition" class="input"></el-input> -->
         <el-select v-model="editPositionClassInfo.newPosition" class="input" @change="changeHandler">
-          <el-option v-for="item in positionList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc"></el-option>
+          <el-option v-for="item in positionList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc + item.dictIndex + item.id"></el-option>
         </el-select>
       </div>
       <el-button type="primary" class="button" @click="addHandler">确定</el-button>
@@ -25,14 +25,14 @@
         <span class="label">新职位类型</span>
         <!-- <el-input v-model="editPositionClassInfo.newPositionClass" class="input"></el-input> -->
         <el-select v-model="editPositionClassInfo.newPositionClass" class="input" @change="positionClassSelectHandler">
-          <el-option v-for="item in positionClassList" :label="item.dictDesc" :value="item.id" :key="item.id"></el-option>
+          <el-option v-for="item in positionClassList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc + item.dictIndex + item.id"></el-option>
         </el-select>
       </div>
       <div class="dialogbox">
         <span class="label">对应的职位</span>
         <el-input v-model="editPositionClassInfo.dictDesc" class="input" disabled></el-input>
         <!-- <el-select v-model="editPositionClassInfo.newPosition" class="input" @change="changeHandler">
-          <el-option v-for="item in positionList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc"></el-option>
+          <el-option v-for="item in positionList" :label="item.dictDesc" :value="item.id" :key="item.dictDesc + item.dictIndex + item.id"></el-option>
         </el-select> -->
       </div>
       <el-button type="primary" class="button" @click="editHandler">确定</el-button>
@@ -119,18 +119,17 @@ export default {
         return false
       }
       let param = {
-        dictType: 'ZHIWEILEIXING',
-        dictDesc: this.positionClassValue,
-        dictIndex: this.positionClassLength,
-        dictValue: '',
-        dictParent: 0
+        positionIndex: this.positionInfo.dictIndex,
+        positionTypeValue: this.positionClassValue,
+        positionValue: this.positionInfo.dictDesc
       }
       try {
-        var { data } = await dicAPIs.saveDictValue(param)
-        if (data.code === 200) {
-          this.positionInfo.dictParent = data.data.id
-        }
-        var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
+        // var { data } = await dicAPIs.saveDictValue(param)
+        // if (data.code === 200) {
+        //   this.positionInfo.dictParent = data.data.id
+        // }
+        // var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
+        let {data} = await dicAPIs.saveDictPostionInfo(param)
         if (data.code === 200) {
           this.$message({
             type: 'success',
