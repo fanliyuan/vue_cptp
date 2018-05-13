@@ -14,7 +14,8 @@ Vue.use(Vuex)
 
 const store = () => new Vuex.Store({
   state: {
-    fileServer: 'http://172.16.126.140/image'
+    fileServer: 'http://172.16.126.140/image',
+    isAdmin: 0
   },
   modules: {
     homeStore,
