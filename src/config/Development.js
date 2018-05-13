@@ -11,7 +11,7 @@
  *          同时当前页面也可以更改scopeURL来修改接口
  */
 
-let scopeURL = ''// 这里替换默认设置的后台接口地址
+let scopeURL = ''// 这里替换默认设置的后台接口地址   http://192.168.0.151:8769/api/back
 
 export default {
   env: 'development',

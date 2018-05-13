@@ -83,13 +83,13 @@ export default {
       },
       tableOptions: editPositionClassService([]).getTableOption({editFun, delFun}),
       rightButtonOptions: [
-        {
-          label: '添加职位类型',
-          fun () {
-            vm.addPositionClass = true
-            // vm.getPositionList()
-          }
-        }
+        // {
+        //   label: '添加职位类型',
+        //   fun () {
+        //     vm.addPositionClass = true
+        //     // vm.getPositionList()
+        //   }
+        // }
       ],
       addPositionClass: false,
       positionClassValue: '',

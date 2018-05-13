@@ -203,10 +203,16 @@ export default {
           label: 'del'
         }]
         if (data.code === 200) {
+          data.data.pageList.forEach((item, index) => {
+            if (item.roleId === 1000) {
+              data.data.pageList.splice(index, 1)
+            }
+          })
           data.data.pageList.forEach(item => {
             item.opetate = opetate
             // item.userName = item.userName ? item.userName : '暂无'
             // item.userAccount = item.userAccount ? item.userAccount : '暂无'
+            item.powerList = item.powerList ? item.powerList : ''
             authList.forEach((sub, index) => {
               item[sub.label] = item.powerList.split(',').indexOf(index + '') === -1 ? '×' : '√'
             })
@@ -222,7 +228,8 @@ export default {
           this.searchResult = null
         }
       } catch (error) {
-        this.$alert('网络不通,或者服务器错误')
+        // this.$alert('网络不通,或者服务器错误')
+        console.log(error)
       }
     }
   },

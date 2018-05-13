@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-13 13:41:14
+ * @Last Modified time: 2018-05-13 17:08:12
 */
 
 <template>
@@ -53,7 +53,7 @@ export default {
       this.options = data
     },
     getLeftBarOption () {
-      if (this.$store.state.isAdmin === 1) {
+      if (this.$store.state.isAdmin === 1 || this.$store.state.isAdmin !== 1) {
         this.leftBarOption = {
           title: '左侧菜单数据配置',
           data: [

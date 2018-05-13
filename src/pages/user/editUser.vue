@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-10 17:33:02
+ * @Last Modified time: 2018-05-13 16:13:11
 */
 <template>
   <div>
@@ -124,11 +124,12 @@ export default {
       this.getDefault()
     } else {
       this.breadCrumbOptions = {bread: [{label: '用户管理', path: '/user'}, {label: '用户添加'}]}
+      this.getPositionTypeList()
     }
     this.resetOption()
     this.getRoleList()
     this.getDepartmentList()
-    this.getPositionTypeList()
+    // this.getPositionTypeList()
     this.getPositionList()
   },
   methods: {
