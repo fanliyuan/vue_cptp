@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-13 11:00:51
+ * @Last Modified time: 2018-05-14 18:17:44
  */
 <template>
   <el-container>
@@ -123,7 +123,7 @@ export default {
                 localStorage.setItem('userName', data.data.data.userName)
                 sessionStorage.setItem('userId', data.data.data.userId)
                 this.$store.state.isAdmin = data.data.data.isAdmin
-                if (this.$store.state.isAdmin === 1) {
+                if (this.$store.state.isAdmin === 3) {
                   this.$router.push('/')
                 } else {
                   this.$router.push('/me')

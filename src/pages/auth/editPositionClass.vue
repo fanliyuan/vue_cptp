@@ -86,8 +86,9 @@ export default {
         // {
         //   label: '添加职位类型',
         //   fun () {
-        //     vm.addPositionClass = true
+        //     // vm.addPositionClass = true
         //     // vm.getPositionList()
+        //     vm.$router.push('./editPositionType')
         //   }
         // }
       ],
@@ -111,38 +112,38 @@ export default {
   },
   methods: {
     async addHandler () {
-      if (!this.addFlag) {
-        this.$message({
-          type: 'error',
-          message: '职位选择不能为空'
-        })
-        return false
-      }
-      let param = {
-        positionIndex: this.positionInfo.dictIndex,
-        positionTypeValue: this.positionClassValue,
-        positionValue: this.positionInfo.dictDesc
-      }
-      try {
-        // var { data } = await dicAPIs.saveDictValue(param)
-        // if (data.code === 200) {
-        //   this.positionInfo.dictParent = data.data.id
-        // }
-        // var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
-        let {data} = await dicAPIs.saveDictPostionInfo(param)
-        if (data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: '添加成功'
-          })
-          this.positionInfo = {}
-          this.getPositionList()
-          this.getPositionClassList()
-          this.addFlag = false
-        }
-      } catch (error) {}
-      this.addPositionClass = false
-      this.editPositionClassInfo.newPosition = null
+      // if (!this.addFlag) {
+      //   this.$message({
+      //     type: 'error',
+      //     message: '职位选择不能为空'
+      //   })
+      //   return false
+      // }
+      // let param = {
+      //   positionIndex: this.positionInfo.dictIndex,
+      //   positionTypeValue: this.positionClassValue,
+      //   positionValue: this.positionInfo.dictDesc
+      // }
+      // try {
+      //   // var { data } = await dicAPIs.saveDictValue(param)
+      //   // if (data.code === 200) {
+      //   //   this.positionInfo.dictParent = data.data.id
+      //   // }
+      //   // var {data} = await dicAPIs.updateSystemDictValue(this.positionInfo)//  eslint-disable-line
+      //   let {data} = await dicAPIs.saveDictPostionInfo(param)
+      //   if (data.code === 200) {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '添加成功'
+      //     })
+      //     this.positionInfo = {}
+      //     this.getPositionList()
+      //     this.getPositionClassList()
+      //     this.addFlag = false
+      //   }
+      // } catch (error) {}
+      // this.addPositionClass = false
+      // this.editPositionClassInfo.newPosition = null
     },
     async editHandler () {
       // 这里调用更新接口, 这里原来有同时修改职位类型和职位接口 *************************************************
@@ -202,7 +203,7 @@ export default {
     },
     pageHandler (val) {
       this.pageInfo.pageNum = val
-      console.log(this.pageInfo)
+      // console.log(this.pageInfo)
       // 调用接口
     },
     resetOption () {

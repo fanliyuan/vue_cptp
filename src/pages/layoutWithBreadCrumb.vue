@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-13 17:08:12
+ * @Last Modified time: 2018-05-14 18:19:01
 */
 
 <template>
@@ -31,6 +31,7 @@ import Header from '../components/header/Header'
 import BreadCrumb from '../components/breadcrumb/BreadCrumb'
 import RightButton from '../components/rightbutton/RightButton'
 import LeftBar from '../components/leftbar/LeftBar'
+import userAPIs from '../api/user/userAPIs'
 export default {
   components: {
     BreadCrumb,
@@ -52,8 +53,9 @@ export default {
     dataFromChild (data) {
       this.options = data
     },
-    getLeftBarOption () {
-      if (this.$store.state.isAdmin === 1 || this.$store.state.isAdmin !== 1) {
+    async getLeftBarOption () {
+      let { data } = await userAPIs.getUserInfoById({ userId: sessionStorage.userId })
+      if (this.$store.state.isAdmin === 3 || this.$store.state.isAdmin !== 3 || data.data.isAdmin === 3) {
         this.leftBarOption = {
           title: '左侧菜单数据配置',
           data: [

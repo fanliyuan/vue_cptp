@@ -4,6 +4,7 @@ import EditPositionPage from '../../pages/auth/editPosition.vue'
 import AuthSearchResultPage from '../../pages/auth/authSearchResult.vue'
 import EditPositionClassPage from '../../pages/auth/editPositionClass.vue'
 import EditRolePage from '../../pages/auth/editRole.vue'
+import EditPositionTypePage from '../../pages/auth/editPositionType'
 export default [
   {
     path: '/auth',
@@ -40,6 +41,10 @@ export default [
     path: 'editPositionClass',
     name: 'editPositionClass',
     component: EditPositionClassPage
+  },
+  {
+    path: 'editPositionType',
+    component: EditPositionTypePage
   },
   {
     path: 'editRole',
