@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-14 18:19:01
+ * @Last Modified time: 2018-05-18 16:07:37
 */
 
 <template>
@@ -54,7 +54,7 @@ export default {
       this.options = data
     },
     async getLeftBarOption () {
-      let { data } = await userAPIs.getUserInfoById({ userId: sessionStorage.userId })
+      let { data } = await userAPIs.getUserInfoById({ userId: localStorage.userId })
       if (this.$store.state.isAdmin === 3 || this.$store.state.isAdmin !== 3 || data.data.isAdmin === 3) {
         this.leftBarOption = {
           title: '左侧菜单数据配置',

@@ -9,12 +9,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import homeStore from './home/homeStore'
 import productStore from './product/productStore'
+import config from '../config/Development'
 
 Vue.use(Vuex)
 
 const store = () => new Vuex.Store({
   state: {
-    fileServer: 'http://172.16.126.140/image',
+    fileServer: config.siteInfo.sites.file_server_url,
     isAdmin: 0
   },
   modules: {

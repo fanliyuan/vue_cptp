@@ -6,15 +6,18 @@ class TabelOptions {
     let thead = [
       {
         label: '用户名',
-        prop: 'userName'
+        prop: 'userName',
+        width: 130
       },
       {
         label: '账号',
-        prop: 'userEmail'
+        prop: 'userEmail',
+        width: 270
       },
       {
         label: '手机号',
-        prop: 'userPhone'
+        prop: 'userPhone',
+        width: 150
       },
       {
         label: '部门',

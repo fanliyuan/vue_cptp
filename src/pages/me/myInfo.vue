@@ -42,7 +42,7 @@ export default {
   methods: {
     async getUserInfo () {
       try {
-        let { data } = await userAPIs.getUserInfoById({ userId: sessionStorage.userId })
+        let { data } = await userAPIs.getUserInfoById({ userId: localStorage.userId })
         if (data.code === 200) {
           this.userInfo = data.data
         } else {

@@ -112,7 +112,7 @@ export default {
     sites: {
       login_site_host: 'http://login.mainsite.com/', // 登录站地址
       main_site_host: 'http://www.mainsite.com/', // 本站地址
-      file_server_url: 'http://www.dev.com' // 文件服务器地址
+      file_server_url: scopeURL || process.env.API_URL // 文件服务器地址
     }
   }
 }

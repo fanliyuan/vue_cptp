@@ -10,7 +10,8 @@ class TabelOptions {
       },
       {
         label: '账号',
-        prop: 'userAccount'
+        prop: 'userAccount',
+        width: 270
       },
       {
         label: '角色',

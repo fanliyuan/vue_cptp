@@ -2,14 +2,37 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:54:53
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-10 10:50:05
+ * @Last Modified time: 2018-05-18 15:52:21
 */
 <template>
-  <div>
+  <div class="container">
     <SelectSearch :options="selectSearchOptions"/>
     <div v-if="searchResult" class="mysearch">您搜索的关键词: <span class="red">{{searchResult.keyword}}</span> ,搜索结果<span class="red"> {{searchResult.total}} </span>个</div>
     <Table :options="tableOptions"></Table>
     <el-pagination v-if="pageInfo.total > 10" :total="pageInfo.total" :current-page="pageInfo.pageNum" :page-size="pageInfo.pageSize" background layout="prev, pager, next, jumper" class="mypagenation" @current-change="pageHandler"></el-pagination>
+    <el-dialog :visible="uploadFlag" :show-close="false" width="30%" :title="'用户批量上传'">
+      <el-upload
+        ref="file"
+        class="upload"
+        drag
+        :action="$store.state.fileServer + '/user/batchAddUser?token=' + token"
+        multiple
+        :before-upload="beforeUploadHandler"
+        :on-error="uploadErrorHandler"
+        :on-success="uploadSuccessHandler"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传xlsx文件，数据不超过200条
+            <a href="http://192.168.0.151:8080/pm360/resource/userInfo/用户信息.xlsx">点击此处下载模板</a>
+          </div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadFlag = false">取 消</el-button>
+        <el-button type="primary" @click="uploadFlag = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -55,7 +78,8 @@ export default {
     }
     let uploadUser = () => {
       // console.log('上传')
-      this.$alert('功能延后')
+      // this.$alert('功能延后')
+      vm.uploadFlag = true
     }
     return {
       tableOptions: {},
@@ -76,7 +100,9 @@ export default {
         departmentId: -1,
         positionId: -1,
         roleId: -1
-      }
+      },
+      uploadFlag: false,
+      token: localStorage.token
     }
   },
   watch: {
@@ -357,6 +383,39 @@ export default {
         })
         this.tableOptions = userListService([]).getOptions({that: this})
       }
+    },
+    beforeUploadHandler (file) {
+      if (file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        this.$message({
+          type: 'error',
+          message: '请确认文件格式是xlsx'
+        })
+        return false
+      } else {
+        return true
+      }
+    },
+    uploadErrorHandler () {
+      this.$message({
+        type: 'error',
+        message: '上传失败'
+      })
+    },
+    uploadSuccessHandler (res, file, fileList) {
+      this.$refs.file.clearFiles()
+      this.uploadFlag = false
+      if (res.code === 200) {
+        this.$message({
+          type: 'success',
+          message: res.message
+        })
+        this.getDataList()
+      } else {
+        this.$message({
+          type: 'error',
+          message: res.message
+        })
+      }
     }
   },
   mounted () {
@@ -366,3 +425,27 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.wrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  .box{
+    width: 30%;
+    height: 30%;
+    background: white;
+    margin: 200px auto;
+    .tip{
+      font-size: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .upload{
+      text-align: center;
+    }
+  }
+}
+</style>

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-25 11:26:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-10 20:28:47
+ * @Last Modified time: 2018-05-18 18:08:57
 */
 
 import apiBase from '../apiBase'
@@ -92,6 +92,16 @@ const module = {
       method: 'post',
       name: 'updataUserIsDisable',
       url: '/updataUserIsDisable'
+    },
+    {
+      method: 'get',
+      name: 'getValidateCode',
+      url: '/getValidateCode'
+    },
+    {
+      method: 'post',
+      name: 'forgetPwd',
+      url: '/forgetPwd'
     }
   ]
 }

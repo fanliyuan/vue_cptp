@@ -3,7 +3,7 @@
     <div class="myinput myheight">
       <div class="box">
         <div class="label">项目名称</div>
-        <el-input class="input" v-if="projectInfo.projectName" v-model="projectInfo.projectName" readonly></el-input>
+        <el-input class="input" v-if="projectInfo.projectName" v-model="projectInfo.projectName"></el-input>
         <el-input class="input" v-else v-model="projectInfo.newName"></el-input>
       </div>
       <!-- <div class="box">

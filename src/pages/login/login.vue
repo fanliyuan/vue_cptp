@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-14 18:17:44
+ * @Last Modified time: 2018-05-18 16:01:18
  */
 <template>
   <el-container>
@@ -121,7 +121,7 @@ export default {
                 this.message = null
                 localStorage.setItem('token', data.data.data.userToken)
                 localStorage.setItem('userName', data.data.data.userName)
-                sessionStorage.setItem('userId', data.data.data.userId)
+                localStorage.setItem('userId', data.data.data.userId)
                 this.$store.state.isAdmin = data.data.data.isAdmin
                 if (this.$store.state.isAdmin === 3) {
                   this.$router.push('/')
