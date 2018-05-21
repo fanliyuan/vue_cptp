@@ -6,7 +6,7 @@
 * 描述 ：公共左侧菜单组件
 */
 <template>
-  <el-menu  class="el-menu-vertical-demo" background-color="#364863" text-color="#fff" active-text-color="#364863" style="border:none;">
+  <el-menu  class="el-menu-vertical-demo" background-color="#364863" text-color="#fff" active-text-color="#364863" style="border:none;" @open="selectHandler">
     <div v-for="item in options.data" :key="item.index">
       <MItems :item='item' :indexp="item.value"></MItems>
     </div>
@@ -21,6 +21,11 @@ export default {
   props: ['options'],
   components: {
     MItems
+  },
+  methods: {
+    selectHandler (index, path) {
+      console.log(index, path)
+    }
   }
 }
 </script>

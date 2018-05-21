@@ -19,7 +19,7 @@ export default {
   },
   data () {
     let delFun = (row) => {
-      console.log('aaaaa' + row.projectId)
+      // console.log('aaaaa' + row.projectId)
     }
     return {
       breadCrumbOption: projectListService().getBreadCrumbOption(),
@@ -59,7 +59,7 @@ export default {
             label: '项目搜索页'
           }
         ]
-        console.log('keyword' + this.searchResult.keyword)
+        // console.log('keyword' + this.searchResult.keyword)
         this.getDataList()
         //  let delFun = async (row) =>{
         //   let { data } = await projectAPIs.deleteProject({id: row.projectId})
@@ -209,7 +209,7 @@ export default {
         )
         let delFun = async (row) => {
           let { data } = await projectAPIs.deleteProject({projectId: row.projectId})
-          console.log(data.data)
+          // console.log(data.data)
           try {
             if (data && data.code === 200) {
               this.$message({
@@ -272,14 +272,14 @@ export default {
         })
         this.pageHandler = val => {
           this.pageInfo.pageNum = val
-          console.log(this.pageInfo)
+          // console.log(this.pageInfo)
           // 接口
           this.getSearchList()
         }
         if (data.code === 200) {
           this.pageInfo.total = data.data.pageInfo.totalNum
           this.searchResult.total = data.data.pageInfo.totalNum
-          console.log(data.data)
+          // console.log(data.data)
           let opetate = [
             {
               textProp: '修改'
@@ -313,7 +313,7 @@ export default {
           //  console.log(zancun)
           this.tableOption = projectListService(zancun).getTableOption({ that: this, delFun })
         }
-        console.log(data)
+        // console.log(data)
       } catch (err) {
       }
     }

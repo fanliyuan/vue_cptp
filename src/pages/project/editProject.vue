@@ -149,7 +149,7 @@ export default {
       } else {
         this.ids = ''
       }
-      console.log(this.ids)
+      // console.log(this.ids)
       // console.log("aaabbb",this.projectInfo)
     } else {
       this.breadCrumbOption = editProjectService().getBreadCrumbOption()
@@ -190,7 +190,7 @@ export default {
     },
     async submitHandler () {
       // 这里调用提交接口
-      console.log('修改提交')
+      // console.log('修改提交')
       //  console.log(this.$route.params)
       try {
         if (this.$route.params && this.$route.params.projectId) {
@@ -279,7 +279,7 @@ export default {
         case 'one':
           // 执行第一类
           //   console.log("111"+val)
-          console.log('ceshi' + val.split('-')[1])
+          // console.log('ceshi' + val.split('-')[1])
           if (val.split('-')[1] === '0') {
             this.twoList = []
             this.threeList = []
@@ -317,7 +317,7 @@ export default {
         case 'four':
           // 这里是选择产品
           this.params.threeLevel = +val.split('-')[0]
-          console.log(this.params.threeLevel)
+          // console.log(this.params.threeLevel)
           if (this.projectInfo.products instanceof Array) {
 
           } else {

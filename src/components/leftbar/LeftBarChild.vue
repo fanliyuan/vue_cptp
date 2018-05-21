@@ -1,4 +1,5 @@
 /**
+import index from '../../config';
 * 作者 ：zn
 *
 * 日期 ：2017/12/08

@@ -48,7 +48,7 @@ export default {
     Tabel
   },
   data () {
-    let vm = this
+    // let vm = this
     let editFun = (row) => {
       this.editPositionClassInfo = {
         oldValue: row.positionClass

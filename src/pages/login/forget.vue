@@ -25,7 +25,8 @@
           </el-form-item>
           <el-form-item prop="code" class="input_row">
             <el-input placeholder="请输入验证码" class="input_code" v-model="inputData.code"></el-input>
-            <span class="input_button">获取验证码</span>
+            <span class="input_button" @click="getValidateCode" :class="{pointer: !isDisabled, disabled: isDisabled}" :title="tips">获取验证码</span>
+            <!-- <el-button class="input_button" @click="getValidateCode">获取验证码</el-button> -->
           </el-form-item>
          <el-form-item prop="newPassword" class="input_row">
             <el-input type="password" placeholder="请输入新密码" v-model="inputData.newPassword"></el-input>
@@ -45,6 +46,7 @@
   </el-container>
 </template>
 <script>
+import userAPIs from '../../api/user/userAPIs.js'
 export default {
   data () {
     let checkPassword = (rule, val, cb) => {
@@ -67,7 +69,8 @@ export default {
         account: [
           {
             required: true,
-            message: '账号不能为空'
+            message: '账号不能为空',
+            trigger: 'change'
           }
         ],
         code: [
@@ -94,14 +97,36 @@ export default {
       account: false,
       code: false,
       newPassword: false,
-      confirmPassword: false
+      confirmPassword: false,
+      isDisabled: true,
+      tips: ''
     }
   },
   methods: {
     submitHandler () {
-      this.$refs.myInput.validate().then(data => {
-        if (data) {
+      this.$refs.myInput.validate().then(async flag => {
+        if (flag) {
           // 这里调用接口
+          try {
+            let {data} = await userAPIs.forgetPwd({
+              token: '',
+              userName: this.inputData.account,
+              userPwd: this.inputData.confirmPassword,
+              validateCode: this.inputData.code
+            })
+            if (data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '密码修改成功'
+              })
+              this.$router.push('/login')
+            } else {
+              this.$message({
+                type: 'error',
+                message: this.data.message ? this.data.message : '操作失败'
+              })
+            }
+          } catch (error) {}
         } else {
           throw new Error('表单验证未通过')
         }
@@ -111,7 +136,51 @@ export default {
     },
     validateHandler (item, res) {
       this[item] = res
+      this.isDisabled = this.inputData.account.trim() === ''
       this.disabledFlag = !(this.account && this.code && this.newPassword && this.confirmPassword)
+    },
+    async getValidateCode () {
+      if (this.isDisabled) {
+        return false
+      }
+      if (!this.inputData.account.trim()) {
+        this.$message({
+          type: 'error',
+          message: '账号不能为空'
+        })
+        return false
+      }
+      this.isDisabled = true
+      try {
+        let {data} = await userAPIs.getValidateCode({token: '', userName: this.inputData.account})
+        if (data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '验证码发送成功'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: data.message ? data.message : '操作失败'
+          })
+        }
+      } catch (error) {}
+      setTimeout(() => {
+        this.isDisabled = false
+      }, 10000)
+
+      // clearInterval(timer)
+      // let time = 0
+      // let timer = setInterval(() => {
+      //   this.isDisabled = true
+      //   if (time < 10) {
+      //     this.tips = '请' + (10 - time) + '秒之后再试'
+      //     time ++
+      //   } else {
+      //     this.tips = ''
+      //     this.isDisabled = false
+      //   }
+      // }, 1000)
     }
   }
 }
@@ -203,6 +272,12 @@ export default {
         white-space: nowrap;
       }
     }
+  }
+  .disabled {
+    cursor: no-drop !important;
+  }
+  .pointer {
+    cursor: pointer !important;
   }
 }
 </style>

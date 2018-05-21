@@ -101,7 +101,6 @@ class Option {
             // console.log(row.projectName[0].textProp)
             that.$confirm(`是否删除${row.projectName} ?`).then(data => {
               if (!data) throw new Error('取消删除')
-              console.log('bbbbb')
               delFun && delFun(row)
             }).catch(err => {
               if (err) that.$message('取消删除')
