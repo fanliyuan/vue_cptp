@@ -2,7 +2,7 @@ class Option {
   constructor (data) {
     this.data = data
   }
-  getTableOption () {
+  getTableOption (data = []) {
     let thead = [
       {
         label: '项目角色',
@@ -15,18 +15,6 @@ class Option {
       {
         label: '手机号',
         prop: 'mobile'
-      }
-    ]
-    let data = [
-      {
-        roleName: '前端工程师',
-        userName: '尼古拉斯花',
-        mobile: '13912341234'
-      },
-      {
-        roleName: '产品经理',
-        userName: '奥巴牛',
-        mobile: '11111111111'
       }
     ]
     return {

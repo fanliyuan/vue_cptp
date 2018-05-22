@@ -11,7 +11,8 @@
  *          同时当前页面也可以更改scopeURL来修改接口
  */
 
-let scopeURL = ''// 这里替换默认设置的后台接口地址   http://192.168.0.151:8769/api/back
+let scopeURL = 'http://192.168.0.151:8769/api/back'// 这里替换默认设置的后台接口地址   http://192.168.0.151:8769/api/back
+let downloadURl = 'http://192.168.0.151:8763'
 
 export default {
   env: 'development',
@@ -112,7 +113,7 @@ export default {
     sites: {
       login_site_host: 'http://login.mainsite.com/', // 登录站地址
       main_site_host: 'http://www.mainsite.com/', // 本站地址
-      file_server_url: scopeURL || process.env.API_URL // 文件服务器地址
+      file_server_url: downloadURl || scopeURL || process.env.API_URL // 文件服务器地址
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-12 20:28:46
+ * @Last Modified time: 2018-05-22 14:32:35
 */
 
 <template>
@@ -10,7 +10,7 @@
     <div class="padding border">
       <el-row style="width:100%;height:80px;" class="">
         <el-col :span="2">
-          <img :src="productInfo.logoUrl || '/staticm/img/unload.jpg'" alt="暂无" width="80" height="80">
+          <img :src="downloadUrl+productId+'&token='+ mytoken+'&flagIndex=10'" onerror="this.src='/staticm/img/unload.jpg'" alt="暂无" width="80" height="80">
           <!-- <div style="width:80px;height:80px;background-color:silver"></div> -->
         </el-col>
         <el-col :span="10">
@@ -237,7 +237,7 @@
         </div>
       </el-row>
     </div>
-    <!-- <div class="padding border">
+    <div class="padding border">
       <el-row justify="space-between" type="flex">
         <el-col :span="12">
           <span style="line-height:3;font-size:20px;">人员列表</span>
@@ -247,7 +247,7 @@
       <div style="margin:20px 150px 0;">
         <Table :options="personTD"></Table>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -275,8 +275,10 @@ export default {
       productId: 1,
       fileInfo: {},
       personTD: productDetailService().getTableOption(),
-      totalNum: 2,
-      breadcrumbOption
+      totalNum: 0,
+      breadcrumbOption,
+      mytoken: localStorage.token,
+      downloadUrl: this.$store.state.fileServer + '/getFile?productId='
     }
   },
   methods: {
@@ -293,11 +295,40 @@ export default {
           this.productInfo = data.data
           this.productInfo.salesAmt = this.productInfo.salesAmt ? this.productInfo.salesAmt : 0
           this.productInfo.salesAmt += '元'
-          this.productInfo.finishPercent = 50
+          // this.productInfo.finishPercent = 50
           this.productInfo.startTime = this.timeFormat(this.productInfo.startTime)
           this.productInfo.endTime = this.timeFormat(this.productInfo.endTime)
         }
       } catch (error) {
+      }
+    },
+    async getFileInfo () {
+      try {
+        let {data} = await productAPIs.getFileInfo({productId: this.productId})
+        if (data.code === 200) {
+          this.fileInfo = data.data.fileFlag
+        }
+      } catch (error) {}
+    },
+    async getProductMember () {
+      try {
+        let {data} = await productAPIs.getProductMember({productId: this.productId})
+        if (data.code === 200) {
+          let temp = []
+          data.data.listData.forEach(item => {
+            temp.push({
+              roleName: item.memberPosition,
+              userName: item.memberName,
+              mobile: item.memberPhone
+            })
+          })
+          this.totalNum = temp.length
+          this.personTD = productDetailService().getTableOption(temp)
+        } else {
+          this.personTD = productDetailService().getTableOption()
+        }
+      } catch (error) {
+        this.personTD = productDetailService().getTableOption()
       }
     },
     timeFormat (time) {
@@ -322,6 +353,8 @@ export default {
     this.productId = this.$route.params.productId
     this.resetOption()
     this.loadAll()
+    this.getFileInfo()
+    this.getProductMember()
   }
 }
 </script>
