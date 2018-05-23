@@ -18,6 +18,31 @@ const module = {
     },
     {
       method: 'post',
+      name: 'updateSystemDictType',
+      url: '/updateSystemDictType'
+    },
+    {
+      method: 'post',
+      name: 'selectInfoByValues',
+      url: '/selectInfoByValues'
+    },
+    {
+      method: 'post',
+      name: 'updateSystemDictValue',
+      url: '/updateSystemDictValue'
+    },
+    {
+      method: 'post',
+      name: 'selectInfoByType',
+      url: '/selectInfoByType'
+    },
+    {
+      method: 'post',
+      name: 'getTypeInfoList',
+      url: '/getTypeInfoList'
+    },
+    {
+      method: 'post',
       name: 'saveDictValue',
       url: '/saveDictValue'
     },
@@ -28,8 +53,18 @@ const module = {
     },
     {
       method: 'post',
-      name: 'updateSystemDictValue',
-      url: '/updateSystemDictValue'
+      name: 'deleteDictType',
+      url: '/deleteDictType'
+    },
+    {
+      method: 'post',
+      name: 'saveDictType',
+      url: '/saveDictType'
+    },
+    {
+      method: 'post',
+      name: 'getSystemDictValueList',
+      url: '/getSystemDictValueList'
     },
     {
       method: 'post',

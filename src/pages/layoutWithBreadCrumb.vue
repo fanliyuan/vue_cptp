@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-18 16:07:37
+ * @Last Modified time: 2018-05-23 10:23:36
 */
 
 <template>
@@ -110,7 +110,7 @@ export default {
               'parentId': 0
             },
             // 这里是字典配置,菜单
-            /* {
+            {
               'value': 7,
               'label': '字典配置',
               'iconfont': 'icon-zidianpeizhi iconfont2',
@@ -129,7 +129,7 @@ export default {
                 'frontUrl': '/dict/value',
                 'parentId': 7
               }]
-            }, */
+            },
             {
               'value': 8,
               'label': '个人中心',
