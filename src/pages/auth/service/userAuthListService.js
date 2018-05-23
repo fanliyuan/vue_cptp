@@ -109,7 +109,7 @@ class TabelOptions {
         }
       },
       {
-        label: '职位类型设置',
+        label: '职位绑定',
         fun (row) {
           // console.log('职位类型设置', row)
           that.$router.push('/auth/editPositionClass')

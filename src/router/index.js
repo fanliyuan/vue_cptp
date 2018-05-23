@@ -9,14 +9,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import product from './product/product'
-import user from './user/user'
 import me from './me/index'
-import auth from './auth/auth'
-import project from './project/project'
-import dict from './dict'
 
 import Login from '../pages/login/login.vue'
 import Forget from '../pages/login/forget.vue'
+import Error from '../pages/error/error.vue'
 // 路由中间件
 import middlewares from '../middlewares'
 
@@ -33,7 +30,7 @@ const router = new Router({
     {
       path: '/',
       name: 'home-index',
-      redirect: '/user'
+      redirect: '/me'
     },
     {
       path: '/product',
@@ -44,35 +41,11 @@ const router = new Router({
       ]
     },
     {
-      path: '/user',
-      name: 'user-index',
-      component: LayoutWithBreadCrumb,
-      children: [
-        ...user
-      ]
-    },
-    {
-      path: '/auth',
-      name: 'auth-index',
-      component: LayoutWithBreadCrumb,
-      children: [
-        ...auth
-      ]
-    },
-    {
       path: '/me',
       name: 'me-index',
       component: LayoutWithBreadCrumb,
       children: [
         ...me
-      ]
-    },
-    {
-      path: '/project',
-      name: 'project-index',
-      component: LayoutWithBreadCrumb,
-      children: [
-        ...project
       ]
     },
     {
@@ -91,12 +64,8 @@ const router = new Router({
       component: Forget
     },
     {
-      path: '/dict',
-      redirect: '/dict/key',
-      component: LayoutWithBreadCrumb,
-      children: [
-        ...dict
-      ]
+      path: '*',
+      component: Error
     }
   ]
 })

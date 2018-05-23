@@ -48,7 +48,7 @@ export default {
     Tabel
   },
   data () {
-    // let vm = this
+    let vm = this
     let editFun = (row) => {
       this.editPositionClassInfo = {
         oldValue: row.positionClass
@@ -77,20 +77,20 @@ export default {
             path: '/auth'
           },
           {
-            label: '职位类型设置'
+            label: '职位绑定'
           }
         ]
       },
       tableOptions: editPositionClassService([]).getTableOption({editFun, delFun}),
       rightButtonOptions: [
-        // {
-        //   label: '添加职位类型',
-        //   fun () {
-        //     // vm.addPositionClass = true
-        //     // vm.getPositionList()
-        //     vm.$router.push('./editPositionType')
-        //   }
-        // }
+        {
+          label: '添加职位类型',
+          fun () {
+            // vm.addPositionClass = true
+            // vm.getPositionList()
+            vm.$router.push('./editPositionType')
+          }
+        }
       ],
       addPositionClass: false,
       positionClassValue: '',

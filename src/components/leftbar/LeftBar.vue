@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     selectHandler (index, path) {
-      console.log(index, path)
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="myrightbutton">
-    <el-button  v-for="(item, index) in options" :key="index" :type="type[index]" class="mybutton" @click="buttonHandler(item)">
+    <el-button  v-for="(item, index) in options" :key="index" :type="type[index]" class="mybutton" @click="buttonHandler(item)" :disabled="item.isDisabled">
       {{item.label}}
     </el-button>
   </div>

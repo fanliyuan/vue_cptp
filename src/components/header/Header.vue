@@ -48,6 +48,7 @@ export default {
   },
   methods: {
     logoutHandler () {
+      window.location.reload()
       if (localStorage && localStorage.token) {
         userAPIs.logout().then(data => {
           if (data.data && data.data.code === 200) {

@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-23 11:01:27
+ * @Last Modified time: 2018-05-23 11:41:18
 */
 <template>
   <div>
@@ -47,7 +47,7 @@ export default {
       if (this.$route.params && this.$route.params.id) {
         this.breadCrumbOption = editKey().getBreadCrumbOption({id: this.$route.params.id})
         let dictInfo = JSON.parse(sessionStorage.getItem('dictInfo'))
-        this.dictInfo.type = getDictDesc(this.typeList, dictInfo.id)
+        this.dictInfo.type = this.getDictDesc(this.typeList, dictInfo.id)
       } else {
         this.breadCrumbOption = editKey().getBreadCrumbOption()
       }

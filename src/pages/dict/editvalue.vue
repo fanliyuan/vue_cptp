@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-23 11:05:54
+ * @Last Modified time: 2018-05-23 11:39:38
 */
 <template>
   <div>
@@ -194,7 +194,7 @@ export default {
       })
     }
   },
-  watch : {
+  watch: {
     isParent () {
       if (this.isParent) this.twoList = []
     }

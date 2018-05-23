@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:12:58
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-10 19:27:06
+ * @Last Modified time: 2018-05-23 11:38:12
  */
 
 <template>
@@ -94,7 +94,7 @@ export default {
           // alert('验证通过,可以提交表单')
           try {
             let { data } = await userAPIs.updatePwd({
-              userId: sessionStorage.getItem('userId'),
+              userId: localStorage.getItem('userId'),
               userOldPassword: this.inputData.oldPassword,
               userNewPassword: this.inputData.confirmPassword
             })

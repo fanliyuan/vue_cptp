@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:40
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-11 09:40:12
+ * @Last Modified time: 2018-05-23 14:15:25
 */
 
 <template>
@@ -46,29 +46,8 @@ export default {
         }
       }
     }
-    let data = [
-      // {
-      //   productName: [
-      //     {
-      //       textProp: '产品1'
-      //     }
-      //   ],
-      //   pm: '经理1',
-      //   stateName: '预立项',
-      //   productId: 1,
-      //   operation: [
-      //     {
-      //       textProp: '修改'
-      //     },
-      //     {
-      //       textProp: '冻结'
-      //     }
-      //   ]
-      // }
-    ]
+    let data = []
     let forbidFun = (row) => {
-      // 调用冻结接口
-      console.log(row.productName[0].textProp)
       this.$router.push('/product/productFobidden')
     }
     return {
@@ -80,14 +59,7 @@ export default {
           }
         ]
       },
-      rightButtonOption: [
-        {
-          label: '添加产品',
-          fun () {
-            vm.$router.push('/product/editProduct')
-          }
-        }
-      ],
+      rightButtonOption: [],
       searchResult: null,
       tableOption: productListService(data).getTabelOptions({that: this, forbidFun}),
       pageInfo: {
@@ -95,7 +67,8 @@ export default {
         pageSize: 10,
         pageNum: 1
       },
-      status: -1
+      status: -1,
+      isDisabled: false
     }
   },
   watch: {
@@ -176,6 +149,15 @@ export default {
       this.getProductList()
     },
     resetOption () {
+      this.rightButtonOption = [
+        {
+          label: '添加产品',
+          isDisabled: this.isDisabled,
+          fun: () => {
+            this.$router.push('/product/editProduct')
+          }
+        }
+      ]
       this.$emit('data', {
         breadCrumbOption: this.breadCrumbOption,
         rightButtonOption: this.rightButtonOption
@@ -290,6 +272,8 @@ export default {
         this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun})
       } catch (error) {
       }
+    },
+    checkAuth () {
     }
   },
   mounted () {

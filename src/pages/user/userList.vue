@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:54:53
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-18 15:52:21
+ * @Last Modified time: 2018-05-23 15:13:59
 */
 <template>
   <div class="container">
@@ -15,7 +15,7 @@
         ref="file"
         class="upload"
         drag
-        :action="$store.state.fileServer + '/user/batchAddUser?token=' + token"
+        :action="$store.state.uploadServer + '/user/batchAddUser?token=' + token"
         multiple
         :before-upload="beforeUploadHandler"
         :on-error="uploadErrorHandler"

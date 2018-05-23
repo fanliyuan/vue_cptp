@@ -68,6 +68,10 @@ export default {
             path: '/auth'
           },
           {
+            label: '职位绑定',
+            path: '/auth/editPositionClass'
+          },
+          {
             label: '职位类型设置'
           }
         ]
