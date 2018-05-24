@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-23 17:48:58
+ * @Last Modified time: 2018-05-24 14:11:40
  */
 <template>
   <el-container>
@@ -51,7 +51,7 @@
 </template>
 <script>
 import userAPIs from '../../api/user/userAPIs'
-import router from '../../router/router.js'
+// import router from '../../router/router.js'
 export default {
   data () {
     let codeCheck = (rule, val, cb) => {
@@ -125,8 +125,10 @@ export default {
                 localStorage.setItem('userId', data.data.data.user.userId)
                 this.$store.state.isAdmin = data.data.data.user.isAdmin
                 if (this.$store.state.isAdmin === 3) {
-                  this.$router.addRoutes(router)
-                  this.$router.push('/user')
+                  // localStorage.setItem('router', JSON.stringify(router))
+                  // this.$router.addRoutes(router)
+                  localStorage.setItem('isAdmin', 3)
+                  this.$router.push(this.$route.query.redUrl)
                 } else {
                   this.$router.push('/me')
                 }
@@ -178,6 +180,20 @@ export default {
     }
   },
   mounted () {
+    if (this.$route.path === '/logout') {
+      userAPIs.logout({token: localStorage.token}).then(data =>{
+        if (data && data.data && data.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '退出成功'
+          })
+        }
+      }).catch(error => console.log(error))
+      localStorage.token = ''
+      localStorage.userId = ''
+      localStorage.userName = ''
+    }
+    localStorage && localStorage.setItem('isAdmin', 0)
     if (localStorage && localStorage.rememberName) {
       this.inputData.userName = localStorage.rememberName
       this.rememberFlag = true

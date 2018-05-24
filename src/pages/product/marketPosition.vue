@@ -71,10 +71,8 @@ export default {
       }
       let { data } = await dicAPIs.saveDictValue({
         dictDesc: this.addMarketPositionInfo,
-        dictIndex: last.dictIndex + 1,
-        dictParent: last.dictParent,
-        dictType: last.dictType,
-        dictValue: ''
+        parentId: last.dictParent,
+        dictType: last.dictType
       })
       try {
         if (data && data.code === 200) {

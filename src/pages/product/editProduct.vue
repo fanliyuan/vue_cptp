@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-12 20:09:53
+ * @Last Modified time: 2018-05-24 13:51:35
 */
 
 <template>
@@ -34,6 +34,12 @@
       <div class="box">
         <div class="label">产品名称</div>
         <el-input v-model="productInfo.productName" placeholder="请输入产品名称" class="input"></el-input>
+      </div>
+      <div class="box">
+        <div class="label">板块公司</div>
+        <el-select v-model="productInfo.plateCompany" placeholder="请选择公司名" class="input">
+          <el-option v-for="item in companyList" :value="item.dictDesc" :label="item.dictDesc" :key="item.dictDesc"></el-option>
+        </el-select>
       </div>
       <div class="box">
         <div class="label">产品经理</div>
@@ -114,7 +120,7 @@ import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
+      productInfo: { productName: '', pm: '', plateCompany: null, state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
       productManagerList: [],
       stateList: [],
       productLevelList: [],
@@ -130,7 +136,8 @@ export default {
       inputValue: '',
       inputValueMarket: '',
       tagList: [],
-      marketList: []
+      marketList: [],
+      companyList: []
     }
   },
   watch: {
@@ -163,7 +170,8 @@ export default {
       this.resetOption()
     }
   },
-  beforeMount () {
+  async beforeMount () {
+    await this.loadComponayList()
     this.loadStateList(this.loadProductInfo)
     this.loadProductManagerList()
     this.getTagList()
@@ -200,6 +208,14 @@ export default {
       } catch (error) {
         console.log()
       }
+    },
+    async loadComponayList () {
+      try {
+        let {data} = await dicAPIs.selectInfoByValues({type: 'BANKUAIGONGSI'})
+        if (data.code === 200) {
+          this.companyList = data.data ? data.data : []
+        }
+      } catch (error) {}
     },
     loadProductInfo () {
       if (this.$route.params && this.$route.params.productId) {
@@ -269,7 +285,8 @@ export default {
           state: +this.productInfo.state,
           stateName: this.productInfo.stateName,
           threeLevel: +this.productInfo.threeLevel,
-          twoLevel: +this.productInfo.twoLevel
+          twoLevel: +this.productInfo.twoLevel,
+          plateCompany: this.productInfo.plateCompany
         }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {

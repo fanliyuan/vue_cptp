@@ -7,8 +7,9 @@
  */
 import checkToken from './checkToken'
 export default (to, from, next) => {
+  console.log()
   let allow = false
-  let partten = ['^/login', '^/forget']
+  let partten = ['^/login', '^/forget', '^/error']
   partten.forEach(item => {
     // item里都是非受限模块
     var reg = new RegExp(item)
@@ -16,13 +17,20 @@ export default (to, from, next) => {
       allow = true
     }
   })
-
   if (allow) {
     // console.log(`不需要鉴权`)
     next()
   } else {
     // console.log(`需要鉴权`, to.fullPath)
-    checkToken(to, from, next)
+    // checkToken(to, from, next)
     // next()
+    // 这里控制权限,如果权限的标识,isAdmin < 3 那么部分路由不生效
+    if (to.matched.some(record => record.meta.isAdmin <= localStorage.isAdmin)) {
+      checkToken(to, from, next)
+    } else {
+      next({
+        path: '/error'
+      })
+    }
   }
 }

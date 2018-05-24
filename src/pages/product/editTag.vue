@@ -66,10 +66,8 @@ export default {
       let last = this.tagList[this.tagList.length - 1] ? this.tagList[this.tagList.length - 1] : { dictIndex: -1, dictParent: 0, dictType: 'CHANPINBIAOQIAN' }
       let { data } = await dicAPIs.saveDictValue({
         dictDesc: this.addTagInfo,
-        dictIndex: last.dictIndex + 1,
-        dictParent: last.dictParent,
-        dictType: last.dictType,
-        dictValue: ''
+        parentId: last.dictParent,
+        dictType: last.dictType
       })
       try {
         if (data && data.code === 200) {

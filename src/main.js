@@ -12,8 +12,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 // swiper
-import VueAwesomeSwiper from 'vue-awesome-swiper'
-import 'swiper/dist/css/swiper.css'
+// import VueAwesomeSwiper from 'vue-awesome-swiper'
+// import 'swiper/dist/css/swiper.css'
 
 // moment
 import moment from 'moment'
@@ -27,7 +27,7 @@ import lodash from 'lodash'
 
 moment.locale('zh-cn')
 Vue.use(ElementUI)
-Vue.use(VueAwesomeSwiper)
+// Vue.use(VueAwesomeSwiper)
 Vue.prototype.$moment = moment
 Vue.prototype.$lodash = lodash
 

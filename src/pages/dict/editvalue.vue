@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-23 11:39:38
+ * @Last Modified time: 2018-05-24 17:09:50
 */
 <template>
   <div>
@@ -87,7 +87,7 @@ export default {
       try {
         let {data} = await dicAPIs.getTypeInfoList({
           pageNum: 1,
-          pageSize: 10,
+          pageSize: 9999,
           type: '',
           desc: ''
         })

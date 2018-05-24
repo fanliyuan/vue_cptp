@@ -99,9 +99,7 @@ export default {
       let editPositionInfo = {
         dictDesc: this.editPositionInfo.dictDesc,
         dictType: 'ZHIWEIXINXI',
-        dictIndex: this.tableOptions.data.length,
-        dictParent: 0,
-        dictValue: ''
+        parentId: 0
       }
       try {
         let { data } = await dicAPIs.saveDictValue(editPositionInfo)

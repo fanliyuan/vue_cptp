@@ -10,6 +10,10 @@ import Router from 'vue-router'
 
 import product from './product/product'
 import me from './me/index'
+import user from './user/user'
+import auth from './auth/auth'
+import project from './project/project'
+import dict from './dict'
 
 import Login from '../pages/login/login.vue'
 import Forget from '../pages/login/forget.vue'
@@ -30,7 +34,8 @@ const router = new Router({
     {
       path: '/',
       name: 'home-index',
-      redirect: '/me'
+      redirect: '/me',
+      meta: {isAdmin: 0}
     },
     {
       path: '/product',
@@ -38,7 +43,8 @@ const router = new Router({
       component: LayoutWithBreadCrumb,
       children: [
         ...product
-      ]
+      ],
+      meta: {isAdmin: 0}
     },
     {
       path: '/me',
@@ -46,22 +52,62 @@ const router = new Router({
       component: LayoutWithBreadCrumb,
       children: [
         ...me
-      ]
+      ],
+      meta: {isAdmin: 0}
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {isAdmin: 0}
     },
     {
       path: '/logout',
       name: 'logout',
-      component: Login
+      component: Login,
+      meta: {isAdmin: 0}
     },
     {
       path: '/Forget',
       name: 'foget',
-      component: Forget
+      component: Forget,
+      meta: {isAdmin: 0}
+    },
+    {
+      path: '/user',
+      name: 'user-index',
+      component: LayoutWithBreadCrumb,
+      children: [
+        ...user
+      ],
+      meta: {isAdmin: 3}
+    },
+    {
+      path: '/auth',
+      name: 'auth-index',
+      component: LayoutWithBreadCrumb,
+      children: [
+        ...auth
+      ],
+      meta: {isAdmin: 3}
+    },
+    {
+      path: '/project',
+      name: 'project-index',
+      component: LayoutWithBreadCrumb,
+      children: [
+        ...project
+      ],
+      meta: {isAdmin: 3}
+    },
+    {
+      path: '/dict',
+      redirect: '/dict/key',
+      component: LayoutWithBreadCrumb,
+      children: [
+        ...dict
+      ],
+      meta: {isAdmin: 3}
     },
     {
       path: '*',

@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     logoutHandler () {
-      window.location.reload()
+      localStorage && localStorage.setItem('isAdmin', 0)
       if (localStorage && localStorage.token) {
         userAPIs.logout().then(data => {
           if (data.data && data.data.code === 200) {
