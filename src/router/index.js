@@ -103,6 +103,7 @@ const router = new Router({
     {
       path: '/dict',
       redirect: '/dict/key',
+      name: 'dict',
       component: LayoutWithBreadCrumb,
       children: [
         ...dict
@@ -111,6 +112,7 @@ const router = new Router({
     },
     {
       path: '*',
+      name: 'ohter',
       component: Error
     }
   ]

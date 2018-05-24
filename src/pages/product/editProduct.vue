@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-24 13:51:35
+ * @Last Modified time: 2018-05-24 20:53:43
 */
 
 <template>
@@ -51,14 +51,14 @@
         >
         </el-autocomplete>
       </div>
-      <div class="box">
-        <div class="label">产品状态</div>
-        <div class="input">
+      <div class="box box-tag">
+        <div class="label label-tag">产品状态</div>
+        <div class="input input-tag">
           <el-radio v-model="productInfo.state" v-for="item in stateList" :label="item.dictIndex + ''" :key="item.dictIndex">{{item.dictDesc}}</el-radio>
         </div>
       </div>
       <!-- 动态编辑标签,市场定位 -->
-      <div class="box box-tag">
+      <div class="box">
         <div class="label label-tag">产品标签</div>
         <div class="input input-tag">
           <el-tag
@@ -322,7 +322,8 @@ export default {
           pm: this.productInfo.pm,
           tag: this.productTag,
           status: this.productInfo.state - 0,
-          statusName: this.productInfo.stateName
+          statusName: this.productInfo.stateName,
+          plateCompany: this.productInfo.plateCompany || ''
         }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {
@@ -591,6 +592,12 @@ export default {
     .input_hidden{
       position: relative;
       z-index: -999;
+    }
+    .el-radio{
+      margin-right: 30px;
+    }
+    .el-radio+.el-radio {
+      margin-left: 0;
     }
   }
 </style>

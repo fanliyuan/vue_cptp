@@ -25,6 +25,7 @@ export default (to, from, next) => {
     // checkToken(to, from, next)
     // next()
     // 这里控制权限,如果权限的标识,isAdmin < 3 那么部分路由不生效
+    localStorage.isAdmin = localStorage.isAdmin ? localStorage.isAdmin : 0
     if (to.matched.some(record => record.meta.isAdmin <= localStorage.isAdmin)) {
       checkToken(to, from, next)
     } else {

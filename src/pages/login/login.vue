@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-23 11:14:45
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-24 14:11:40
+ * @Last Modified time: 2018-05-24 19:01:20
  */
 <template>
   <el-container>
@@ -124,11 +124,12 @@ export default {
                 localStorage.setItem('userName', data.data.data.user.userName)
                 localStorage.setItem('userId', data.data.data.user.userId)
                 this.$store.state.isAdmin = data.data.data.user.isAdmin
-                if (this.$store.state.isAdmin === 3) {
+                localStorage.setItem('isAdmin', data.data.data.user.isAdmin)
+                if (data.data.data.user.isAdmin === 3) {
                   // localStorage.setItem('router', JSON.stringify(router))
                   // this.$router.addRoutes(router)
-                  localStorage.setItem('isAdmin', 3)
-                  this.$router.push(this.$route.query.redUrl)
+                  // 这里不能返回原来的页面
+                  this.$router.push('/user')
                 } else {
                   this.$router.push('/me')
                 }
@@ -144,6 +145,7 @@ export default {
               }
             }).catch(err => {
               if (err) {
+                console.log(err)
                 this.$alert('断网了或者服务器错误')
               }
             })
@@ -181,7 +183,7 @@ export default {
   },
   mounted () {
     if (this.$route.path === '/logout') {
-      userAPIs.logout({token: localStorage.token}).then(data =>{
+      userAPIs.logout({token: localStorage.token}).then(data => {
         if (data && data.data && data.data.code === 200) {
           this.$message({
             type: 'success',
