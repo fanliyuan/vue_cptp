@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-24 20:53:43
+ * @Last Modified time: 2018-05-28 10:04:39
 */
 
 <template>
@@ -35,6 +35,12 @@
         <div class="label">产品名称</div>
         <el-input v-model="productInfo.productName" placeholder="请输入产品名称" class="input"></el-input>
       </div>
+      <!-- <div class="box">
+        <div class="label">板块类型</div>
+        <el-select v-model="productInfo.plateType" placeholder="请选择公司名" class="input" @change="plateTypeHandler">
+          <el-option v-for="item in plateList" :value="item.dictDesc" :label="item.dictDesc" :key="item.dictDesc"></el-option>
+        </el-select>
+      </div> -->
       <div class="box">
         <div class="label">板块公司</div>
         <el-select v-model="productInfo.plateCompany" placeholder="请选择公司名" class="input">
@@ -120,7 +126,7 @@ import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', plateCompany: null, state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
+      productInfo: { productName: '', pm: '', plateType: null, plateCompany: null, state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
       productManagerList: [],
       stateList: [],
       productLevelList: [],
@@ -137,7 +143,8 @@ export default {
       inputValueMarket: '',
       tagList: [],
       marketList: [],
-      companyList: []
+      companyList: [],
+      plateList: []
     }
   },
   watch: {
@@ -171,8 +178,15 @@ export default {
     }
   },
   async beforeMount () {
+    await this.loadPlateList()
     await this.loadComponayList()
-    this.loadStateList(this.loadProductInfo)
+    await this.loadStateList()
+    this.loadProductInfo()
+    this.plateList.some(async item => {
+      if (item.dictDesc === this.productInfo.plateType) {
+        await this.loadComponayList(item.id)
+      }
+    })
     this.loadProductManagerList()
     this.getTagList()
     this.getMarketList()
@@ -209,13 +223,39 @@ export default {
         console.log()
       }
     },
-    async loadComponayList () {
+    async loadPlateList () {
       try {
-        let {data} = await dicAPIs.selectInfoByValues({type: 'BANKUAIGONGSI'})
+        let {data} = await dicAPIs.selectInfoByValues({type: 'BANKUAILEIXING'})
         if (data.code === 200) {
-          this.companyList = data.data ? data.data : []
+          this.plateList = data.data ? data.data : []
         }
       } catch (error) {}
+    },
+    async plateTypeHandler (val) {
+      await this.loadComponayList(val)
+      this.productInfo.plateCompany = this.plateList[0] ? this.plateList[0].dictDesc : null
+    },
+    async loadComponayList (parentId) {
+      try {
+        if (parentId || parentId === 0) {
+          let {data} = await dicAPIs.queryDictValueInfo({parentId: parentId})
+          if (data.code === 200) {
+            this.companyList = data.data ? data.data : []
+          } else {
+            throw new Error('接口非200')
+          }
+        } else {
+          let {data} = await dicAPIs.selectInfoByValues({type: 'BANKUAIGONGSI'})
+          if (data.code === 200) {
+            this.companyList = data.data ? data.data : []
+          } else {
+            throw new Error('接口非200')
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.companyList = []
+      }
     },
     loadProductInfo () {
       if (this.$route.params && this.$route.params.productId) {
@@ -287,6 +327,7 @@ export default {
           threeLevel: +this.productInfo.threeLevel,
           twoLevel: +this.productInfo.twoLevel,
           plateCompany: this.productInfo.plateCompany
+          // plateType: this.productInfo.plateType
         }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {
@@ -324,6 +365,7 @@ export default {
           status: this.productInfo.state - 0,
           statusName: this.productInfo.stateName,
           plateCompany: this.productInfo.plateCompany || ''
+          // plateType: this.productInfo.plateType
         }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {

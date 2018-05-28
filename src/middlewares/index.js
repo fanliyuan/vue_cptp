@@ -28,6 +28,8 @@ export default (to, from, next) => {
     localStorage.isAdmin = localStorage.isAdmin ? localStorage.isAdmin : 0
     if (to.matched.some(record => record.meta.isAdmin <= localStorage.isAdmin)) {
       checkToken(to, from, next)
+      // 绕过token验证,和服务器联网
+      // next()
     } else {
       next({
         path: '/error'

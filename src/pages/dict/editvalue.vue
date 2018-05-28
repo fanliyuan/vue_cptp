@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-07 16:55:03
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-24 17:09:50
+ * @Last Modified time: 2018-05-25 16:52:17
 */
 <template>
   <div>
@@ -13,7 +13,7 @@
           <el-option
             v-for="keyInfo in oneList"
             :key="keyInfo.id"
-            :label="keyInfo.dictType"
+            :label="keyInfo.dictDesc"
             :value="keyInfo.dictType"
           >
           </el-option>
@@ -29,9 +29,9 @@
           <el-radio label="1" v-model="isParent">否</el-radio>
       </div>
       <!-- 下拉列表-->
-        <div class="name select" v-if="isParent === '1'">
+        <div class="name select" style="margin-top: -50px" v-if="isParent === '1'">
           <el-select class="input" v-model="classInfo.oneClass" @change="dictSelcet('one', classInfo.oneClass)">
-            <el-option v-for="(item) in oneList" :key="item.id" :label="item.dictType" :value="item.dictType"></el-option>
+            <el-option v-for="(item) in oneList" :key="item.id" :label="item.dictDesc" :value="item.dictType"></el-option>
           </el-select>
         </div>
         <div class="name select" v-if="twoList.length > 0">
