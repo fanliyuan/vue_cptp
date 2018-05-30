@@ -38,28 +38,28 @@ class Option {
   getTableOption ({that, delFun}) {
     let thead = [
       {
-        label: '字典值序号',
-        prop: 'tId'
-      },
-      {
-        label: '字典值描述',
-        prop: 'vDesc'
+        label: '字典类型',
+        prop: 'dictType'
       },
       {
         label: '字典值索引',
-        prop: 'tIndex'
+        prop: 'dictIndex'
       },
       {
-        label: '字典类型',
-        prop: 'tDesc'
+        label: '字典值下标',
+        prop: 'id'
+      },
+      {
+        label: '字典值描述',
+        prop: 'dictDesc'
       },
       {
         label: '是否父类',
-        prop: 'tParentId'
+        prop: 'dictParent'
       },
       {
         label: '字典值',
-        prop: 'vValue'
+        prop: 'dictValue'
       },
       {
         xtype: 'links',
@@ -72,7 +72,7 @@ class Option {
             that.$router.push(`/dict/editValue/${row.id}`)
             sessionStorage.setItem('editValueId', row.id)
           } else if (item.textProp === '删除') {
-            that.$confirm(`当前数据可能关联其他数据,如果删除,可能导致其他数据异常,是否删除?`).then(data => {
+            that.$confirm(`是否删除`).then(data => {
               if (!data) throw new Error('取消删除')
               delFun && delFun(row)
             }).catch(err => {

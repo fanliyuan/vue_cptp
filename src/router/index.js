@@ -9,15 +9,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import product from './product/product'
-import me from './me/index'
 import user from './user/user'
+import me from './me/index'
 import auth from './auth/auth'
 import project from './project/project'
 import dict from './dict'
 
 import Login from '../pages/login/login.vue'
 import Forget from '../pages/login/forget.vue'
-import Error from '../pages/error/error.vue'
 // 路由中间件
 import middlewares from '../middlewares'
 
@@ -34,8 +33,7 @@ const router = new Router({
     {
       path: '/',
       name: 'home-index',
-      redirect: '/me',
-      meta: {isAdmin: 0}
+      redirect: '/user'
     },
     {
       path: '/product',
@@ -43,35 +41,7 @@ const router = new Router({
       component: LayoutWithBreadCrumb,
       children: [
         ...product
-      ],
-      meta: {isAdmin: 0}
-    },
-    {
-      path: '/me',
-      name: 'me-index',
-      component: LayoutWithBreadCrumb,
-      children: [
-        ...me
-      ],
-      meta: {isAdmin: 0}
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login,
-      meta: {isAdmin: 0}
-    },
-    {
-      path: '/logout',
-      name: 'logout',
-      component: Login,
-      meta: {isAdmin: 0}
-    },
-    {
-      path: '/Forget',
-      name: 'foget',
-      component: Forget,
-      meta: {isAdmin: 0}
+      ]
     },
     {
       path: '/user',
@@ -79,8 +49,7 @@ const router = new Router({
       component: LayoutWithBreadCrumb,
       children: [
         ...user
-      ],
-      meta: {isAdmin: 3}
+      ]
     },
     {
       path: '/auth',
@@ -88,8 +57,15 @@ const router = new Router({
       component: LayoutWithBreadCrumb,
       children: [
         ...auth
-      ],
-      meta: {isAdmin: 3}
+      ]
+    },
+    {
+      path: '/me',
+      name: 'me-index',
+      component: LayoutWithBreadCrumb,
+      children: [
+        ...me
+      ]
     },
     {
       path: '/project',
@@ -97,23 +73,30 @@ const router = new Router({
       component: LayoutWithBreadCrumb,
       children: [
         ...project
-      ],
-      meta: {isAdmin: 3}
+      ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Login
+    },
+    {
+      path: '/Forget',
+      name: 'foget',
+      component: Forget
     },
     {
       path: '/dict',
       redirect: '/dict/key',
-      name: 'dict',
       component: LayoutWithBreadCrumb,
       children: [
         ...dict
-      ],
-      meta: {isAdmin: 3}
-    },
-    {
-      path: '*',
-      name: 'ohter',
-      component: Error
+      ]
     }
   ]
 })

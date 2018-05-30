@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-28 10:04:39
+ * @Last Modified time: 2018-05-30 11:57:09
 */
 
 <template>
@@ -35,12 +35,12 @@
         <div class="label">产品名称</div>
         <el-input v-model="productInfo.productName" placeholder="请输入产品名称" class="input"></el-input>
       </div>
-      <!-- <div class="box">
+      <div class="box">
         <div class="label">板块类型</div>
         <el-select v-model="productInfo.plateType" placeholder="请选择公司名" class="input" @change="plateTypeHandler">
           <el-option v-for="item in plateList" :value="item.dictDesc" :label="item.dictDesc" :key="item.dictDesc"></el-option>
         </el-select>
-      </div> -->
+      </div>
       <div class="box">
         <div class="label">板块公司</div>
         <el-select v-model="productInfo.plateCompany" placeholder="请选择公司名" class="input">
@@ -126,7 +126,7 @@ import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', plateType: null, plateCompany: null, state: '-1', productId: null, oneLevel: null, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
+      productInfo: { productName: '', pm: '', plateType: null, plateCompany: null, state: '-1', productId: null, oneLevel: 0, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
       productManagerList: [],
       stateList: [],
       productLevelList: [],
@@ -233,9 +233,16 @@ export default {
     },
     async plateTypeHandler (val) {
       await this.loadComponayList(val)
-      this.productInfo.plateCompany = this.plateList[0] ? this.plateList[0].dictDesc : null
+      this.productInfo.plateCompany = this.companyList[0] ? this.companyList[0].dictDesc : null
     },
-    async loadComponayList (parentId) {
+    async loadComponayList (val) {
+      let parentId
+      this.plateList.some(item => {
+        if (item.dictDesc === val) {
+          parentId = item.id
+          return true
+        }
+      })
       try {
         if (parentId || parentId === 0) {
           let {data} = await dicAPIs.queryDictValueInfo({parentId: parentId})
@@ -326,8 +333,8 @@ export default {
           stateName: this.productInfo.stateName,
           threeLevel: +this.productInfo.threeLevel,
           twoLevel: +this.productInfo.twoLevel,
-          plateCompany: this.productInfo.plateCompany
-          // plateType: this.productInfo.plateType
+          plateCompany: this.productInfo.plateCompany,
+          plateType: this.productInfo.plateType
         }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {
@@ -364,8 +371,14 @@ export default {
           tag: this.productTag,
           status: this.productInfo.state - 0,
           statusName: this.productInfo.stateName,
-          plateCompany: this.productInfo.plateCompany || ''
-          // plateType: this.productInfo.plateType
+          plateCompany: this.productInfo.plateCompany || '',
+          plateType: this.productInfo.plateType
+        }
+        if (!params.pm || !params.name || !params.statusName || !params.plateCompany || !params.plateType) {
+          return this.$message({
+            type: 'error',
+            message: '请确保输入完整'
+          })
         }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {

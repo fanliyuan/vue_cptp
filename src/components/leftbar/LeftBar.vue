@@ -29,23 +29,4 @@ export default {
 }
 </script>
 <style lang="less">
-	.el-aside{
-		background: #364863 !important;
-		overflow: hidden;
-		a{
-			color: #fff;
-			font-size: 16px;
-		}
-		.el-menu-item.is-active{
-			background:#f2f2f2 !important;
-			a{
-				color: #364863 !important;
-			}
-		}
-		.el-menu-item{
-			a{
-				display: block;
-			}
-		}
-	}
 </style>

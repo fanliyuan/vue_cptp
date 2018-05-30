@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-05-09 10:26:28
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-23 10:38:51
+ * @Last Modified time: 2018-05-30 09:42:17
 */
 <template>
   <div>
@@ -141,7 +141,10 @@ export default {
           })
         }
         let delFun = async (row) => {
-          let {data} = await dicAPIs.deleteDictValue({id: row.id})
+          if (!row.tId) {
+            return this.$message('参数为空,不能继续')
+          }
+          let {data} = await dicAPIs.deleteDictValue({id: row.tId})
           try {
             if (data && data.code === 200) {
               this.$message({

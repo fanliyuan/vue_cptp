@@ -16,7 +16,6 @@ Vue.use(Vuex)
 const store = () => new Vuex.Store({
   state: {
     fileServer: config.siteInfo.sites.file_server_url,
-    uploadServer: config.siteInfo.sites.upload_server,
     isAdmin: 0,
     router: {}
   },

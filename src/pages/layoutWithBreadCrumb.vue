@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-24 09:30:30
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-24 18:59:17
+ * @Last Modified time: 2018-05-29 15:48:15
 */
 
 <template>
@@ -20,7 +20,8 @@
     </nav>
     <el-container style="margin-top:0;margin-bottom:0;height: auto">
       <el-aside style="width:290px">
-        <LeftBar :options="leftBarOption"></LeftBar>
+        <!-- <LeftBar :options="leftBarOption"></LeftBar> -->
+        <Nav :navData="navOption"></Nav>
       </el-aside>
       <router-view @data="dataFromChild" class="router_view"/>
     </el-container>
@@ -30,14 +31,16 @@
 import Header from '../components/header/Header'
 import BreadCrumb from '../components/breadcrumb/BreadCrumb'
 import RightButton from '../components/rightbutton/RightButton'
-import LeftBar from '../components/leftbar/LeftBar'
+// import LeftBar from '../components/leftbar/LeftBar'
+import Nav from '../components/nav/nav'
 import userAPIs from '../api/user/userAPIs'
 export default {
   components: {
     BreadCrumb,
     RightButton,
     Header,
-    LeftBar
+    // LeftBar,
+    Nav
   },
   props: ['test'],
   data () {
@@ -46,7 +49,8 @@ export default {
         breadCrumbOption: {},
         rightButtonOption: []
       },
-      leftBarOption: {}
+      leftBarOption: {},
+      navOption: []
     }
   },
   methods: {
@@ -181,10 +185,211 @@ export default {
           ]
         }
       }
+    },
+    async getNavOption () {
+      if (this.$store.state.isAdmin === 3) {
+        this.navOption = [
+          {
+            iconClass: 'icon-yonghuguanli iconfont',
+            index: '1',
+            label: '用户管理',
+            frontUrl: '/user'
+          },
+          {
+            iconClass: 'icon-quanxianshezhi iconfont',
+            index: '2',
+            label: '权限管理',
+            frontUrl: '/auth'
+          },
+          {
+            iconClass: 'icon-chanpin iconfont',
+            index: '3',
+            label: '产品管理',
+            frontUrl: '/product',
+            children: [
+              {
+                iconClass: 'icon-biaoqian iconfontx iconfont',
+                index: '1',
+                label: '标签管理',
+                frontUrl: '/product/editTag'
+              },
+              {
+                iconClass: 'icon-shichangfenxi iconfontx iconfont',
+                index: '2',
+                label: '市场定位',
+                frontUrl: '/product/marketPosition'
+              }
+            ]
+          },
+          {
+            iconClass: 'icon-xiangmu iconfont',
+            index: '4',
+            label: '项目管理',
+            frontUrl: '/project'
+          },
+          {
+            iconClass: 'icon-zidianpeizhi iconfont2',
+            index: '5',
+            label: '字典配置',
+            frontUrl: '/dict',
+            children: [
+              {
+                iconClass: 'icon-zidianleixingguanli iconfontx iconfont2',
+                index: '1',
+                label: '字典类型',
+                frontUrl: '/dict/key'
+              },
+              {
+                iconClass: 'icon-icon-test  iconfontx iconfont2',
+                index: '2',
+                label: '字典类型值',
+                frontUrl: '/dict/value'
+              }
+            ]
+          },
+          {
+            iconClass: 'icon-gerenzhongxin iconfont',
+            index: '6',
+            label: '个人中心',
+            frontUrl: '/me'
+          }
+        ]
+      } else {
+        try {
+          let {data} = await userAPIs.getUserInfoById({ userId: localStorage.userId })
+          if (data.data.isAdmin === 3) {
+            this.navOption = [
+              {
+                iconClass: 'icon-yonghuguanli iconfont',
+                index: '1',
+                label: '用户管理',
+                frontUrl: '/user'
+              },
+              {
+                iconClass: 'icon-quanxianshezhi iconfont',
+                index: '2',
+                label: '权限管理',
+                frontUrl: '/auth'
+              },
+              {
+                iconClass: 'icon-chanpin iconfont',
+                index: '3',
+                label: '产品管理',
+                frontUrl: '/product',
+                children: [
+                  {
+                    iconClass: 'icon-biaoqian iconfontx iconfont',
+                    index: '1',
+                    label: '标签管理',
+                    frontUrl: '/product/editTag'
+                  },
+                  {
+                    iconClass: 'icon-shichangfenxi iconfontx iconfont',
+                    index: '2',
+                    label: '市场定位',
+                    frontUrl: '/product/marketPosition'
+                  }
+                ]
+              },
+              {
+                iconClass: 'icon-xiangmu iconfont',
+                index: '4',
+                label: '项目管理',
+                frontUrl: '/project'
+              },
+              {
+                iconClass: 'icon-zidianpeizhi iconfont2',
+                index: '5',
+                label: '字典配置',
+                frontUrl: '/dict',
+                children: [
+                  {
+                    iconClass: 'icon-zidianleixingguanli iconfontx iconfont2',
+                    index: '1',
+                    label: '字典类型',
+                    frontUrl: '/dict/key'
+                  },
+                  {
+                    iconClass: 'icon-icon-test  iconfontx iconfont2',
+                    index: '2',
+                    label: '字典类型值',
+                    frontUrl: '/dict/value'
+                  }
+                ]
+              },
+              {
+                iconClass: 'icon-gerenzhongxin iconfont',
+                index: '6',
+                label: '个人中心',
+                frontUrl: '/me'
+              }
+            ]
+          } else {
+            this.navOption = [
+              {
+                iconClass: 'icon-chanpin iconfont',
+                index: '3',
+                label: '产品管理',
+                frontUrl: '/product',
+                children: [
+                  {
+                    iconClass: 'icon-biaoqian iconfontx iconfont',
+                    index: '1',
+                    label: '标签管理',
+                    frontUrl: '/product/editTag'
+                  },
+                  {
+                    iconClass: 'icon-shichangfenxi iconfontx iconfont',
+                    index: '2',
+                    label: '市场定位',
+                    frontUrl: '/product/marketPosition'
+                  }
+                ]
+              },
+              {
+                iconClass: 'icon-gerenzhongxin iconfont',
+                index: '6',
+                label: '个人中心',
+                frontUrl: '/me'
+              }
+            ]
+          }
+        } catch (error) {
+          this.navOption = [
+            {
+              iconClass: 'icon-chanpin iconfont',
+              index: '3',
+              label: '产品管理',
+              frontUrl: '/product',
+              children: [
+                {
+                  iconClass: 'icon-biaoqian iconfontx iconfont',
+                  index: '1',
+                  label: '标签管理',
+                  frontUrl: '/product/editTag'
+                },
+                {
+                  iconClass: 'icon-shichangfenxi iconfontx iconfont',
+                  index: '2',
+                  label: '市场定位',
+                  frontUrl: '/product/marketPosition'
+                }
+              ]
+            },
+            {
+              iconClass: 'icon-gerenzhongxin iconfont',
+              index: '6',
+              label: '个人中心',
+              frontUrl: '/me'
+            }
+          ]
+        }
+      }
     }
   },
   mounted () {
-    this.getLeftBarOption()
+    // this.getLeftBarOption()
+    this.getNavOption()
   }
 }
 </script>
