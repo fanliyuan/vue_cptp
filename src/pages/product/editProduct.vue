@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-05-30 11:57:09
+ * @Last Modified time: 2018-06-01 14:49:25
 */
 
 <template>
@@ -12,9 +12,9 @@
         <div style="margin-left:105px;">
           <!-- 这里该用循环,自动生成 -->
           <el-radio-group v-model="productInfo.oneLevel" @change="oneLevelChange">
-            <el-radio label="0">DAAS</el-radio>
-            <el-radio label="1">PAAS</el-radio>
-            <el-radio label="2">SAAS</el-radio>
+            <el-radio label="0" value="0">DAAS</el-radio>
+            <el-radio label="1" value="0">PAAS</el-radio>
+            <el-radio label="2" value="0">SAAS</el-radio>
           </el-radio-group>
         </div>
       </div>
@@ -126,7 +126,7 @@ import dicAPIs from '../../api/dic/dicAPIs'
 export default {
   data () {
     return {
-      productInfo: { productName: '', pm: '', plateType: null, plateCompany: null, state: '-1', productId: null, oneLevel: 0, twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
+      productInfo: { productName: '', pm: '', plateType: null, plateCompany: null, state: '-1', productId: null, oneLevel: '0', twoLevel: '0', threeLevel: '-1', productMarketTarget: null, productTag: null },
       productManagerList: [],
       stateList: [],
       productLevelList: [],
@@ -181,6 +181,7 @@ export default {
     await this.loadPlateList()
     await this.loadComponayList()
     await this.loadStateList()
+    this.productInfo.state = '0'
     this.loadProductInfo()
     this.plateList.some(async item => {
       if (item.dictDesc === this.productInfo.plateType) {
@@ -355,7 +356,7 @@ export default {
           if (err) {
             this.$message({
               type: 'error',
-              message: err.message
+              message: err.message || '操作失败'
             })
           }
         })
@@ -399,7 +400,7 @@ export default {
           if (err) {
             this.$message({
               type: 'error',
-              message: err.message
+              message: err.message || '操作失败'
             })
           }
         })
@@ -649,7 +650,7 @@ export default {
       z-index: -999;
     }
     .el-radio{
-      margin-right: 30px;
+      margin-right: 25px;
     }
     .el-radio+.el-radio {
       margin-left: 0;

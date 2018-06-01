@@ -39,27 +39,27 @@ class Option {
     let thead = [
       {
         label: '字典类型',
-        prop: 'dictType'
+        prop: 'tDesc'
       },
       {
         label: '字典值索引',
-        prop: 'dictIndex'
+        prop: 'tIndex'
       },
       {
         label: '字典值下标',
-        prop: 'id'
+        prop: 'tId'
       },
       {
         label: '字典值描述',
-        prop: 'dictDesc'
+        prop: 'tDesc'
       },
       {
         label: '是否父类',
-        prop: 'dictParent'
+        prop: 'tParentId'
       },
       {
         label: '字典值',
-        prop: 'dictValue'
+        prop: 'vValue'
       },
       {
         xtype: 'links',

@@ -98,7 +98,7 @@ export default {
               // 调用冻结接口
               // console.log(row.productName[0].textProp)
               // row.frozenStatus = '1'
-              let { data } = await productAPIs.updateProductFrozenStatus({id: row.prouctId, status: 1})
+              let { data } = await productAPIs.updateProductFrozenStatus({id: row.productId, status: 1})
               try {
                 if (data && data.code === 200) {
                   this.$message({

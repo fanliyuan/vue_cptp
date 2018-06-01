@@ -314,7 +314,6 @@ export default {
         let { data } = await dicAPIs.selectInfoByValues({ type: 'QUANXIANLEIXING' })
         if (data.code === 200) {
           this.authList = data.data
-          this.authList.reverse()
         }
       } catch (error) {}
     },
