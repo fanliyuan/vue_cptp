@@ -2,7 +2,7 @@
  * @Author: ChouEric
  * @Date: 2018-04-26 16:53:31
  * @Last Modified by: ChouEric
- * @Last Modified time: 2018-06-01 14:49:25
+ * @Last Modified time: 2018-06-05 14:00:54
 */
 
 <template>
@@ -37,13 +37,13 @@
       </div>
       <div class="box">
         <div class="label">板块类型</div>
-        <el-select v-model="productInfo.plateType" placeholder="请选择公司名" class="input" @change="plateTypeHandler">
+        <el-select v-model="productInfo.plateType" placeholder="请选择公司名" clearable class="input" @change="plateTypeHandler">
           <el-option v-for="item in plateList" :value="item.dictDesc" :label="item.dictDesc" :key="item.dictDesc"></el-option>
         </el-select>
       </div>
       <div class="box">
         <div class="label">板块公司</div>
-        <el-select v-model="productInfo.plateCompany" placeholder="请选择公司名" class="input">
+        <el-select v-model="productInfo.plateCompany" clearable placeholder="请选择公司名" class="input">
           <el-option v-for="item in companyList" :value="item.dictDesc" :label="item.dictDesc" :key="item.dictDesc"></el-option>
         </el-select>
       </div>
@@ -179,15 +179,19 @@ export default {
   },
   async beforeMount () {
     await this.loadPlateList()
-    await this.loadComponayList()
     await this.loadStateList()
     this.productInfo.state = '0'
     this.loadProductInfo()
-    this.plateList.some(async item => {
-      if (item.dictDesc === this.productInfo.plateType) {
-        await this.loadComponayList(item.id)
-      }
-    })
+    let plateType
+    if (this.$route.params.productId) {
+      this.plateList.some(item => {
+        if (item.dictDesc === this.productInfo.plateType) {
+          plateType = item.dictDesc
+          return true
+        }
+      })
+      plateType && await this.loadComponayList(plateType)
+    }
     this.loadProductManagerList()
     this.getTagList()
     this.getMarketList()
@@ -235,6 +239,10 @@ export default {
     async plateTypeHandler (val) {
       await this.loadComponayList(val)
       this.productInfo.plateCompany = this.companyList[0] ? this.companyList[0].dictDesc : null
+      if (!this.productInfo.plateType) {
+        this.productInfo.plateCompany = ''
+        this.companyList = []
+      }
     },
     async loadComponayList (val) {
       let parentId
@@ -337,6 +345,13 @@ export default {
           plateCompany: this.productInfo.plateCompany,
           plateType: this.productInfo.plateType
         }
+        if ((params.plateCompany && params.plateType) || !(params.plateCompany || params.plateType)) {
+        } else {
+          return this.$message({
+            type: 'error',
+            message: '请确认板块类型和板块公司'
+          })
+        }
         this.productManagerList.some(item => {
           if (item.userName === params.pm) {
             params.userId = item.userId
@@ -375,10 +390,17 @@ export default {
           plateCompany: this.productInfo.plateCompany || '',
           plateType: this.productInfo.plateType
         }
-        if (!params.pm || !params.name || !params.statusName || !params.plateCompany || !params.plateType) {
+        if (!params.pm || !params.name || !params.statusName) {
           return this.$message({
             type: 'error',
             message: '请确保输入完整'
+          })
+        }
+        if ((params.plateCompany && params.plateType) || !(params.plateCompany || params.plateType)) {
+        } else {
+          return this.$message({
+            type: 'error',
+            message: '请确认板块类型和板块公司'
           })
         }
         this.productManagerList.some(item => {
