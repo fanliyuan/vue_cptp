@@ -297,7 +297,7 @@ export default {
           if (key === 'productName') {
             this.productInfo[key] = productInfo[key][0].textProp
           } else {
-            this.productInfo[key] = productInfo[key] + ''
+            this.productInfo[key] = productInfo[key] == null ? '' : productInfo[key] + ''
           }
         }
         this.levelDisplay()
@@ -324,6 +324,7 @@ export default {
         }
       })
       this.productInfo.productName = this.productInfo.productName.replace(/,/g, '')
+      // 编辑
       if (this.$route.params && this.$route.params.productId) {
         // 这里调用编辑接口
         let params = {
@@ -345,6 +346,7 @@ export default {
           plateCompany: this.productInfo.plateCompany,
           plateType: this.productInfo.plateType
         }
+
         if ((params.plateCompany && params.plateType) || !(params.plateCompany || params.plateType)) {
         } else {
           return this.$message({
@@ -396,6 +398,8 @@ export default {
             message: '请确保输入完整'
           })
         }
+
+        // 判断如果值都存在或者值都不存在
         if ((params.plateCompany && params.plateType) || !(params.plateCompany || params.plateType)) {
         } else {
           return this.$message({
