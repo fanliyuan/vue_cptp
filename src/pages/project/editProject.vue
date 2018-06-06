@@ -286,7 +286,7 @@ export default {
             this.params.oneLevel = 0
             this.params.twoLevel = 0
             this.getProductList()
-          } else if (val.split('-')[1] === 1) {
+          } else if (val.split('-')[1] === '1') {
             this.twoList = []
             this.threeList = []
             this.params.oneLevel = 1
