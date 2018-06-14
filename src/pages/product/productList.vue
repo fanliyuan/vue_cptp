@@ -91,9 +91,13 @@ export default {
                 textProp: '修改'
               },
               {
+              	textProp:'删除'
+              },
+              {
                 textProp: '冻结'
               }
             ]
+            
             let forbidFun = async (row) => {
               // 调用冻结接口
               // console.log(row.productName[0].textProp)
@@ -111,20 +115,84 @@ export default {
                 console.log()
               }
             }
+            
+            let deleteFun = async (row) => {
+	        	let vm = this;
+	        	if(row.frozenStatus === '1'){
+	        		vm.$message({
+			          message: '只有未冻结状态下的产品才可以删除!',
+			          type: 'warning'
+			        });
+	        	}else{
+	    			vm.$confirm('是否删除此产品?', '提示', {
+			          confirmButtonText: '确定',
+			          cancelButtonText: '取消',
+			          type: 'warning'
+			        }).then(() => {
+//			        	let { data } = await productAPIs.deleteProduct({productId: row.productId});
+			        	productAPIs.deleteProduct({productId: row.productId}).then(({data}) => {
+				        	if(data.code == 200){
+				        		vm.$message({
+				        		  type: 'success',
+				        		  message: '删除成功!'
+				        		});
+		    					vm.getProductList();
+				        	}else{
+			        			vm.$message({
+						          message: `${data.message}`,
+						          type: 'warning'
+						        });
+			        		}
+			        	})
+			        }).catch(() => {
+			          vm.$message({
+			            type: 'info',
+			            message: '已取消删除'
+			          });          
+			        });
+	        	}
+	        }
             this.pageInfo.total = data.data.totalCount
             if (!data.data.pageList) {
               this.searchResult = {
                 keyword: this.$route.params.keyword,
                 total: 0
               }
-              this.tableOption = productListService([]).getTabelOptions({that: this, forbidFun})
+              this.tableOption = productListService([]).getTabelOptions({that: this, forbidFun,deleteFun})
               return false
             }
             data.data.pageList.forEach(item => {
               item.operation = operation
               item.productName = [{textProp: item.productName}]
+              if (item.frozenStatus === '1') {
+	            item.operation = [
+	              {
+	                textProp: '修改'
+	              },
+	              {
+	              	textProp:'删除'
+	              },
+	              {
+	                textProp: '已冻结'
+	              }
+	            ]
+	          } else {
+	            item.operation = [
+	              {
+	                textProp: '修改'
+	              },
+	              {
+	              	textProp:'删除'
+	              },
+	              {
+	                textProp: '冻结'
+	              }
+	            ]
+	          }
+              
+              
             })
-            this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun})
+            this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun,deleteFun})
             this.pageInfo.total = data.data.totalCount
             this.searchResult = {
               keyword: this.$route.params.keyword,
@@ -241,9 +309,47 @@ export default {
             console.log()
           }
         }
+        //0--冻结,1--已冻结
+        let deleteFun = async (row) => {
+        	console.log(row)
+        	let vm = this;
+        	if(row.frozenStatus === '1'){
+        		vm.$message({
+		          message: '只有未冻结状态下的产品才可以删除!',
+		          type: 'warning'
+		        });
+        	}else{
+    			vm.$confirm('是否删除此产品?', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+//		        	let { data } = await productAPIs.deleteProduct({productId: row.productId})
+		        	productAPIs.deleteProduct({productId: row.productId}).then(({data}) =>{
+			        	if(data.code == 200){
+			        		vm.$message({
+			        		  type: 'success',
+			        		  message: '删除成功!'
+			        		});
+	    					vm.getProductList();
+			        	}else{
+		        			vm.$message({
+					          message: `${data.message}`,
+					          type: 'warning'
+					        });
+		        		}
+		        	})
+		        }).catch(() => {
+		          vm.$message({
+		            type: 'info',
+		            message: '已取消删除'
+		          });          
+		        });
+        	}
+        }
         if (!data.data.pageList) {
           this.pageInfo.total = 0
-          this.tableOption = productListService([]).getTabelOptions({that: this, forbidFun})
+          this.tableOption = productListService([]).getTabelOptions({that: this, forbidFun,deleteFun})
           return false
         }
         this.pageInfo.total = data.data.totalCount
@@ -252,6 +358,9 @@ export default {
             item.operation = [
               {
                 textProp: '修改'
+              },
+              {
+              	textProp:'删除'
               },
               {
                 textProp: '已冻结'
@@ -263,13 +372,16 @@ export default {
                 textProp: '修改'
               },
               {
+              	textProp:'删除'
+              },
+              {
                 textProp: '冻结'
               }
             ]
           }
           item.productName = [{textProp: item.productName}]
         })
-        this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun})
+        this.tableOption = productListService(data.data.pageList).getTabelOptions({that: this, forbidFun,deleteFun})
       } catch (error) {
       }
     },

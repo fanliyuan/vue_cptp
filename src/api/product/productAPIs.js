@@ -50,6 +50,10 @@ const module = {
       method: 'post',
       name: 'getProductMember',
       url: '/getProductMember'
+    },{
+      method: 'post',
+      name: 'deleteProduct',
+      url: '/deleteProduct'
     }
   ]
 }

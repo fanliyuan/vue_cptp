@@ -2,7 +2,7 @@ class Option {
   constructor (data) {
     this.data = data
   }
-  getTabelOptions ({that, forbidFun, cancelForbid}) {
+  getTabelOptions ({that, forbidFun, cancelForbid, deleteFun}) {
     let thead = [
       {
         xtype: 'links',
@@ -43,11 +43,11 @@ class Option {
               })
           } else if (val.textProp === '已冻结') {
             cancelForbid && cancelForbid(row)
-          } else {
-            console.log(row, '停用')
+          } else if(val.textProp === '删除') {
+            deleteFun && deleteFun(row)
           }
         },
-        linkStyle: 'display: inline-block;width: 49%;'
+        linkStyle: 'display: inline-block;width: 33%;'
       }
     ]
     let data = this.data
