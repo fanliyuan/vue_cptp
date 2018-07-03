@@ -128,6 +128,7 @@ export default {
         }
         let cancelForbid = async (row) => {
           // 取消冻结接口
+//        debugger
           // console.log(row.productName[0].textProp, '取消冻结')
           let { data } = await productAPIs.updateProductFrozenStatus({id: row.productId, status: '0'})
           try {

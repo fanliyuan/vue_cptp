@@ -153,7 +153,7 @@ export default {
             } else {
               this.$message({
                 type: 'error',
-                message: '字典类型删除失败'
+                message: `${data.message}`
               })
             }
           } catch (err) {

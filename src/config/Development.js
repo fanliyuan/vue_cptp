@@ -12,7 +12,7 @@
  */
 
 let scopeURL = 'http://192.168.0.151:8769/api/back'// 这里替换默认设置的后台接口地址   http://192.168.0.151:8769/api/back   http://192.168.100.63:8769/api/back
-
+//let scopeURL = 'http://192.168.100.9:8769/api/back'
 let downloadURl = 'http://192.168.0.151:8763'
 
 export default {

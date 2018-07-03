@@ -13,7 +13,7 @@
       <div class="dialogbox">
         <span class="label">原市场定位</span>
         <el-input v-model="editMarketPositionInfo.oldValue" class="input" readonly=""></el-input>
-      </div>
+      </div> 
       <div class="dialogbox">
         <span class="label">新市场定位</span>
         <el-input v-model="editMarketPositionInfo.newValue" class="input"></el-input>

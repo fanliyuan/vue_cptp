@@ -7,8 +7,8 @@
 
 <template>
   <div>
-    <el-form class="myinput" ref="myInput" :rules="inputRule" :model="inputData" @validate="validateHandler">
-      <el-form-item class="box" prop="oldMobile">
+    <el-form class="myinput" ref="myInput" label-width='85px' :rules="inputRule" :model="inputData" @validate="validateHandler">
+      <el-form-item class="box" prop="oldMobile" label="原手机号">
         <el-input class="input" v-model.number="inputData.oldMobile" placeholder="请输入原手机号"></el-input>
       </el-form-item>
       <!-- 这里需要获取验证码 -->
@@ -16,14 +16,15 @@
         <el-input class="input short" v-model="inputData.code" placeholder="验证码"></el-input>
         <el-form-item class="input button">获取验证码</el-form-item>
       </el-form-item> -->
-      <el-form-item class="box" prop="newMobile">
+      <el-form-item class="box" prop="newMobile" label="新手机号">
         <el-input class="input" v-model.number="inputData.newMobile" placeholder="请输入新手机号"></el-input>
       </el-form-item>
-      <el-form-item class="box" prop="confirmMobile">
+      <el-form-item class="box" prop="confirmMobile" label="确认手机号">
         <el-input class="input" v-model.number="inputData.confirmMobile" placeholder="请再次输入新手机号"></el-input>
       </el-form-item>
       <el-form-item class="box mt10">
         <el-button type="primary" :disabled="disabledFlag" @click="submitHandler">确认</el-button>
+        <!--<el-button type="warning" @click="submitHandler">关闭</el-button>-->
       </el-form-item>
     </el-form>
   </div>
@@ -201,7 +202,7 @@ export default {
       text-align: center
     }
     .el-button{
-      padding: 12px 100px;
+      padding: 12px 95px;
     }
   }
 </style>

@@ -48,12 +48,21 @@
         </el-select>
       </div>
       <div class="box">
-        <div class="label">产品经理</div>
+      	<div class="label">产品经理</div>
+      	<!--<el-select class="input" v-model="productInfo" placeholder="请选择" >
+          <el-option
+            v-for="keyInfo in productManagerList"
+            :key="keyInfo.userId"
+            :label="keyInfo.userName"
+            :value="keyInfo.dictType">
+          </el-option>
+        </el-select>-->
         <el-autocomplete
-          class="input"
+          class="input productMan"
           v-model="productInfo.pm"
           :fetch-suggestions="querySearch"
           placeholder="请输入内容"
+          readonly = "true"
         >
         </el-autocomplete>
       </div>
@@ -198,9 +207,11 @@ export default {
   },
   methods: {
     querySearch (queryString, cb) {
+//     $(".productMan input").attr({"readonly":true})
       let productManagerList = this.productManagerList
       let results = queryString ? productManagerList.filter(this.createFilter(queryString)) : productManagerList
       cb(results)
+//     $(".productMan input").attr({"readonly":false}) 
     },
     createFilter (queryString) {
       return (productManagerList) => {
@@ -215,6 +226,7 @@ export default {
           item.value = item.userName
         })
         this.productManagerList = data.data
+//      debugger
       } catch (error) {
         console.log()
       }

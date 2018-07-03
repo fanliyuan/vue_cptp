@@ -15,7 +15,7 @@
         ref="file"
         class="upload"
         drag
-        :action="$store.state.uploadServer + '/user/batchAddUser?token=' + token"
+        :action="'http://192.168.0.151:8769/api/back' + '/user/batchAddUser?token=' + token"
         multiple
         :before-upload="beforeUploadHandler"
         :on-error="uploadErrorHandler"
@@ -127,10 +127,13 @@ export default {
       this.resetOption()
     }
   },
+  
   methods: {
     pageHandler (val) {
       this.pageInfo.pageNum = val
       this.getDataList()
+      console.log(upLoad.defaultHost)
+      console.log('http://192.168.100.9:8769/api/back/')
     },
     resetOption () {
       this.$emit('data', {

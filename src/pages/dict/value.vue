@@ -155,7 +155,7 @@ export default {
             } else {
               this.$message({
                 type: 'error',
-                message: '类型值删除失败'
+                message: `${data.message}`
               })
             }
           } catch (err) {

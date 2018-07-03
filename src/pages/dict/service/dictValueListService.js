@@ -51,7 +51,7 @@ class Option {
       },
       {
         label: '字典值描述',
-        prop: 'tDesc'
+        prop: 'vDesc'
       },
       {
         label: '是否父类',

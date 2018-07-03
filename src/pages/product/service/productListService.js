@@ -42,7 +42,16 @@ class Option {
                 }
               })
           } else if (val.textProp === '已冻结') {
-            cancelForbid && cancelForbid(row)
+            that.$confirm(`是否解冻${row.productName[0].textProp} ?`)
+              .then(data => {
+                if (!data) throw new Error('取消解冻')
+                // 调用解冻接口
+                cancelForbid && cancelForbid(row)
+              }).catch(err => {
+                if (err) {
+                  that.$message('取消解冻')
+                }
+              })
           } else if(val.textProp === '删除') {
             deleteFun && deleteFun(row)
           }

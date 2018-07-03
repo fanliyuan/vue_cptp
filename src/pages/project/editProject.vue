@@ -209,10 +209,11 @@ export default {
               type: 'success',
               message: data.message
             })
+            this.$router.push('/project')
           } else {
             this.$message({
               type: 'error',
-              message: '修改失败'
+              message: `${data.message}`
             })
           }
         } else {
@@ -233,14 +234,15 @@ export default {
               type: 'success',
               message: data.message
             })
+            this.$router.push('/project')
           } else {
             this.$message({
               type: 'error',
-              message: '新增失败'
+              message: `${data.message}`
             })
           }
         }
-        this.$router.push('/project')
+//      this.$router.push('/project')
       } catch (error) {
         if (error) {
           this.$confirm('操作失败,点击确认将返回列表页').then(_ => {
